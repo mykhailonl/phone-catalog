@@ -21,7 +21,7 @@ dist-ssr
 .env.development.local
 .env.test.local
 .env.production.local
-.evnrc
+.envrc
 
 # Vite cache
 .vite/
@@ -44,5 +44,5 @@ dist-ssr
 temp
 tmp
 
-#public directory
+# Public directory
 public
