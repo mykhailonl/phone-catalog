@@ -2,6 +2,7 @@ import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
+import pluginReact from 'eslint-plugin-react';
 import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js';
 import pluginPrettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
@@ -27,7 +28,7 @@ export default [
       },
     },
     plugins: {
-      react: pluginReactConfig,
+      react: pluginReact,
       prettier: pluginPrettier,
     },
     rules: {
