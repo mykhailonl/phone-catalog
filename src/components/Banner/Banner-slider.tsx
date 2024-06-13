@@ -1,5 +1,5 @@
 // TODO
 
 export const Banner = () => {
-  return <></>;
+  return <p>Banner</p>;
 };
