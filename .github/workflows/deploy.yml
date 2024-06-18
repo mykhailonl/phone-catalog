@@ -22,7 +22,6 @@ jobs:
 
       - name: List build directory
         run: ls -la dist
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
