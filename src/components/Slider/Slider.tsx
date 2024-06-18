@@ -85,7 +85,7 @@ export const Slider = () => {
         <p>{`Slide length: ${slides.length}`}</p>
       </div>
 
-      <div className="relative col-span-full aspect-square w-full overflow-hidden">
+      <div className="relative col-span-full col-end-[-2] aspect-square w-full overflow-hidden md:col-start-2">
         <div
           className={cn(`flex h-full`)}
           style={{
