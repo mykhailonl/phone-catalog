@@ -1,4 +1,4 @@
-import { Banner } from './components/Banner/Banner';
+import { Slider } from './components/Slider/Slider';
 import { Header } from './components/Header';
 import { Title } from './components/Title';
 
@@ -17,7 +17,7 @@ export const App = () => {
 
       <Title />
 
-      <Banner />
+      <Slider />
     </div>
   );
 };
