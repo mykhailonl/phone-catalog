@@ -16,15 +16,15 @@ export const SliderButton = ({ direction }: Props) => {
 
   return (
     <button
-      className="hidden flex-col items-center justify-center md:flex border-[1px] border-icons w-8"
+      className="border-icons hidden w-8 flex-col items-center justify-center border-[1px] md:flex"
       onClick={() => {
-        handleClick()
-        console.log(direction)
+        handleClick();
+        console.log(direction);
       }}
     >
       <div className="flex h-4 w-4 items-center justify-center">
         <img
-          src={`../src/img/icons/${direction}-arrow.svg`}
+          src={`/icons/${direction}-arrow.svg`}
           alt={`${direction}-arrow`}
           className="items-center justify-center"
         />

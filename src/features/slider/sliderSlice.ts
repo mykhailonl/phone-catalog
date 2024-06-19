@@ -8,11 +8,11 @@ import { SliderState } from '../../types/SliderState';
 const initialState: SliderState = {
   currentIndex: 1,
   slides: [
-    { id: 0, image: './src/img/slider-images/slider-3.png', link: '#' },
-    { id: 1, image: './src/img/slider-images/slider-1.png', link: '#' },
-    { id: 2, image: './src/img/slider-images/slider-2.png', link: '#' },
-    { id: 3, image: './src/img/slider-images/slider-3.png', link: '#' },
-    { id: 4, image: './src/img/slider-images/slider-1.png', link: '#' },
+    { id: 0, image: '/slider-images/slider-3.png', link: '#' },
+    { id: 1, image: '/slider-images/slider-1.png', link: '#' },
+    { id: 2, image: '/slider-images/slider-2.png', link: '#' },
+    { id: 3, image: '/slider-images/slider-3.png', link: '#' },
+    { id: 4, image: '/slider-images/slider-1.png', link: '#' },
   ],
   interval: 5000,
   autoPlay: true,
