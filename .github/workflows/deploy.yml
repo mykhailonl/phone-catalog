@@ -1,4 +1,4 @@
-name: GitHub Pages Deploy
+name: Deploy
 
 on:
   push:
@@ -19,8 +19,11 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.PAT }}
           publish_dir: ./build
+          publish_branch: gh-pages
+          exclude_assets: .github
