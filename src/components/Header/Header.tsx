@@ -13,7 +13,7 @@ export const Header = () => {
       <div className={`${styles['header__button-shadow']} flex p-4`}>
         <button>
           <img
-            src="/icons/header-burger-menu.svg"
+            src="/public/icons/header-burger-menu.svg"
             alt="menu"
             className="h-4 w-4"
           />
