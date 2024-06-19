@@ -14,6 +14,7 @@ import {
 
 import { Slide } from '../Slide/Slide';
 import { Dots } from '../Dots';
+import { SliderButton } from '../SliderButton';
 
 /*
 Slider component plan:
@@ -76,16 +77,18 @@ export const Slider = () => {
 
   return (
     <div
-      className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop grid"
+      className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop md:px-content-md grid gap-16px"
       onMouseEnter={() => dispatch(setAutoPlay(false))}
       onMouseLeave={() => dispatch(setAutoPlay(true))}
     >
-      <div className="col-span-full flex items-center justify-between">
+      {/* <div className="col-span-full flex items-center justify-between">
         <p>{`Current index: ${currentIndex}`}</p>
         <p>{`Slide length: ${slides.length}`}</p>
-      </div>
+      </div> */}
 
-      <div className="relative col-span-full col-end-[-2] aspect-square w-full overflow-hidden md:col-start-2">
+      <SliderButton direction='left' />
+
+      <div className="relative col-span-full grid aspect-square w-full overflow-hidden md:col-start-2 md:col-end-[-2]">
         <div
           className={cn(`flex h-full`)}
           style={{
@@ -108,6 +111,8 @@ export const Slider = () => {
           ))}
         </div>
       </div>
+
+      <SliderButton direction='right' />
 
       <div className="col-span-full mt-2 flex justify-center">
         <Dots />

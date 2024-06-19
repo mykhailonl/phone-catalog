@@ -1,6 +1,7 @@
 import { Slider } from './components/Slider/Slider';
 import { Header } from './components/Header';
 import { Title } from './components/Title';
+import { NewModelsSlider } from './components/NewModelsSlider';
 
 /*
 TODO
@@ -18,6 +19,8 @@ export const App = () => {
       <Title />
 
       <Slider />
+
+      <NewModelsSlider />
     </div>
   );
 };
