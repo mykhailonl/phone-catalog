@@ -14,6 +14,9 @@ export default {
         white: '#FFFFFF',
         green: '#27AE60',
         red: '#EB5757',
+        mobileCategory: '#6D6474',
+        tabletCategory: '#8D8D92',
+        accessoriesCategory: '#973D5F',
       },
       fontFamily: {
         mont: ['Mont', 'sans-serif'],

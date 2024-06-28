@@ -1,7 +1,8 @@
 import { Slider } from './components/Slider/Slider';
 import { Header } from './components/Header';
 import { Title } from './components/Title';
-import { NewModelsSlider } from './components/NewModelsSlider';
+import { ProductSlider } from './components/ProductSlider';
+import { Categories } from './components/Categories';
 
 /*
 TODO
@@ -20,7 +21,21 @@ export const App = () => {
 
       <Slider />
 
-      <NewModelsSlider />
+      <ProductSlider
+        title="Brand new models"
+        apiUrl="/api/products.json"
+        discount={false}
+        newOnly={true}
+      />
+
+      <Categories />
+
+      <ProductSlider
+        title="Hot prices"
+        apiUrl="/api/products.json"
+        discount={true}
+        newOnly={false}
+      />
     </div>
   );
 };
