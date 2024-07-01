@@ -65,10 +65,11 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
 
   return (
     <div className="px-content md:px-content-md lg:px-content-lg my-14 grid md:my-16 lg:my-20">
-      <div className="grid-cols-mobile md:grid-cols-tablet gap-16px lg:grid-cols-desktop prose md:prose-md lg:prose-lg col-span-full mb-0 grid">
+      <div className="grid-cols-mobile md:grid-cols-tablet gap-16px lg:grid-cols-desktop prose md:prose-md lg:prose-lg mb-0 grid">
         <h2 className="col-span-2 mb-0 justify-self-start">{title}</h2>
 
-        {products.length}
+        {/* TODO delete after */}
+        {/* {products.length} */}
 
         <div className="col-span-2 flex items-center gap-4 justify-self-end">
           <ProductSliderButton
@@ -84,15 +85,14 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
           />
         </div>
 
-        <div className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop gap-16px col-span-full grid">
+        <div className="relative col-span-full overflow-x-hidden">
+          {/* Добавляем overflow-x-hidden и col-span-full */}
           <div
-            className="gap-16px col-span-full grid grid-flow-col transition-transform duration-300 ease-out"
+            className="flex gap-4 transition-transform duration-300 ease-out"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
             {products.map((item, index) => (
-              <div className="col-span-3" key={index}>
-                <Product product={item} discount={discount} />
-              </div>
+              <Product product={item} discount={discount} key={index} />
             ))}
           </div>
         </div>

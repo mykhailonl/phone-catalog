@@ -1,41 +1,32 @@
-import { Slider } from './components/Slider/Slider';
+import { Outlet, useLocation } from 'react-router-dom';
+
 import { Header } from './components/Header';
-import { Title } from './components/Title';
-import { ProductSlider } from './components/ProductSlider';
-import { Categories } from './components/Categories';
+import { Footer } from './components/Footer';
+import { SideBar } from './components/SideBar';
+import { useState } from 'react';
 
 /*
 TODO
 
-1.Create redux context
-2. move Header-title etc into homepage? 
 3. move all used images and api from public folder
 */
 
 export const App = () => {
+  const location = useLocation();
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="App">
-      <Header />
+      <Header onBurgerClick={() => setIsOpen(!isOpen)} isOpen={isOpen} />
 
-      <Title />
+      <div className="p-4">Current path: {location.pathname}</div>
 
-      <Slider />
+      <SideBar isOpen={isOpen} onBurgerClick={() => setIsOpen(!isOpen)} />
 
-      <ProductSlider
-        title="Brand new models"
-        apiUrl="/api/products.json"
-        discount={false}
-        newOnly={true}
-      />
+      <Outlet />
 
-      <Categories />
-
-      <ProductSlider
-        title="Hot prices"
-        apiUrl="/api/products.json"
-        discount={true}
-        newOnly={false}
-      />
+      <Footer />
     </div>
   );
 };

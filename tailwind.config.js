@@ -76,7 +76,7 @@ export default {
               letterSpacing: '0',
               fontWeight: '600',
             },
-            uppercase: {
+            a: {
               fontSize: '12px',
               lineHeight: '11px',
               letterSpacing: '0.04em',

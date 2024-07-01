@@ -1,5 +1,3 @@
-// TODO check why github pages are not updated after merge
-
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import cn from 'classnames';
