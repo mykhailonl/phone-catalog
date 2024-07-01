@@ -14,6 +14,9 @@ export default {
         white: '#FFFFFF',
         green: '#27AE60',
         red: '#EB5757',
+        mobileCategory: '#6D6474',
+        tabletCategory: '#8D8D92',
+        accessoriesCategory: '#973D5F',
       },
       fontFamily: {
         mont: ['Mont', 'sans-serif'],
@@ -73,7 +76,7 @@ export default {
               letterSpacing: '0',
               fontWeight: '600',
             },
-            uppercase: {
+            a: {
               fontSize: '12px',
               lineHeight: '11px',
               letterSpacing: '0.04em',

@@ -15,7 +15,7 @@ const initialState: SliderState = {
     { id: 4, image: '/slider-images/slider-1.png', link: '#' },
   ],
   interval: 5000,
-  autoPlay: true,
+  autoPlay: false,
   isAnimating: false,
 };
 

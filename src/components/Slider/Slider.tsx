@@ -1,5 +1,3 @@
-// TODO check why github pages are not updated after merge
-
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import cn from 'classnames';
@@ -77,7 +75,7 @@ export const Slider = () => {
 
   return (
     <div
-      className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop md:px-content-md grid gap-16px"
+      className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop md:px-content-md gap-16px grid"
       onMouseEnter={() => dispatch(setAutoPlay(false))}
       onMouseLeave={() => dispatch(setAutoPlay(true))}
     >
@@ -86,7 +84,7 @@ export const Slider = () => {
         <p>{`Slide length: ${slides.length}`}</p>
       </div> */}
 
-      <SliderButton direction='left' />
+      <SliderButton direction="left" />
 
       <div className="relative col-span-full grid aspect-square w-full overflow-hidden md:col-start-2 md:col-end-[-2]">
         <div
@@ -112,7 +110,7 @@ export const Slider = () => {
         </div>
       </div>
 
-      <SliderButton direction='right' />
+      <SliderButton direction="right" />
 
       <div className="col-span-full mt-2 flex justify-center">
         <Dots />

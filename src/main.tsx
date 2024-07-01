@@ -7,12 +7,23 @@ import { App } from './App';
 
 import { store } from './store';
 import { Provider } from 'react-redux';
+import { HomePage } from './components/HomePage';
+import { PageNotFound } from './components/PageNotFound/PageNotFound';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    // errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: '*',
+        element: <PageNotFound />,
+      },
+    ],
   },
 ]);
 
