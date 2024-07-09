@@ -6,7 +6,7 @@ type Props = {
 export const Specification = ({ label, value }: Props) => {
   return (
     <div className="flex justify-between">
-      <small className="text-secondary m-0">{label}</small>
+      <small className="m-0 text-secondary">{label}</small>
 
       <small className="font-bold">{value}</small>
     </div>

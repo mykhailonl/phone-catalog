@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import cn from 'classnames';
 
 import { RootState } from '../../store';
 import {
@@ -44,7 +43,6 @@ export const Slider = () => {
     (state: RootState) => state.slider,
   );
 
-  // auto-slide every interval
   useEffect(() => {
     if (autoPlay) {
       const timer = setInterval(() => {
@@ -75,7 +73,7 @@ export const Slider = () => {
 
   return (
     <div
-      className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop md:px-content-md gap-16px grid"
+      className="col-span-full mb-14 flex gap-2"
       onMouseEnter={() => dispatch(setAutoPlay(false))}
       onMouseLeave={() => dispatch(setAutoPlay(true))}
     >
@@ -86,9 +84,9 @@ export const Slider = () => {
 
       <SliderButton direction="left" />
 
-      <div className="relative col-span-full grid aspect-square w-full overflow-hidden md:col-start-2 md:col-end-[-2]">
+      <div className="relative aspect-square w-full overflow-hidden md:col-start-2 md:col-end-[-2] md:aspect-auto md:h-[189px] lg:col-start-2 lg:col-end-[-2] lg:h-[400px]">
         <div
-          className={cn(`flex h-full`)}
+          className="flex h-full w-full"
           style={{
             transition: isAnimating
               ? `transform ${ANIMATION_DURATION}ms`
@@ -99,10 +97,7 @@ export const Slider = () => {
           {slides.map((slide, index) => (
             <div
               key={index}
-              className="h-full w-full flex-shrink-0"
-              style={{
-                width: '100%',
-              }}
+              className="h-full w-full flex-shrink-0 md:h-[189px] lg:h-[400px]"
             >
               <Slide image={slide.image} id={slide.id} link={slide.link} />
             </div>

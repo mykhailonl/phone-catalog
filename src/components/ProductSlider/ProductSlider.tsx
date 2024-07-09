@@ -64,9 +64,11 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
   // #endregion
 
   return (
-    <div className="px-content md:px-content-md lg:px-content-lg my-14 grid md:my-16 lg:my-20">
-      <div className="grid-cols-mobile md:grid-cols-tablet gap-16px lg:grid-cols-desktop prose md:prose-md lg:prose-lg mb-0 grid">
-        <h2 className="col-span-2 mb-0 justify-self-start">{title}</h2>
+    <div className="col-span-full flex px-content md:my-16 md:px-0 lg:my-20">
+      <div className="prose mb-0 grid grid-cols-mobile gap-16px gap-y-6 md:prose-md lg:prose-lg md:grid-cols-tablet md:gap-6 lg:grid-cols-desktop">
+        <h2 className="col-span-2 mb-0 justify-self-start md:col-span-10">
+          {title}
+        </h2>
 
         {/* TODO delete after */}
         {/* {products.length} */}
@@ -86,10 +88,11 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
         </div>
 
         <div className="relative col-span-full overflow-x-hidden">
-          {/* Добавляем overflow-x-hidden и col-span-full */}
           <div
             className="flex gap-4 transition-transform duration-300 ease-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
           >
             {products.map((item, index) => (
               <Product product={item} discount={discount} key={index} />

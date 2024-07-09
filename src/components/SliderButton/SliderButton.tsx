@@ -16,7 +16,7 @@ export const SliderButton = ({ direction }: Props) => {
 
   return (
     <button
-      className="border-icons hidden w-8 flex-col items-center justify-center border-[1px] md:flex"
+      className="col-span-1 hidden w-8 flex-col items-center justify-center border-[1px] border-icons md:flex"
       onClick={() => {
         handleClick();
         console.log(direction);

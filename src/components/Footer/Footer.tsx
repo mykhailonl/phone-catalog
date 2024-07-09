@@ -5,22 +5,22 @@ import { Logo } from '../Logo';
 
 export const Footer = () => {
   return (
-    <footer className="grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop gap-16px px-content md:px-content-md lg:px-content-lg prose md:prose-md lg:prose-lg grid">
-      <div className="col-span-full flex flex-col gap-8 py-8">
+    <footer className="prose mt-16 grid grid-cols-mobile gap-16px px-content shadow-custom-top md:prose-md lg:prose-lg md:grid-cols-tablet md:px-content-md lg:grid-cols-desktop lg:px-content-lg">
+      <div className="col-span-full flex flex-col gap-8 py-8 md:flex-row md:items-center md:justify-between">
         <div className="flex w-[89px] items-center">
           <Logo />
         </div>
 
-        {/* TODO change to nav? */}
-        <div className="gap-16px flex flex-col">
+        {/* TODO check hover values (item width) */}
+        <nav className="flex w-fit flex-col gap-16px md:flex-row md:justify-between">
           <NavItem url="/" name="Github" />
 
           <NavItem url="/" name="Contacts" />
 
           <NavItem url="/" name="Rights" />
-        </div>
+        </nav>
 
-        <div className="gap-16px col-span-full flex items-center justify-center">
+        <div className="col-span-full flex items-center justify-center gap-16px">
           <small className="text-secondary">Back to top</small>
 
           <HashLink

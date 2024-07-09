@@ -15,8 +15,8 @@ import { Category } from '../Category';
 
 export const Categories = () => {
   return (
-    <div className="prose md:prose-md lg:prose-lg px-content md:px-content-md lg:px-content-lg grid-cols-mobile md:grid-cols-tablet lg:grid-cols-desktop gap-16px grid">
-      <h2 className="text-gray-primary col-span-full mb-6">Shop by category</h2>
+    <div className="col-span-full my-14 flex flex-col gap-8 px-content md:px-0">
+      <h2 className="m-0 mb-6 text-gray-primary">Shop by category</h2>
 
       <Category
         name="Mobile phones"

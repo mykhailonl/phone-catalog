@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+@import '../../styles/typography';
+@import '../../styles/grid';
+
+.homepage {
+  @include grid(mobile);
+
+  h1 {
+    @include apply-typography(h1);
+    color: map-get($colors, gray-primary);
+  }
+}

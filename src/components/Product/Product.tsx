@@ -12,8 +12,8 @@ type Props = {
 
 export const Product = ({ product, discount }: Props) => {
   return (
-    <div className="border-elements prose md:prose-md lg:prose-lg flex h-[439px] w-[75%] flex-shrink-0 flex-col gap-2 border-[1px] p-8">
-      <div className="flex max-h-[129px]">
+    <div className="prose flex h-[439px] w-[75%] flex-shrink-0 flex-col gap-2 border-[1px] border-elements p-8 md:prose-md lg:prose-lg md:h-[512px] md:w-5/12">
+      <div className="flex max-h-[129px] md:max-h-[202px]">
         <img
           src={product.image}
           alt={`${product.image} photo`}
@@ -21,27 +21,27 @@ export const Product = ({ product, discount }: Props) => {
         />
       </div>
 
-      <Link to={product.itemId} className="mt-4">
-        <button className="text-gray-primary text-left">{product.name}</button>
+      <Link to={product.itemId} className="pt-4">
+        <button className="text-left text-gray-primary">{product.name}</button>
       </Link>
 
       <div className="flex items-center gap-2">
         {!discount ? (
-          <h2 className="text-gray-primary m-0">${product.fullPrice}</h2>
+          <h2 className="m-0 text-gray-primary">${product.fullPrice}</h2>
         ) : (
           <>
-            <h2 className="text-gray-primary m-0">${product.price}</h2>
+            <h2 className="m-0 text-gray-primary">${product.price}</h2>
 
-            <h3 className="text-secondary m-0 line-through">
+            <h3 className="m-0 text-secondary line-through">
               ${product.fullPrice}
             </h3>
           </>
         )}
       </div>
 
-      <div className="bg-elements h-[1px]"></div>
+      <div className="h-[1px] bg-elements"></div>
 
-      <div className="flex h-[77px] flex-col justify-evenly">
+      <div className="flex flex-col gap-2 py-2">
         <Specification label="Screen" value={product.screen} />
 
         <Specification label="Capacity" value={product.capacity} />
@@ -49,12 +49,12 @@ export const Product = ({ product, discount }: Props) => {
         <Specification label="RAM" value={product.ram} />
       </div>
 
-      <div className="flex justify-between">
-        <button className="bg-gray-primary p-[9.5px] text-white">
+      <div className="flex justify-between gap-2">
+        <button className="flex-grow bg-gray-primary p-[9.5px] text-white">
           Add to cart
         </button>
 
-        <button className="border-elements h-10 w-10 border-[1px] p-3">
+        <button className="h-10 w-10 border-[1px] border-elements p-3">
           <img
             src="icons/emty-heart.svg"
             alt=""

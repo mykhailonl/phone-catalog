@@ -5,6 +5,11 @@ export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      boxShadow: {
+        'custom-left': '-1px 0px 0px 0px rgba(226, 230, 233, 1)',
+        'custom-bottom': '0px 1px 0px 0px rgba(226, 230, 233, 1)',
+        'custom-top': '0px -1px 0px 0px rgba(226, 230, 233, 1)',
+      },
       colors: {
         'gray-primary': '#313237',
         secondary: '#89939A',

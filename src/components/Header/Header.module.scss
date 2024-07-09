@@ -1,9 +1,48 @@
 .header {
-  &__shadow {
-    box-shadow: 0px 1px 0px 0px #e2e6e9;
+  @include box-shadow(custom-bottom);
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  height: 48px;
+  width: 100%;
+
+  @include on-desktop {
+    gap: 24px;
+    height: 64px;
   }
 
-  &__button-shadow {
-    box-shadow: -1px 0px 0px 0px #e2e6e9;
+  &__logo {
+    display: flex;
+    align-items: center;
+
+    padding-inline: 16px;
+    padding-block: 13px;
+
+    @include on-desktop {
+      padding-inline: 24px;
+      padding-block: 18px;
+    }
+
+    &__block {
+      height: 22px;
+
+      @include on-desktop {
+        height: 28px;
+      }
+    }
+  }
+
+  &__burger {
+    display: flex;
+    justify-content: end;
+    flex-grow: 1;
+
+    padding: 16px;
+
+    @include on-tablet {
+      display: none;
+    }
   }
 }

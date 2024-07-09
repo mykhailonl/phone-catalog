@@ -1,0 +1,12 @@
+@mixin grid($type) {
+  display: grid;
+  gap: 16px;
+
+  @if $type == mobile {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  } @else if $type == tablet {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  } @else if $type == desktop {
+    grid-template-columns: repeat(24, 32px);
+  }
+}

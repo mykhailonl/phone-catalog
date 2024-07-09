@@ -1,41 +1,40 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { RootState } from '../../store';
 
 import { Header } from '../Header';
-import { SideBarItem } from '../SideBarItem';
 import { SideBarLink } from '../SideBarLink';
+import { MenuItems } from '../MenuItems';
 
-type Props = {
-  onBurgerClick: React.Dispatch<React.SetStateAction<boolean>>;
-  isOpen: boolean;
-};
+import styles from './SideBar.module.scss';
 
 // TODO fix vertical scrolling
 // TODO add text hover
 
-export const SideBar = ({ isOpen, onBurgerClick }: Props) => {
+export const SideBar = () => {
+  const { isOpen } = useSelector((state: RootState) => state.menu);
+
   return (
     <aside
-      className={`fixed top-0 h-screen w-full transform bg-white transition-transform ${isOpen ? 'translate-y-0' : '-translate-y-full'} prose z-20 duration-500`}
+      className={`${styles.menu} ${isOpen ? styles.menu__isOpen : styles.menu__isClosed}`}
     >
-      <Header isOpen={isOpen} onBurgerClick={() => onBurgerClick(!isOpen)} />
+      <div className={styles.menu__header}>
+        <Header />
+      </div>
 
-      {/* TODO position */}
-      <div className="flex flex-col">
-        <nav className="px-content gap-16px mt-6 flex flex-col">
-          {/* TODO check links */}
-          <SideBarItem url="/" name="Home" />
-
-          <SideBarItem url="/" name="Phones" />
-
-          <SideBarItem url="/" name="Tablets" />
-
-          <SideBarItem url="/" name="Accessories" />
+      <div className="flex flex-grow flex-col justify-between">
+        <nav className={`mt-6 flex flex-col gap-16px px-content`}>
+          <MenuItems />
         </nav>
 
-        <div className="flex w-full">
-          <SideBarLink image="icons/emty-heart.svg" url="/" />
+        <div className={`flex w-full border border-solid border-gray-300`}>
+          <div className="flex h-16 flex-grow">
+            <SideBarLink image="icons/emty-heart.svg" url="/" />
+          </div>
 
-          <SideBarLink image="icons/icon-cart.svg" url="/" />
+          <div className="flex h-16 flex-grow">
+            <SideBarLink image="icons/icon-cart.svg" url="/" />
+          </div>
         </div>
       </div>
     </aside>
