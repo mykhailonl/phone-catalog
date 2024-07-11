@@ -35,6 +35,10 @@
   }
 
   &__burger {
+    padding: 0;
+    border: none;
+    background: inherit;
+
     display: flex;
     justify-content: end;
     flex-grow: 1;
@@ -43,6 +47,49 @@
 
     @include on-tablet {
       display: none;
+    }
+  }
+
+  &__links {
+    display: none;
+    align-items: center;
+
+    height: 100%;
+
+
+    @include on-tablet {
+      display: flex;
+      gap: 32px;
+    }
+
+    @include on-desktop {
+      gap: 64px;
+    }
+  }
+
+  &__buttons {
+    display: none;
+
+    flex-grow: 1;
+    justify-content: end;
+
+    @include on-tablet {
+      display: flex;
+    }
+  }
+
+  &__buttonWrapper {
+    @include box-shadow(custom-left);
+
+    --side: 48px;
+
+    display: flex;
+
+    height: var(--side);
+    width: var(--side);
+
+    @include on-desktop {
+      --side: 64px;
     }
   }
 }

@@ -1,5 +1,6 @@
 // TODO check img height
 // TODO check if it nextButton gets disabled after offset fix
+import styles from './ProductSliderButton.module.scss';
 
 type Props = {
   direction: 'left' | 'right';
@@ -12,17 +13,19 @@ export const ProductSliderButton = ({
   onClick,
   disabled,
 }: Props) => {
+  const { button, button__disabled, button__imgWrapper, button__img } = styles;
+
   return (
     <button
-      className={`flex h-8 w-8 items-center justify-center border-[1px] ${disabled ? 'border-elements opacity-50' : 'border-icons'}`}
+      className={`${button} ${disabled ? button__disabled : ''}`}
       onClick={onClick}
       disabled={disabled}
     >
-      <div className="flex h-4 w-4 items-center justify-center">
+      <div className={button__imgWrapper}>
         <img
           src={`/icons/${direction}-arrow.svg`}
           alt={`product slider button ${direction}`}
-          className="flex h-[10px] w-[6px]"
+          className={button__img}
         />
       </div>
     </button>

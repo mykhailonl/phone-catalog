@@ -1,7 +1,5 @@
+import styles from './Title.module.scss';
+
 export const Title = () => {
-  return (
-    <h1 className="col-span-full px-content md:px-0">
-      Welcome to Nice Gadgets store!
-    </h1>
-  );
+  return <h1 className={styles.title}>Welcome to Nice Gadgets store!</h1>;
 };

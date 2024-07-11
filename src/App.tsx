@@ -4,12 +4,6 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { SideBar } from './components/SideBar';
 
-/*
-TODO
-
-3. move all used images and api from public folder
-*/
-
 export const App = () => {
   const location = useLocation();
 

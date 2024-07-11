@@ -1,0 +1,35 @@
+.sideBarLink {
+  @include box-shadow(custom-left);
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+  flex-grow: 1;
+
+  &__iconWrapper {
+    position: relative;
+    height: 16px;
+    width: 16px;
+  }
+
+  &__iconImg {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__amount {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+
+    font-size: 9px;
+    line-height: 11.5px;
+    color: map-get($colors, white);
+  }
+}

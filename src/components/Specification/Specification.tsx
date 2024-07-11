@@ -1,14 +1,18 @@
+import styles from './Specification.module.scss';
+
 type Props = {
   label: 'Screen' | 'Capacity' | 'RAM';
   value: string;
 };
 
 export const Specification = ({ label, value }: Props) => {
-  return (
-    <div className="flex justify-between">
-      <small className="m-0 text-secondary">{label}</small>
+  const { spec, spec__text, 'spec__text--bold': spec__text_bold } = styles;
 
-      <small className="font-bold">{value}</small>
+  return (
+    <div className={spec}>
+      <small className={spec__text}>{label}</small>
+
+      <small className={`${spec__text} ${spec__text_bold}`}>{value}</small>
     </div>
   );
 };

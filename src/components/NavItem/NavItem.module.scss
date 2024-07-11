@@ -1,6 +1,8 @@
 @import '../../styles/variables';
 
 .item {
+  @include apply-typography(a);
+
   position: relative;
   text-decoration: none;
 

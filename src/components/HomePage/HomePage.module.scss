@@ -4,10 +4,26 @@
 @import '../../styles/grid';
 
 .homepage {
-  @include grid(mobile);
+  @include on-tablet {
+    @include content-padding-inline;
+  }
 
-  h1 {
-    @include apply-typography(h1);
-    color: map-get($colors, gray-primary);
+  &__content {
+    @include grid(mobile);
+
+    row-gap: 0;
+
+    max-width: 1136px;
+
+    @include on-tablet {
+      @include grid(tablet);
+    }
+
+    @include on-desktop {
+      @include grid(desktop);
+
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }

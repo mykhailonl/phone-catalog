@@ -9,25 +9,27 @@ export const HomePage = () => {
   return (
     // "grid grid-cols-mobile gap-16px md:prose-md md:grid-cols-tablet md:px-content-md lg:mx-auto lg:grid-cols-desktop lg:px-content-lg"
     <main className={styles.homepage}>
-      <Title />
+      <div className={styles.homepage__content}>
+        <Title />
 
-      <Slider />
+        <Slider />
 
-      <ProductSlider
-        title="Brand new models"
-        apiUrl="/api/products.json"
-        discount={false}
-        newOnly={true}
-      />
+        <ProductSlider
+          title="Brand new models"
+          apiUrl="/api/products.json"
+          discount={false}
+          newOnly={true}
+        />
 
-      <Categories />
+        <Categories />
 
-      <ProductSlider
-        title="Hot prices"
-        apiUrl="/api/products.json"
-        discount={true}
-        newOnly={false}
-      />
+        <ProductSlider
+          title="Hot prices"
+          apiUrl="/api/products.json"
+          discount={true}
+          newOnly={false}
+        />
+      </div>
     </main>
   );
 };

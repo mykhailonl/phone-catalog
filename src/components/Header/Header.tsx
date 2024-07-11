@@ -13,18 +13,33 @@ export const Header = () => {
   const dispatch = useDispatch();
   const { isOpen } = useSelector((state: RootState) => state.menu);
 
+  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
+  const { cartItems } = useSelector((state: RootState) => state.cart);
+
+  const favItemsAmount = favoriteItems.length;
+  const cartItemsAmount = cartItems.length;
+
+  // #region styles
+  const {
+    header,
+    header__logo,
+    header__logo__block,
+    header__burger,
+    header__links,
+    header__buttons,
+    header__buttonWrapper,
+  } = styles;
+  // #endregion
+
   return (
-    <header id="header" className={styles.header}>
-      <div className={styles.header__logo}>
-        <div className={styles.header__logo__block}>
+    <header id="header" className={header}>
+      <div className={header__logo}>
+        <div className={header__logo__block}>
           <Logo />
         </div>
       </div>
 
-      <button
-        className={styles.header__burger}
-        onClick={() => dispatch(toggleMenu())}
-      >
+      <button className={header__burger} onClick={() => dispatch(toggleMenu())}>
         <img
           src={
             !isOpen ? 'icons/header-burger-menu.svg' : 'icons/icon-close.svg'
@@ -33,18 +48,28 @@ export const Header = () => {
         />
       </button>
 
-      <div className="hidden h-full items-center md:flex md:gap-8 lg:gap-16">
+      <div className={header__links}>
         <MenuItems />
       </div>
 
       {/* TODO rename component for the links and maybe move to wrapper component? */}
-      <div className="hidden flex-grow justify-end md:flex">
-        <div className="h-12 w-12 shadow-custom-left">
-          <SideBarLink image="icons/emty-heart.svg" url="/" />
+      <div className={header__buttons}>
+        <div className={header__buttonWrapper}>
+          <SideBarLink
+            image="icons/emty-heart.svg"
+            url="favourites"
+            amount={favItemsAmount}
+            name="fav"
+          />
         </div>
 
-        <div className="h-12 w-12 shadow-custom-left">
-          <SideBarLink image="icons/icon-cart.svg" url="/" />
+        <div className={header__buttonWrapper}>
+          <SideBarLink
+            image="icons/icon-cart.svg"
+            url="cart"
+            amount={cartItemsAmount}
+            name="cart"
+          />
         </div>
       </div>
     </header>

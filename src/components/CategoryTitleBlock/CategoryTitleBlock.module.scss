@@ -1,0 +1,15 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__name {
+
+  }
+
+  &__amount {
+    @include apply-typography(p);
+
+    color: map-get($colors, secondary);
+  }
+}

@@ -1,0 +1,93 @@
+.footer {
+  @include grid(mobile);
+  @include content-padding-inline;
+  @include box-shadow(custom-top);
+
+  &__container {
+    grid-column: 1 / -1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    padding-block: 32px;
+
+    @include on-tablet {
+      flex-direction: row;
+
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+
+    width: 89px;
+    height: 32px;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    width: fit-content;
+
+    @include on-tablet {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  &__anchor {
+    grid-column: 1 / -1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    &__text {
+      @include apply-typography(small);
+
+      color: map-get($colors, secondary);
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid map-get($colors, icons);
+
+      height: 32px;
+      width: 32px;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      height: 16px;
+      width: 16px;
+    }
+
+    &__arrow {
+      display: flex;
+
+      height: 10px;
+      width: 6px;
+      transform: rotate(-90deg);
+    }
+  }
+
+  @include on-tablet {
+    @include grid(tablet);
+  }
+
+  @include on-desktop {
+    @include grid(desktop);
+  }
+}

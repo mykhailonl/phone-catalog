@@ -2,13 +2,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Dot } from '../Dot';
 
+import styles from './Dots.module.scss';
+
 export const Dots = () => {
   const { currentIndex, slides } = useSelector(
     (state: RootState) => state.slider,
   );
 
   return (
-    <div className="flex h-6 w-20 gap-1">
+    <div className={styles.dots}>
       {slides.slice(1, -1).map((slide) => (
         <Dot
           key={slide.id}

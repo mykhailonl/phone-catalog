@@ -8,31 +8,28 @@ import { MenuItems } from '../MenuItems';
 
 import styles from './SideBar.module.scss';
 
-// TODO fix vertical scrolling
-// TODO add text hover
-
 export const SideBar = () => {
   const { isOpen } = useSelector((state: RootState) => state.menu);
 
   return (
     <aside
-      className={`${styles.menu} ${isOpen ? styles.menu__isOpen : styles.menu__isClosed}`}
+      className={`${styles.sidebar} ${isOpen ? styles.sidebar__isOpen : styles.sidebar__isClosed}`}
     >
-      <div className={styles.menu__header}>
+      <div className={styles.sidebar__header}>
         <Header />
       </div>
 
-      <div className="flex flex-grow flex-col justify-between">
-        <nav className={`mt-6 flex flex-col gap-16px px-content`}>
+      <div className={styles.sidebar__content}>
+        <nav className={styles.sidebar__nav}>
           <MenuItems />
         </nav>
 
-        <div className={`flex w-full border border-solid border-gray-300`}>
-          <div className="flex h-16 flex-grow">
+        <div className={styles.sidebar__footer}>
+          <div className={styles.sidebar__linkWrapper}>
             <SideBarLink image="icons/emty-heart.svg" url="/" />
           </div>
 
-          <div className="flex h-16 flex-grow">
+          <div className={styles.sidebar__linkWrapper}>
             <SideBarLink image="icons/icon-cart.svg" url="/" />
           </div>
         </div>

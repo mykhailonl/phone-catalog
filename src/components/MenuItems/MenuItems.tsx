@@ -1,16 +1,17 @@
 import { SideBarItem } from '../SideBarItem';
 
+// TODO check underline (needs to stick to the bottom)
+
 export const MenuItems = () => {
   return (
-    /* TODO check links */
     <>
       <SideBarItem url="/" name="Home" />
 
-      <SideBarItem url="/" name="Phones" />
+      <SideBarItem url="phones" name="Phones" />
 
-      <SideBarItem url="/" name="Tablets" />
+      <SideBarItem url="tablets" name="Tablets" />
 
-      <SideBarItem url="/" name="Accessories" />
+      <SideBarItem url="accessories" name="Accessories" />
     </>
   );
 };

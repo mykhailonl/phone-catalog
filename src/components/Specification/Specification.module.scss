@@ -1,0 +1,15 @@
+.spec {
+  display: flex;
+  justify-content: space-between;
+
+  &__text {
+    @include apply-typography(small);
+    
+    color: map-get($colors, secondary);
+
+    &--bold {
+      font-weight: bold;
+      color: map-get($colors, gray-primary);
+    }
+  }
+}

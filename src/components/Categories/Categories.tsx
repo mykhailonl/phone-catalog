@@ -1,5 +1,7 @@
 import { Category } from '../Category';
 
+import styles from './Categories.module.scss';
+
 // TODO make an util func for fetch?
 
 // Do I need this func or pass products inside?
@@ -14,29 +16,31 @@ import { Category } from '../Category';
 // };
 
 export const Categories = () => {
+  const { categories, categories__title } = styles;
+
   return (
-    <div className="col-span-full my-14 flex flex-col gap-8 px-content md:px-0">
-      <h2 className="m-0 mb-6 text-gray-primary">Shop by category</h2>
+    <div className={categories}>
+      <h2 className={categories__title}>Shop by category</h2>
 
       <Category
         name="Mobile phones"
         photo="/img/category-phones.webp"
-        quantity={100}
-        bgColor="bg-mobileCategory"
+        url="phones"
+        products="/api/phones.json"
       />
 
       <Category
         name="Tablets"
         photo="/img/category-tablets.webp"
-        quantity={100}
-        bgColor="bg-tabletCategory"
+        url="tablets"
+        products="/api/tablets.json"
       />
 
       <Category
         name="Accessories"
         photo="/img/category-accessories.webp"
-        quantity={100}
-        bgColor="bg-accessoriesCategory"
+        url="accessories"
+        products="/api/accessories.json"
       />
     </div>
   );
