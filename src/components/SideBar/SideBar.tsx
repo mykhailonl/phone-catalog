@@ -26,11 +26,11 @@ export const SideBar = () => {
 
         <div className={styles.sidebar__footer}>
           <div className={styles.sidebar__linkWrapper}>
-            <SideBarLink image="icons/emty-heart.svg" url="/" />
+            <SideBarLink image="icons/emty-heart.svg" url="/" name="fav" />
           </div>
 
           <div className={styles.sidebar__linkWrapper}>
-            <SideBarLink image="icons/icon-cart.svg" url="/" />
+            <SideBarLink image="icons/icon-cart.svg" url="/" name="cart" />
           </div>
         </div>
       </div>
