@@ -1,6 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { setCurrentIndex } from '../../features/slider/sliderSlice';
 
+import styles from './Dot.module.scss';
+
 type Props = {
   isActive: boolean;
   id: number;
@@ -13,13 +15,12 @@ export const Dot = ({ isActive, id }: Props) => {
     dispatch(setCurrentIndex(id));
   };
 
+  const { dot, dot__content, dot__isActive } = styles;
+
   return (
-    <button
-      className="flex h-full w-6 items-center justify-center"
-      onClick={handleDotClick}
-    >
+    <button className={dot} onClick={handleDotClick}>
       <div
-        className={`h-1 w-[14px] ${isActive ? 'bg-gray-primary' : 'bg-elements'}`}
+        className={`${dot__content} ${isActive ? dot__isActive : 'bg-elements'}`}
       />
     </button>
   );

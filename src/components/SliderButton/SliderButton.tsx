@@ -1,6 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { setNextSlide, setPrevSlide } from '../../features/slider/sliderSlice';
 
+import styles from './SliderButton.module.scss';
+
 type Props = {
   direction: 'left' | 'right';
 };
@@ -14,20 +16,17 @@ export const SliderButton = ({ direction }: Props) => {
       : dispatch(setNextSlide());
   };
 
+  const { sliderButton, sliderButton__wrapper } = styles;
+
   return (
     <button
-      className="border-icons hidden w-8 flex-col items-center justify-center border-[1px] md:flex"
+      className={sliderButton}
       onClick={() => {
         handleClick();
-        console.log(direction);
       }}
     >
-      <div className="flex h-4 w-4 items-center justify-center">
-        <img
-          src={`/icons/${direction}-arrow.svg`}
-          alt={`${direction}-arrow`}
-          className="items-center justify-center"
-        />
+      <div className={sliderButton__wrapper}>
+        <img src={`/icons/${direction}-arrow.svg`} alt={`${direction}-arrow`} />
       </div>
     </button>
   );

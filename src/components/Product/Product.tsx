@@ -1,47 +1,144 @@
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { Product as ProductType } from '../../types/Product';
 import { Specification } from '../Specification';
+
+import { RootState } from '../../store';
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from '../../features/favorites/favoriteSlice';
+import { addToCart, removeFromCart } from '../../features/cart/cartSlice';
+
+import styles from './Product.module.scss';
+import { useState } from 'react';
 
 type Props = {
   product: ProductType;
   discount: boolean;
 };
 
-// TODO
-// solution for offset className="w-full flex-shrink-0 md:w-[calc(100%/3)]"
-
 export const Product = ({ product, discount }: Props) => {
+  const dispatch = useDispatch();
+  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
+  const { cartItems } = useSelector((state: RootState) => state.cart);
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  // #region styles
+  const {
+    prod,
+    prod__contentWrapper,
+    prod__imgWrapper,
+    prod__img,
+    prod__link,
+    prod__buttonLink,
+    prod__priceWrapper,
+    prod__price,
+    prod__discount,
+    prod__line,
+    prod__specs,
+    prod__buttonWrapper,
+    prod__cartButton,
+    prod__favButton,
+    prod__favImg,
+    white,
+    green,
+    elements,
+  } = styles;
+  // #endregion
+
+  // #region handlers
+  const handleFavClick = (product: ProductType) => {
+    if (favoriteItems.some((item) => item.id === product.id)) {
+      dispatch(removeFromFavorites(product.id));
+    } else {
+      dispatch(addToFavorites(product));
+    }
+  };
+
+  const handleAddToCartClick = (product: ProductType) => {
+    if (cartItems.some((item) => item.id === product.id)) {
+      dispatch(removeFromCart(product.id));
+    } else {
+      dispatch(addToCart(product));
+    }
+  };
+
+  const withDelay = (callback: () => void, delay: number = 300) => {
+    return () => {
+      if (isButtonDisabled) return;
+
+      setIsButtonDisabled(true);
+      callback();
+
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, delay);
+    };
+  };
+
+  const handleFavClickWithDelay = withDelay(() => handleFavClick(product));
+  const handleCartClickWithDelay = withDelay(() =>
+    handleAddToCartClick(product),
+  );
+  // #endregion
+
+  const inFavorites = (id: number) => {
+    return favoriteItems.some((item) => item.id === id);
+  };
+
+  const inCart = (id: number) => {
+    return cartItems.some((item) => item.id === id);
+  };
+
+  // #region conditions
+  const isInCart = inCart(product.id);
+  const isInFavorites = inFavorites(product.id);
+
+  const cartButtonText = isInCart ? 'Added to cart' : 'Add to cart';
+  const additionalCartButtonStyles = isInCart
+    ? { backgroundColor: white, color: green, borderColor: elements }
+    : {};
+
+  const additionalFavButtonStyles = isInFavorites
+    ? { borderColor: elements }
+    : {};
+
+  // #endregion
+
   return (
-    <div className="border-elements prose md:prose-md lg:prose-lg flex h-[439px] w-[75%] flex-shrink-0 flex-col gap-2 border-[1px] p-8">
-      <div className="flex max-h-[129px]">
-        <img
-          src={product.image}
-          alt={`${product.image} photo`}
-          className="m-0 h-full w-full object-contain"
-        />
+    <div className={prod}>
+      <div className={prod__contentWrapper}>
+        <div className={prod__imgWrapper}>
+          <img
+            src={product.image}
+            alt={`${product.image} photo`}
+            className={prod__img}
+          />
+        </div>
+
+        <Link to={product.itemId} className={prod__link}>
+          <button className={prod__buttonLink}>{product.name}</button>
+        </Link>
       </div>
 
-      <Link to={product.itemId} className="mt-4">
-        <button className="text-gray-primary text-left">{product.name}</button>
-      </Link>
-
-      <div className="flex items-center gap-2">
+      <div className={prod__priceWrapper}>
         {!discount ? (
-          <h2 className="text-gray-primary m-0">${product.fullPrice}</h2>
+          <h2 className={prod__price}>${product.fullPrice}</h2>
         ) : (
           <>
-            <h2 className="text-gray-primary m-0">${product.price}</h2>
+            <h2 className={prod__price}>${product.price}</h2>
 
-            <h3 className="text-secondary m-0 line-through">
-              ${product.fullPrice}
-            </h3>
+            <h3 className={prod__discount}>${product.fullPrice}</h3>
           </>
         )}
       </div>
 
-      <div className="bg-elements h-[1px]"></div>
+      <div className={prod__line}></div>
 
-      <div className="flex h-[77px] flex-col justify-evenly">
+      <div className={prod__specs}>
         <Specification label="Screen" value={product.screen} />
 
         <Specification label="Capacity" value={product.capacity} />
@@ -49,16 +146,28 @@ export const Product = ({ product, discount }: Props) => {
         <Specification label="RAM" value={product.ram} />
       </div>
 
-      <div className="flex justify-between">
-        <button className="bg-gray-primary p-[9.5px] text-white">
-          Add to cart
+      <div className={prod__buttonWrapper}>
+        <button
+          className={prod__cartButton}
+          onClick={handleCartClickWithDelay}
+          style={additionalCartButtonStyles}
+          disabled={isButtonDisabled}
+        >
+          {cartButtonText}
         </button>
 
-        <button className="border-elements h-10 w-10 border-[1px] p-3">
+        <button
+          className={prod__favButton}
+          onClick={handleFavClickWithDelay}
+          disabled={isButtonDisabled}
+          style={additionalFavButtonStyles}
+        >
           <img
-            src="icons/emty-heart.svg"
-            alt=""
-            className="m-0 h-full w-full"
+            src={
+              isInFavorites ? '/icons/fav-heart.svg' : '/icons/emty-heart.svg'
+            }
+            alt="favorite button"
+            className={prod__favImg}
           />
         </button>
       </div>

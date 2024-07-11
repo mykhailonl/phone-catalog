@@ -1,0 +1,38 @@
+@import '../../styles/variables';
+
+.item {
+  @include apply-typography(a);
+
+  position: relative;
+  text-decoration: none;
+
+  &__content {
+    display: flex;
+    font-weight: 800;
+    color: map-get($colors, secondary);
+
+    &:hover {
+      color: map-get($colors, gray-primary);
+
+      .item__underline {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  &__underline {
+    position: absolute;
+
+    bottom: -8px;
+    left: 0;
+
+    background-color: map-get($colors, gray-primary);
+
+    height: 2px;
+    width: 100%;
+
+    transition: transform map-get($duration, '0.3');
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+}

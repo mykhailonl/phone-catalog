@@ -1,9 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import sliderSlice from './features/slider/sliderSlice';
+import sideBarSlice from './features/sideBar/sideBarSlice';
+import favoriteSlice from './features/favorites/favoriteSlice';
+import cartSlice from './features/cart/cartSlice';
 
 export const store = configureStore({
   reducer: {
     slider: sliderSlice,
+    menu: sideBarSlice,
+    favorites: favoriteSlice,
+    cart: cartSlice,
   },
 });
 

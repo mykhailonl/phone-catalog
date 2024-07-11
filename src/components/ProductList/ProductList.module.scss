@@ -1,0 +1,34 @@
+.list {
+  @include content-padding-inline;
+
+  &__content {
+    @include grid(mobile);
+
+    @include on-tablet {
+      @include grid(tablet);
+    }
+
+    @include on-desktop {
+      @include grid(desktop);
+    }
+  }
+
+  &__titleBlock {
+    grid-column: 1 / -1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__title {
+    @include apply-typography(h1);
+  }
+
+  &__amount {
+    @include apply-typography(p);
+
+    color: map-get($colors, secondary);
+    font-weight: 600;
+  }
+}

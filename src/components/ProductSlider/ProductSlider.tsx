@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ProductSliderButton } from '../ProductSliderButton';
 import { Product } from '../Product';
 import { Product as ProductType } from '../../types/Product';
+
+import styles from './ProductSlider.module.scss';
 
 type Props = {
   title: string;
@@ -53,7 +55,7 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
 
   const handleNextClick = () => {
     setCurrentIndex((prevIndex) =>
-      Math.min(prevIndex + 1, Math.max(products.length - 3, 0)),
+      Math.min(prevIndex + 1, Math.max(products.length - 1, 0)),
     );
   };
   // #endregion
@@ -63,15 +65,24 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
   const productsEndPosition = currentIndex === products.length;
   // #endregion
 
+  const {
+    productSlider,
+    productSlider__wrapper,
+    productSlider__title,
+    productSlider__buttonsWrapper,
+    productSlider__carousel,
+    productSlider__carouselWrapper,
+  } = styles;
+
   return (
-    <div className="px-content md:px-content-md lg:px-content-lg my-14 grid md:my-16 lg:my-20">
-      <div className="grid-cols-mobile md:grid-cols-tablet gap-16px lg:grid-cols-desktop prose md:prose-md lg:prose-lg mb-0 grid">
-        <h2 className="col-span-2 mb-0 justify-self-start">{title}</h2>
+    <div className={productSlider}>
+      <div className={productSlider__wrapper}>
+        <h2 className={productSlider__title}>{title}</h2>
 
         {/* TODO delete after */}
         {/* {products.length} */}
 
-        <div className="col-span-2 flex items-center gap-4 justify-self-end">
+        <div className={productSlider__buttonsWrapper}>
           <ProductSliderButton
             direction="left"
             onClick={handlePrevClick}
@@ -85,11 +96,14 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
           />
         </div>
 
-        <div className="relative col-span-full overflow-x-hidden">
-          {/* Добавляем overflow-x-hidden и col-span-full */}
+        <div className={productSlider__carouselWrapper}>
           <div
-            className="flex gap-4 transition-transform duration-300 ease-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            className={productSlider__carousel}
+            style={
+              {
+                '--current-index': currentIndex,
+              } as React.CSSProperties
+            }
           >
             {products.map((item, index) => (
               <Product product={item} discount={discount} key={index} />

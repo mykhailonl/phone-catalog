@@ -1,36 +1,76 @@
-import React from 'react';
-import { Logo } from '../Logo';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { toggleMenu } from '../../features/sideBar/sideBarSlice';
+import { RootState } from '../../store';
+
 import styles from './Header.module.scss';
 
-type Props = {
-  onBurgerClick: React.Dispatch<React.SetStateAction<boolean>>;
-  isOpen: boolean;
-};
+import { Logo } from '../Logo';
+import { SideBarLink } from '../SideBarLink';
+import { MenuItems } from '../MenuItems';
 
-export const Header = ({ onBurgerClick, isOpen }: Props) => {
+export const Header = () => {
+  const dispatch = useDispatch();
+  const { isOpen } = useSelector((state: RootState) => state.menu);
+
+  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
+  const { cartItems } = useSelector((state: RootState) => state.cart);
+
+  const favItemsAmount = favoriteItems.length;
+  const cartItemsAmount = cartItems.length;
+
+  // #region styles
+  const {
+    header,
+    header__logo,
+    header__logo__block,
+    header__burger,
+    header__links,
+    header__buttons,
+    header__buttonWrapper,
+  } = styles;
+  // #endregion
+
   return (
-    <header
-      id="header"
-      className={`${styles.header__shadow} flex h-12 w-full items-center justify-between`}
-    >
-      <div className="flex items-center px-4 py-[13px]">
-        <div className="h-[22px] w-16">
+    <header id="header" className={header}>
+      <div className={header__logo}>
+        <div className={header__logo__block}>
           <Logo />
         </div>
       </div>
 
-      <div className={`${styles['header__button-shadow']} flex h-12 w-12 p-4`}>
-        <button
-          onClick={() => onBurgerClick(true)}
-          className="flex h-4 w-4 items-center justify-center"
-        >
-          <img
-            src={
-              !isOpen ? 'icons/header-burger-menu.svg' : 'icons/icon-close.svg'
-            }
-            alt="menu"
+      <button className={header__burger} onClick={() => dispatch(toggleMenu())}>
+        <img
+          src={
+            !isOpen ? 'icons/header-burger-menu.svg' : 'icons/icon-close.svg'
+          }
+          alt="menu"
+        />
+      </button>
+
+      <div className={header__links}>
+        <MenuItems />
+      </div>
+
+      {/* TODO rename component for the links and maybe move to wrapper component? */}
+      <div className={header__buttons}>
+        <div className={header__buttonWrapper}>
+          <SideBarLink
+            image="icons/emty-heart.svg"
+            url="favourites"
+            amount={favItemsAmount}
+            name="fav"
           />
-        </button>
+        </div>
+
+        <div className={header__buttonWrapper}>
+          <SideBarLink
+            image="icons/icon-cart.svg"
+            url="cart"
+            amount={cartItemsAmount}
+            name="cart"
+          />
+        </div>
       </div>
     </header>
   );

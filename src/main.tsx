@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import './index.css';
-import { App } from './App';
-
 import { store } from './store';
-import { Provider } from 'react-redux';
+
+import { App } from './App';
 import { HomePage } from './components/HomePage';
 import { PageNotFound } from './components/PageNotFound/PageNotFound';
+import { ProductList } from './components/ProductList';
+
+import './index.css';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,32 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: 'favourites',
+        // TODO productUrl?
+        element: <ProductList title="Favourites" productsUrl="" />,
+      },
+      {
+        path: 'phones',
+        element: (
+          <ProductList title="Mobile phones" productsUrl="./api/phones.json" />
+        ),
+      },
+      {
+        path: 'tablets',
+        element: (
+          <ProductList title="Tablets" productsUrl="./api/tablets.json" />
+        ),
+      },
+      {
+        path: 'accessories',
+        element: (
+          <ProductList
+            title="Accessories"
+            productsUrl="./api/accessories.json"
+          />
+        ),
       },
       {
         path: '*',

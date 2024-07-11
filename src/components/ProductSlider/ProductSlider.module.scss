@@ -1,0 +1,82 @@
+.productSlider {
+  @include content-padding-inline;
+
+  --slide-width: calc(75% - 4px);
+  --gap: 16px;
+
+  grid-column: 1 / -1;
+  margin-block: 56px;
+
+  &__wrapper {
+    @include grid(mobile);
+    row-gap: 24px;
+
+    margin-bottom: 0;
+
+    @include on-tablet {
+      @include grid(tablet);
+      --slide-width: calc(41.67% - 8px);
+
+      gap: 24px;
+    }
+
+    @include on-desktop {
+      @include grid(desktop);
+      --slide-width: calc(25% - 12px);
+    }
+  }
+
+  &__title {
+    @include apply-typography(h2);
+
+    grid-column: span 2;
+    justify-self: start;
+
+    margin-bottom: 0;
+
+    @include on-tablet {
+      grid-column: span 10;
+    }
+
+    @include on-desktop {
+      grid-column: span 12;
+    }
+  }
+
+  &__buttonsWrapper {
+    grid-column: span 2;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-self: end;
+
+    @include on-desktop {
+      grid-column: -3 / -1;
+    }
+  }
+
+  &__carouselWrapper {
+    grid-column: 1 / -1;
+    overflow: hidden;
+  }
+
+  &__carousel {
+    display: flex;
+    gap: var(--gap);
+    transition: transform map-get($duration, '0.3') ease-out;
+    transform: translateX(
+      calc(var(--current-index) * (var(--slide-width) + var(--gap)) * -1)
+    );
+  }
+
+  @include on-tablet {
+    margin-block: 64px;
+
+    padding-inline: 0;
+  }
+
+  @include on-desktop {
+    margin-block: 80px;
+  }
+}

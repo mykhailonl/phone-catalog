@@ -16,7 +16,7 @@ export const PageNotFound = () => {
   }, [navigation]);
 
   return (
-    <div className="px-content md:px-content-md lg:px-content-lg flex flex-col py-10">
+    <div className="flex flex-col px-content py-10 md:px-content-md lg:px-content-lg">
       <Link to="/" className="mb-4 flex justify-center">
         Get back to Home
       </Link>

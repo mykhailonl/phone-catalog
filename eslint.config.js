@@ -4,7 +4,6 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js';
-import pluginPrettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 
 export default [
@@ -29,11 +28,9 @@ export default [
     },
     plugins: {
       react: pluginReact,
-      prettier: pluginPrettier,
     },
     rules: {
       ...pluginReactConfig.rules,
-      'prettier/prettier': 'error',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
