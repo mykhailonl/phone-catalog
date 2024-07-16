@@ -8,29 +8,55 @@ import { MenuItems } from '../MenuItems';
 
 import styles from './SideBar.module.scss';
 
+const {
+  sidebar,
+  sidebar__isOpen,
+  sidebar__isClosed,
+  sidebar__header,
+  sidebar__content,
+  sidebar__nav,
+  sidebar__footer,
+  sidebar__linkWrapper,
+} = styles;
+
 export const SideBar = () => {
   const { isOpen } = useSelector((state: RootState) => state.menu);
+  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
+  const { cartItems } = useSelector((state: RootState) => state.cart);
+
+  const favItemsAmount = favoriteItems.length;
+  const cartItemsAmount = cartItems.length;
 
   return (
     <aside
-      className={`${styles.sidebar} ${isOpen ? styles.sidebar__isOpen : styles.sidebar__isClosed}`}
+      className={`${sidebar} ${isOpen ? sidebar__isOpen : sidebar__isClosed}`}
     >
-      <div className={styles.sidebar__header}>
+      <div className={sidebar__header}>
         <Header />
       </div>
 
-      <div className={styles.sidebar__content}>
-        <nav className={styles.sidebar__nav}>
+      <div className={sidebar__content}>
+        <nav className={sidebar__nav}>
           <MenuItems />
         </nav>
 
-        <div className={styles.sidebar__footer}>
-          <div className={styles.sidebar__linkWrapper}>
-            <SideBarLink image="icons/emty-heart.svg" url="/" name="fav" />
+        <div className={sidebar__footer}>
+          <div className={sidebar__linkWrapper}>
+            <SideBarLink
+              image="icons/emty-heart.svg"
+              url="/"
+              name="fav"
+              amount={favItemsAmount}
+            />
           </div>
 
-          <div className={styles.sidebar__linkWrapper}>
-            <SideBarLink image="icons/icon-cart.svg" url="/" name="cart" />
+          <div className={sidebar__linkWrapper}>
+            <SideBarLink
+              image="icons/icon-cart.svg"
+              url="/"
+              name="cart"
+              amount={cartItemsAmount}
+            />
           </div>
         </div>
       </div>
