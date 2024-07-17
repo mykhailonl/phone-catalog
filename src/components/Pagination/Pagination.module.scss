@@ -1,0 +1,15 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 16px;
+
+  // TODO remove
+  grid-column: 1 / -1;
+
+  &__pages {
+    display: flex;
+    gap: 8px;
+  }
+}

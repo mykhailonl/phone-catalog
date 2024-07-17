@@ -1,6 +1,6 @@
 @mixin grid($type) {
   display: grid;
-  gap: 16px;
+  column-gap: 16px;
 
   @if $type == mobile {
     grid-template-columns: repeat(4, minmax(0, 1fr));

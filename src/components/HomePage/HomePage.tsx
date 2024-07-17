@@ -5,11 +5,12 @@ import { Title } from '../Title';
 
 import styles from './HomePage.module.scss';
 
+const { homepage, homepage__content } = styles;
+
 export const HomePage = () => {
   return (
-    // "grid grid-cols-mobile gap-16px md:prose-md md:grid-cols-tablet md:px-content-md lg:mx-auto lg:grid-cols-desktop lg:px-content-lg"
-    <main className={styles.homepage}>
-      <div className={styles.homepage__content}>
+    <main className={homepage}>
+      <div className={homepage__content}>
         <Title />
 
         <Slider />
