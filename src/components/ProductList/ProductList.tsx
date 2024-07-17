@@ -63,8 +63,7 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
   // #endregion
 
   // #region searchParams
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const currentPage = +(searchParams.get('page') || curLocalPage);
   const itemsOnpage = +(
