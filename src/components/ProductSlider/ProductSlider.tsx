@@ -13,9 +13,6 @@ type Props = {
   newOnly: boolean;
 };
 
-// TODO find a solution for an offset
-// FIXME title when its 3 lines
-
 export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
   // TODO how to type it (Promise) generic?
   const getProducts = async (): Promise<ProductType[]> => {

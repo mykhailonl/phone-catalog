@@ -23,8 +23,8 @@ import { RootState } from '../../store';
 
 type Props = {
   title: string;
-  productsUrl: string;
-  category: 'phones' | 'tablets' | 'accessories';
+  productsUrl?: string;
+  category: 'phones' | 'tablets' | 'accessories' | 'favourites';
 };
 
 const { list, list__content, list__dropdowns, list__product } = styles;
@@ -50,16 +50,20 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
 
   // #region products (set and fetch)
   const [products, setProducts] = useState<ProductType[]>([]);
+  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
 
   useEffect(() => {
-    fetchProducts(productsUrl).then((items: ProductType[]) => {
-      const categoryProducts = items
-        .filter((item) => item.category === category)
-        .sort((a, b) => b.year - a.year);
-
-      setProducts(categoryProducts);
-    });
-  }, [productsUrl, category]);
+    if (category === 'favourites') {
+      setProducts(favoriteItems);
+    } else if (productsUrl) {
+      fetchProducts(productsUrl).then((items: ProductType[]) => {
+        const categoryProducts = items
+          .filter((item) => item.category === category)
+          .sort((a, b) => b.year - a.year);
+        setProducts(categoryProducts);
+      });
+    }
+  }, [category, productsUrl, favoriteItems]);
   // #endregion
 
   // #region searchParams
@@ -76,26 +80,27 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
   useEffect(() => {
     switch (sortBy) {
       case 'Newest':
-        console.log('sort by new');
-
-        setProducts([...products].sort((a, b) => b.year - a.year));
+        setProducts((prevProducts) =>
+          [...prevProducts].sort((a, b) => b.year - a.year),
+        );
         break;
       case 'Oldest':
-        console.log('sort by old');
-
-        setProducts([...products].sort((a, b) => a.year - b.year));
+        setProducts((prevProducts) =>
+          [...prevProducts].sort((a, b) => a.year - b.year),
+        );
         break;
       case 'Cheapest':
-        console.log('sort by cheap');
-
-        setProducts([...products].sort((a, b) => a.fullPrice - b.fullPrice));
+        setProducts((prevProducts) =>
+          [...prevProducts].sort((a, b) => a.fullPrice - b.fullPrice),
+        );
         break;
       case 'Expensive':
-        console.log('sort by expensive');
-        setProducts([...products].sort((a, b) => b.fullPrice - a.fullPrice));
+        setProducts((prevProducts) =>
+          [...prevProducts].sort((a, b) => b.fullPrice - a.fullPrice),
+        );
         break;
       default:
-        return;
+        break;
     }
   }, [sortBy]);
 
@@ -103,6 +108,9 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
   const indexOfLastItem = currentPage * itemsOnpage;
   const indexOfFirstItem = indexOfLastItem - itemsOnpage;
   const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+
+  const dropdownsVisible = category !== 'favourites';
+  const pagionationVisible = pagesAmount > 1;
 
   return (
     <div className={list}>
@@ -112,11 +120,16 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
           categoryAmount={products.length}
         />
 
-        <div className={list__dropdowns}>
-          <DropDown dropdownConfig={sortByDropdown} currentValue={sortBy} />
+        {dropdownsVisible && (
+          <div className={list__dropdowns}>
+            <DropDown dropdownConfig={sortByDropdown} currentValue={sortBy} />
 
-          <DropDown dropdownConfig={itemsDropdown} currentValue={itemsOnpage} />
-        </div>
+            <DropDown
+              dropdownConfig={itemsDropdown}
+              currentValue={itemsOnpage}
+            />
+          </div>
+        )}
 
         {/* TODO add wrapper products div and give it padding-block 24px? */}
         {currentItems.map((prod, index) => (
@@ -125,7 +138,7 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
           </div>
         ))}
 
-        <Pagination pages={pagesAmount} />
+        {pagionationVisible && <Pagination pages={pagesAmount} />}
       </div>
     </div>
   );

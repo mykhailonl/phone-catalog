@@ -1,13 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { ProductList } from '../ProductList';
 import { PageNotFound } from '../PageNotFound';
-
-export type Category = 'phones' | 'tablets' | 'accessories';
-export enum CategoryEnum {
-  Phones = 'phones',
-  Tablets = 'tablets',
-  Accessories = 'accessories',
-}
+import { Category, CategoryEnum } from '../../types/CategoryTypes';
 
 export const ProductListWrapper = () => {
   const { category } = useParams<{ category: Category }>();

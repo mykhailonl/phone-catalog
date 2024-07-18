@@ -17,7 +17,9 @@ export const CategoryTitleBlock = ({ categoryName, categoryAmount }: Props) => {
       <h1 className={block__name}>{categoryName}</h1>
 
       <p className={block__amount}>
-        {categoryAmount} {categoryAmount !== 1 ? 'models' : 'model'}
+        {!categoryAmount && categoryName === 'Favourites'
+          ? `Favourite list is empty`
+          : `${categoryAmount} ${categoryAmount !== 1 ? 'models' : 'model'}`}
       </p>
     </div>
   );

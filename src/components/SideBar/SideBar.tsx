@@ -44,7 +44,7 @@ export const SideBar = () => {
           <div className={sidebar__linkWrapper}>
             <SideBarLink
               image="icons/emty-heart.svg"
-              url="/"
+              url="favourites"
               name="fav"
               amount={favItemsAmount}
             />

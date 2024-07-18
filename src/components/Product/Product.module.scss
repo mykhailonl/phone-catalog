@@ -57,6 +57,7 @@
     @include apply-typography(button);
 
     text-align: left;
+    color: map-get($colors, gray-primary);
   }
 
   &__priceWrapper {

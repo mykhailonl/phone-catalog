@@ -1,9 +1,7 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+
 import { useDispatch, useSelector } from 'react-redux';
-
-import { Product as ProductType } from '../../types/Product';
-import { Specification } from '../Specification';
-
 import { RootState } from '../../store';
 import {
   addToFavorites,
@@ -11,8 +9,30 @@ import {
 } from '../../features/favorites/favoriteSlice';
 import { addToCart, removeFromCart } from '../../features/cart/cartSlice';
 
+import { Product as ProductType } from '../../types/Product';
+import { Specification } from '../Specification';
+
 import styles from './Product.module.scss';
-import { useState } from 'react';
+const {
+  prod,
+  prod__contentWrapper,
+  prod__imgWrapper,
+  prod__img,
+  prod__link,
+  prod__buttonLink,
+  prod__priceWrapper,
+  prod__price,
+  prod__discount,
+  prod__line,
+  prod__specs,
+  prod__buttonWrapper,
+  prod__cartButton,
+  prod__favButton,
+  prod__favImg,
+  white,
+  green,
+  elements,
+} = styles;
 
 type Props = {
   product: ProductType;
@@ -21,33 +41,12 @@ type Props = {
 
 export const Product = ({ product, discount }: Props) => {
   const dispatch = useDispatch();
+  const { category } = useParams();
+
   const { favoriteItems } = useSelector((state: RootState) => state.favorites);
   const { cartItems } = useSelector((state: RootState) => state.cart);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
-  // #region styles
-  const {
-    prod,
-    prod__contentWrapper,
-    prod__imgWrapper,
-    prod__img,
-    prod__link,
-    prod__buttonLink,
-    prod__priceWrapper,
-    prod__price,
-    prod__discount,
-    prod__line,
-    prod__specs,
-    prod__buttonWrapper,
-    prod__cartButton,
-    prod__favButton,
-    prod__favImg,
-    white,
-    green,
-    elements,
-  } = styles;
-  // #endregion
 
   // #region handlers
   const handleFavClick = (product: ProductType) => {
@@ -105,8 +104,11 @@ export const Product = ({ product, discount }: Props) => {
   const additionalFavButtonStyles = isInFavorites
     ? { borderColor: elements }
     : {};
-
   // #endregion
+
+  const linkTo = category
+    ? `${product.itemId}`
+    : `${product.category}/${product.itemId}`;
 
   return (
     <div className={prod}>
@@ -119,7 +121,7 @@ export const Product = ({ product, discount }: Props) => {
           />
         </div>
 
-        <Link to={product.itemId} className={prod__link}>
+        <Link to={linkTo} className={prod__link}>
           <button className={prod__buttonLink}>{product.name}</button>
         </Link>
       </div>

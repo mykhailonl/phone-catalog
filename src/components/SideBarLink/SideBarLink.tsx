@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { toggleMenu } from '../../features/sideBar/sideBarSlice';
 
 import styles from './SideBarLink.module.scss';
 
@@ -9,13 +11,21 @@ type Props = {
   amount?: number;
 };
 
+const {
+  sideBarLink,
+  sideBarLink__iconWrapper,
+  sideBarLink__iconImg,
+  sideBarLink__amount,
+} = styles;
+
 export const SideBarLink = ({ image, url, amount, name }: Props) => {
-  const {
-    sideBarLink,
-    sideBarLink__iconWrapper,
-    sideBarLink__iconImg,
-    sideBarLink__amount,
-  } = styles;
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    console.log('handle');
+
+    dispatch(toggleMenu());
+  };
 
   // #region conditions
   const additionalImgStyles = amount ? { height: '28px', width: '28px' } : {};
@@ -24,7 +34,7 @@ export const SideBarLink = ({ image, url, amount, name }: Props) => {
   // #endregion
 
   return (
-    <Link to={url} className={sideBarLink}>
+    <Link to={url} className={sideBarLink} onClick={handleClick}>
       <div className={sideBarLink__iconWrapper} style={additionalImgStyles}>
         <img src={img} alt="" className={sideBarLink__iconImg} />
 
