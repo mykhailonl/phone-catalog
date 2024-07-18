@@ -9,6 +9,16 @@ import { Logo } from '../Logo';
 import { SideBarLink } from '../SideBarLink';
 import { MenuItems } from '../MenuItems';
 
+const {
+  header,
+  header__logo,
+  header__logo__block,
+  header__burger,
+  header__links,
+  header__buttons,
+  header__buttonWrapper,
+} = styles;
+
 export const Header = () => {
   const dispatch = useDispatch();
   const { isOpen } = useSelector((state: RootState) => state.menu);
@@ -18,18 +28,6 @@ export const Header = () => {
 
   const favItemsAmount = favoriteItems.length;
   const cartItemsAmount = cartItems.length;
-
-  // #region styles
-  const {
-    header,
-    header__logo,
-    header__logo__block,
-    header__burger,
-    header__links,
-    header__buttons,
-    header__buttonWrapper,
-  } = styles;
-  // #endregion
 
   return (
     <header id="header" className={header}>

@@ -21,21 +21,29 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
-      {
-        path: 'favourites',
-        // TODO productUrl?
-        element: <ProductList title="Favourites" productsUrl="" />,
-      },
+      // {
+      //   path: 'favourites',
+      //   // TODO productUrl?
+      //   element: <ProductList title="Favourites" productsUrl="" />,
+      // },
       {
         path: 'phones',
         element: (
-          <ProductList title="Mobile phones" productsUrl="./api/phones.json" />
+          <ProductList
+            title="Mobile phones"
+            productsUrl="./api/products.json"
+            category="phones"
+          />
         ),
       },
       {
         path: 'tablets',
         element: (
-          <ProductList title="Tablets" productsUrl="./api/tablets.json" />
+          <ProductList
+            title="Tablets"
+            productsUrl="./api/products.json"
+            category="tablets"
+          />
         ),
       },
       {
@@ -43,7 +51,8 @@ const router = createBrowserRouter([
         element: (
           <ProductList
             title="Accessories"
-            productsUrl="./api/accessories.json"
+            productsUrl="./api/products.json"
+            category="accessories"
           />
         ),
       },

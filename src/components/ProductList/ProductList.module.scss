@@ -11,24 +11,27 @@
     @include on-desktop {
       @include grid(desktop);
     }
+
+    row-gap: 40px;
   }
 
-  &__titleBlock {
+  &__dropdowns {
     grid-column: 1 / -1;
+    grid-row: 1 / 1;
 
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 16px;
+
+    @include on-tablet {
+      grid-column: span 7;
+    }
   }
 
-  &__title {
-    @include apply-typography(h1);
-  }
+  &__product {
+    grid-column: 1 / -1;
 
-  &__amount {
-    @include apply-typography(p);
-
-    color: map-get($colors, secondary);
-    font-weight: 600;
+    @include on-tablet {
+      grid-column: span 6;
+    }
   }
 }
