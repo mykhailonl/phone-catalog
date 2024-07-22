@@ -11,6 +11,8 @@ import { PageNotFound } from './components/PageNotFound/PageNotFound';
 import { ProductList } from './components/ProductList';
 
 import './index.css';
+import { ItemCard } from './components/ItemCard';
+import { ProductListWrapper } from './components/ProductListWraper/ProductListWraper';
 
 const router = createBrowserRouter([
   {
@@ -21,40 +23,17 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
-      // {
-      //   path: 'favourites',
-      //   // TODO productUrl?
-      //   element: <ProductList title="Favourites" productsUrl="" />,
-      // },
       {
-        path: 'phones',
-        element: (
-          <ProductList
-            title="Mobile phones"
-            productsUrl="./api/products.json"
-            category="phones"
-          />
-        ),
+        path: 'favourites',
+        element: <ProductList title="Favourites" category="favourites" />,
       },
       {
-        path: 'tablets',
-        element: (
-          <ProductList
-            title="Tablets"
-            productsUrl="./api/products.json"
-            category="tablets"
-          />
-        ),
+        path: ':category',
+        element: <ProductListWrapper />,
       },
       {
-        path: 'accessories',
-        element: (
-          <ProductList
-            title="Accessories"
-            productsUrl="./api/products.json"
-            category="accessories"
-          />
-        ),
+        path: ':category/:itemPage',
+        element: <ItemCard />,
       },
       {
         path: '*',

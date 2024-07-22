@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import sliderSlice from './features/slider/sliderSlice';
 import sideBarSlice from './features/sideBar/sideBarSlice';
 import favoriteSlice from './features/favorites/favoriteSlice';
 import cartSlice from './features/cart/cartSlice';
 import paginationSlice from './features/pagination/paginationSlice';
+import currentItemSlice from './features/currentItem/currentItemSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +14,7 @@ export const store = configureStore({
     favorites: favoriteSlice,
     cart: cartSlice,
     pagination: paginationSlice,
+    currentItem: currentItemSlice,
   },
 });
 

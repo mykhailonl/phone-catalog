@@ -43,8 +43,8 @@ export const SideBar = () => {
         <div className={sidebar__footer}>
           <div className={sidebar__linkWrapper}>
             <SideBarLink
-              image="icons/emty-heart.svg"
-              url="/"
+              image="/icons/emty-heart.svg"
+              url="favourites"
               name="fav"
               amount={favItemsAmount}
             />
@@ -52,7 +52,7 @@ export const SideBar = () => {
 
           <div className={sidebar__linkWrapper}>
             <SideBarLink
-              image="icons/icon-cart.svg"
+              image="/icons/icon-cart.svg"
               url="/"
               name="cart"
               amount={cartItemsAmount}
