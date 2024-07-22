@@ -53,6 +53,8 @@ type Params = {
 // TODO breadcrumbs
 // TODO navigate back link
 
+// TODO change Price on color/capacity change
+
 export const ItemCard = () => {
   const { category, itemPage } = useParams<Params>();
 

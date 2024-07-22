@@ -1,0 +1,23 @@
+.actual__price {
+  @include apply-typography(h2);
+
+  @include on-tablet {
+    font-size: 22px;
+    line-height: 31px;
+  }
+}
+
+.full__price {
+  @include apply-typography(h3);
+
+  color: map-get($colors, secondary);
+  text-decoration: line-through;
+}
+
+.page__context.actual__price {
+  @include apply-typography(h1);
+}
+
+.page__context.full__price {
+  @include apply-typography(h2);
+}
