@@ -40,7 +40,7 @@ export const Header = () => {
       <button className={header__burger} onClick={() => dispatch(toggleMenu())}>
         <img
           src={
-            !isOpen ? 'icons/header-burger-menu.svg' : 'icons/icon-close.svg'
+            !isOpen ? '/icons/header-burger-menu.svg' : '/icons/icon-close.svg'
           }
           alt="menu"
         />
@@ -54,7 +54,7 @@ export const Header = () => {
       <div className={header__buttons}>
         <div className={header__buttonWrapper}>
           <SideBarLink
-            image="icons/emty-heart.svg"
+            image="/icons/emty-heart.svg"
             url="favourites"
             amount={favItemsAmount}
             name="fav"
@@ -63,7 +63,7 @@ export const Header = () => {
 
         <div className={header__buttonWrapper}>
           <SideBarLink
-            image="icons/icon-cart.svg"
+            image="/icons/icon-cart.svg"
             url="cart"
             amount={cartItemsAmount}
             name="cart"
