@@ -66,22 +66,6 @@
     gap: 8px;
   }
 
-  &__price {
-    @include apply-typography(h2);
-
-    @include on-tablet {
-      font-size: 22px;
-      line-height: 31px;
-    }
-  }
-
-  &__discount {
-    @include apply-typography(h3);
-
-    color: map-get($colors, secondary);
-    text-decoration: line-through;
-  }
-
   &__line {
     flex-shrink: 0;
 
@@ -95,44 +79,6 @@
     gap: 8px;
 
     padding-block: 8px;
-  }
-
-  &__buttonWrapper {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  &__cartButton {
-    flex-grow: 1;
-    background-color: map-get($colors, gray-primary);
-    border: 1px solid transparent;
-
-    padding: 9.5px;
-    color: map-get($colors, white);
-
-    &:hover {
-      transition: box-shadow map-get($duration, '0.3') ease;
-      box-shadow: 0px 3px 13px 0px #17203166;
-    }
-  }
-
-  &__favButton {
-    height: 40px;
-    width: 40px;
-    padding: 12px;
-
-    border: 1px solid map-get($colors, icons);
-
-    &:hover {
-      transition: border-color map-get($duration, '0.3') ease;
-      border-color: map-get($colors, gray-primary);
-    }
-  }
-
-  &__favImg {
-    height: 100%;
-    width: 100%;
   }
 
   @include on-tablet {
