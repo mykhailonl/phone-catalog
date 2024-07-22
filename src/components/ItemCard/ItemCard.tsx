@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import {
   setCurrentItem,
+  setCurrentProduct,
   setTargetImg,
 } from '../../features/currentItem/currentItemSlice';
 
@@ -15,7 +16,17 @@ import { Item } from '../../types/Item';
 
 import { fetchProducts } from '../../utils/fetchProducts';
 
+import { ColorSelector } from '../ColorSelector';
+import { CapacitySelector } from '../CapacitySelector';
+import { ProductActions } from '../ProductActions';
+
 import styles from './ItemCard.module.scss';
+import { ProductPrice } from '../ProductPrice';
+import { Product } from '../../types/Product';
+import { Specification } from '../Specification';
+import { ProductAbout } from '../ProductAbout';
+import { ProductSpecs } from '../ProductSpecs';
+
 const {
   card,
   card__content,
@@ -26,6 +37,12 @@ const {
   card__sliderBlock,
   card__sliderBlockIsActive,
   card__sliderImg,
+  card__controls,
+  card__colors,
+  card__capacity,
+  card__actions,
+  card__price,
+  card__specs,
 } = styles;
 
 type Params = {
@@ -40,7 +57,7 @@ export const ItemCard = () => {
   const { category, itemPage } = useParams<Params>();
 
   const dispatch = useDispatch();
-  const { currentItem, targetImgIndex } = useSelector(
+  const { currentItem, currentProduct, targetImgIndex } = useSelector(
     (state: RootState) => state.currentItem,
   );
 
@@ -49,20 +66,36 @@ export const ItemCard = () => {
   }
 
   useEffect(() => {
-    const productsUrl = `/api/${category}.json`;
+    const fetchData = async () => {
+      try {
+        const productsUrl = `/api/${category}.json`;
+        const items: Item[] = await fetchProducts(productsUrl);
 
-    fetchProducts(productsUrl).then((items: Item[]) => {
-      const item = items.find((item) => item.id === itemPage);
+        const item = items.find((item) => item.id === itemPage);
 
-      if (item) {
+        if (!item) {
+          return <PageNotFound />;
+        }
+
         dispatch(setCurrentItem(item));
-      } else {
-        return <PageNotFound />;
-      }
-    });
-  }, [category, itemPage]);
 
-  if (currentItem === null) {
+        const products: Product[] = await fetchProducts(`/api/products.json`);
+        const newProduct = products.find((prod) => prod.itemId === item.id);
+
+        if (!newProduct) {
+          return <PageNotFound />;
+        }
+
+        dispatch(setCurrentProduct(newProduct));
+      } catch (error) {
+        return <p>{`Error happened while fetching products: ${error}`}</p>;
+      }
+    };
+
+    fetchData();
+  }, [category, itemPage, dispatch]);
+
+  if (!currentItem || !currentProduct) {
     return null;
   }
 
@@ -70,7 +103,6 @@ export const ItemCard = () => {
   const handlePreviewClick = (index: number) => {
     dispatch(setTargetImg(index));
   };
-
   // #endregion
 
   return (
@@ -104,6 +136,55 @@ export const ItemCard = () => {
             </div>
           ))}
         </div>
+
+        <div className={card__controls}>
+          <div className={card__colors}>
+            <ColorSelector colors={currentItem.colorsAvailable} />
+          </div>
+
+          <div className={card__capacity}>
+            <CapacitySelector capacityOptions={currentItem.capacityAvailable} />
+          </div>
+
+          <div className={card__actions}>
+            {/* TODO what to do with a discount? */}
+            <div className={card__price}>
+              <ProductPrice
+                fullPrice={currentItem.priceRegular}
+                discountedPrice={currentItem.priceDiscount}
+                context="page"
+              />
+            </div>
+
+            <ProductActions product={currentProduct} />
+          </div>
+
+          <div className={card__specs}>
+            <Specification
+              label="Screen"
+              value={currentItem.screen}
+              context="page"
+            />
+
+            <Specification
+              label="Resolution"
+              value={currentItem.resolution}
+              context="page"
+            />
+
+            <Specification
+              label="Processor"
+              value={currentItem.processor}
+              context="page"
+            />
+
+            <Specification label="RAM" value={currentItem.ram} context="page" />
+          </div>
+        </div>
+
+        <ProductAbout description={currentItem.description} />
+
+        <ProductSpecs product={currentItem} />
       </div>
     </div>
   );
