@@ -1,18 +1,43 @@
 import styles from './Specification.module.scss';
 
 type Props = {
-  label: 'Screen' | 'Capacity' | 'RAM';
-  value: string;
+  label:
+    | 'Screen'
+    | 'Capacity'
+    | 'RAM'
+    | 'Processor'
+    | 'Resolution'
+    | 'Built in memory'
+    | 'Camera'
+    | 'Zoom'
+    | 'Cell';
+  value: string | string[];
+  context?: 'card' | 'page' | 'spec__page';
 };
 
-export const Specification = ({ label, value }: Props) => {
-  const { spec, spec__text, 'spec__text--bold': spec__text_bold } = styles;
+export const Specification = ({ label, value, context }: Props) => {
+  const {
+    spec,
+    spec__text,
+    page__context,
+    card__context,
+    spec__context,
+    spec__label,
+  } = styles;
+  const contextClass =
+    context === 'card'
+      ? card__context
+      : context === 'page'
+        ? page__context
+        : spec__context;
+
+  const newValue = Array.isArray(value) ? value.slice(0, 5).join(', ') : value;
 
   return (
-    <div className={spec}>
-      <small className={spec__text}>{label}</small>
+    <div className={`${spec} ${contextClass}`}>
+      <small className={`${spec__label} ${contextClass}`}>{label}</small>
 
-      <small className={`${spec__text} ${spec__text_bold}`}>{value}</small>
+      <small className={`${spec__text} ${contextClass}`}>{newValue}</small>
     </div>
   );
 };
