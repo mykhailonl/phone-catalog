@@ -1,12 +1,12 @@
 .colorSelector {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .colorOptions {
   display: flex;
   gap: 8px;
+  padding-block: 8px 24px;
 }
 
 .colorCircle {
@@ -48,4 +48,10 @@
   @include apply-typography(small);
 
   color: map-get($colors, secondary);
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: map-get($colors, elements);
 }

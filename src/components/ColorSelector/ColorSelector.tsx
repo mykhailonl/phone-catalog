@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updateItemProperty } from '../../features/currentItem/currentItemSlice';
@@ -11,6 +12,7 @@ const {
   colorCircle,
   innerCircle,
   isActive,
+  line,
 } = styles;
 
 type Props = {
@@ -24,18 +26,24 @@ const colorPalette: { [key: string]: string } = {
 };
 
 export const ColorSelector = ({ colors }: Props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentItem = useSelector(
     (state: RootState) => state.currentItem.currentItem,
   );
 
   const handleColorChange = (color: string) => {
+    if (!currentItem) return;
+
     dispatch(updateItemProperty({ property: 'color', value: color }));
+    navigate(
+      `/${currentItem.category}/${currentItem.namespaceId}-${currentItem.capacity}-${currentItem.color}`,
+    );
   };
 
   return (
     <div className={colorSelector}>
-      <small className={title}>Available colors</small>
+      <h3 className={title}>Available colors</h3>
 
       <div className={colorOptions}>
         {colors.map((color, index) => {
@@ -55,6 +63,8 @@ export const ColorSelector = ({ colors }: Props) => {
           );
         })}
       </div>
+
+      <div className={line}></div>
     </div>
   );
 };
