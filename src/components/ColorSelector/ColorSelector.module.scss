@@ -1,0 +1,51 @@
+.colorSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.colorOptions {
+  display: flex;
+  gap: 8px;
+}
+
+.colorCircle {
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border: 1px solid map-get($colors, elements);
+  border-radius: 50%;
+  
+  &:hover {
+    border-color: map-get($colors, gray-primary);
+  }
+
+  cursor: pointer;
+  transition: border map-get($duration, '0.3') ease;
+}
+
+.innerCircle {
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+
+  border: 2px solid map-get($colors, white);
+  border-radius: 50%;
+
+}
+
+.isActive {
+  border-color: map-get($colors, gray-primary);
+}
+
+.title {
+  @include apply-typography(small);
+
+  color: map-get($colors, secondary);
+}
