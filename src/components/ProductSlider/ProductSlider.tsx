@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { fetchProducts } from '../../utils/fetchProducts';
 
 import { ProductSliderButton } from '../ProductSliderButton';
 import { Product } from '../Product';
+
 import { Product as ProductType } from '../../types/Product';
 
 import styles from './ProductSlider.module.scss';
+const {
+  productSlider,
+  productSlider__wrapper,
+  productSlider__title,
+  productSlider__buttonsWrapper,
+  productSlider__carousel,
+  productSlider__carouselWrapper,
+} = styles;
 
 type Props = {
   title: string;
@@ -13,37 +24,41 @@ type Props = {
   newOnly: boolean;
 };
 
-export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
-  // TODO how to type it (Promise) generic?
-  const getProducts = async (): Promise<ProductType[]> => {
-    return fetch(apiUrl).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
+// TODO get rid of states?
 
-      throw new Error('Failed to fetch products');
-    });
-  };
+export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
+  const { category } = useParams();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState<ProductType[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const productsData = await getProducts();
-        const preparedProducts = newOnly
+        const productsData: ProductType[] = await fetchProducts(apiUrl);
+        let preparedProducts = newOnly
           ? productsData.filter((product) => product.year === 2022)
           : productsData.filter((product) => product.year !== 2022);
 
-        setProducts(preparedProducts);
+        if (category) {
+          console.log(true);
+
+          const filteredProducts = preparedProducts.filter(
+            (product) => product.category === category,
+          );
+          setProducts(filteredProducts);
+        } else {
+          console.log(false);
+
+          setProducts(preparedProducts);
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchData();
+  }, [category, apiUrl, newOnly]);
 
   // #region click handlers
   const handlePrevClick = () => {
@@ -62,22 +77,10 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
   const productsEndPosition = currentIndex === products.length;
   // #endregion
 
-  const {
-    productSlider,
-    productSlider__wrapper,
-    productSlider__title,
-    productSlider__buttonsWrapper,
-    productSlider__carousel,
-    productSlider__carouselWrapper,
-  } = styles;
-
   return (
     <div className={productSlider}>
       <div className={productSlider__wrapper}>
         <h2 className={productSlider__title}>{title}</h2>
-
-        {/* TODO delete after */}
-        {/* {products.length} */}
 
         <div className={productSlider__buttonsWrapper}>
           <ProductSliderButton

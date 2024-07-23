@@ -5,6 +5,10 @@
   flex-direction: column;
   gap: 32px;
 
+  @include on-desktop {
+    grid-column: 1 / 13;
+  }
+
   &__titleBlock {
     display: flex;
     flex-direction: column;

@@ -5,15 +5,17 @@ import { Title } from '../Title';
 
 import styles from './HomePage.module.scss';
 
-const { homepage, homepage__content } = styles;
+const { homepage, homepage__content, homepage__top } = styles;
 
 export const HomePage = () => {
   return (
     <main className={homepage}>
       <div className={homepage__content}>
-        <Title />
+        <div className={homepage__top}>
+          <Title />
 
-        <Slider />
+          <Slider />
+        </div>
 
         <ProductSlider
           title="Brand new models"

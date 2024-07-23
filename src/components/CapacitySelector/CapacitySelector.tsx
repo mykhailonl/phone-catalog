@@ -1,10 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { updateItemProperty } from '../../features/currentItem/currentItemSlice';
+import { setCurrentItem } from '../../features/currentItem/currentItemSlice';
 
 import styles from './CapacitySelector.module.scss';
+import { fetchProducts } from '../../utils/fetchProducts';
+import { Item } from '../../types/Item';
 
 const {
   capacity__selector,
@@ -21,19 +23,32 @@ type Props = {
 };
 
 export const CapacitySelector = ({ capacityOptions }: Props) => {
+  const { category } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentItem = useSelector(
     (state: RootState) => state.currentItem.currentItem,
   );
 
-  const handleCapacityChange = (capacity: string) => {
+  const handleCapacityChange = async (newCapacity: string) => {
     if (!currentItem) return;
 
-    dispatch(updateItemProperty({ property: 'capacity', value: capacity }));
-    navigate(
-      `/${currentItem.category}/${currentItem.namespaceId}-${capacity}-${currentItem.color}`,
+    const productsUrl = `/api/${category}.json`;
+    const items: Item[] = await fetchProducts(productsUrl);
+
+    const newItem = items.find(
+      (item) =>
+        item.namespaceId === currentItem.namespaceId &&
+        item.capacity === newCapacity &&
+        item.color === currentItem.color,
     );
+
+    if (newItem) {
+      dispatch(setCurrentItem(newItem));
+      navigate(
+        `/${newItem.category}/${newItem.namespaceId}-${newItem.capacity}-${newItem.color}`,
+      );
+    }
   };
 
   return (

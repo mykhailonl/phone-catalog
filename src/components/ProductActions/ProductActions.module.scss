@@ -8,6 +8,7 @@
   display: flex;
   justify-content: space-between;
   gap: 8px;
+  box-sizing: border-box;
 
   &__cart {
     flex-grow: 1;

@@ -1,0 +1,21 @@
+.button {
+  grid-column: 1 / -1;
+  
+  display: flex;
+
+  gap: 4px;
+  width: 66px;
+  margin-bottom: 16px;
+
+  &__label {
+    @include apply-typography(small);
+
+    margin-top: 2px;
+    line-height: 14px;
+    color: map-get($colors, secondary);
+  }
+
+  &__icon {
+    padding: 3px 5px;
+  }
+}

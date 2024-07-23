@@ -1,6 +1,4 @@
 .categories {
-  @include content-padding-inline;
-
   grid-column: 1 / -1;
 
   display: flex;

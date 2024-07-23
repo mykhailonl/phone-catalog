@@ -28,62 +28,14 @@ export const currentItemSlice = createSlice({
     },
     setCurrentProduct: (state, action: PayloadAction<Product | null>) => {
       state.currentProduct = action.payload;
+      state.targetImgIndex = 0;
     },
     setTargetImg: (state, action: PayloadAction<number>) => {
       state.targetImgIndex = action.payload;
-    },
-    updateItemProperty: (
-      state,
-      action: PayloadAction<{ property: string; value: string }>,
-    ) => {
-      if (!state.currentItem) return;
-
-      const { property, value } = action.payload;
-
-      if (property === 'color') {
-        console.log('color change');
-
-        const newColor = value;
-        state.currentItem.color = newColor;
-
-        // upd images
-        state.currentItem.images = state.currentItem.images.map((img) =>
-          img.replace(/\/([^\/]+)\/([^\/]+)$/, `/${newColor.toLowerCase()}/$2`),
-        );
-
-        // upd name
-        const nameParts = state.currentItem.name.split(' ');
-        nameParts[nameParts.length - 1] =
-          newColor.charAt(0).toUpperCase() + newColor.slice(1);
-        state.currentItem.name = nameParts.join(' ');
-
-        // upd id
-        state.currentItem.id = state.currentItem.id.replace(
-          /-[^\/]+$/,
-          `-${newColor}`,
-        );
-      } else if (property === 'capacity') {
-        state.currentItem.capacity = value;
-
-        // upd name for memory capacity
-        const nameParts = state.currentItem.name.split(' ');
-        nameParts[nameParts.length - 2] = value;
-        state.currentItem.name = nameParts.join(' ');
-
-        // upd id
-        state.currentItem.id = state.currentItem.id.replace(
-          /-[^\/]+$/,
-          `-${value}`,
-        );
-      }
     },
   },
 });
 
 export default currentItemSlice.reducer;
-export const {
-  setCurrentItem,
-  setTargetImg,
-  updateItemProperty,
-  setCurrentProduct,
-} = currentItemSlice.actions;
+export const { setCurrentItem, setTargetImg, setCurrentProduct } =
+  currentItemSlice.actions;

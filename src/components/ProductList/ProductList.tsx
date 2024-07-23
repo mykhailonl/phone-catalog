@@ -20,6 +20,7 @@ import { Product } from '../Product/Product';
 import { Pagination } from '../Pagination';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { BreadCrumbs } from '../BreadCrumbs';
 
 type Props = {
   title: string;
@@ -114,6 +115,8 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
 
   return (
     <div className={list}>
+      <BreadCrumbs />
+
       <div className={list__content}>
         <CategoryTitleBlock
           categoryName={title}

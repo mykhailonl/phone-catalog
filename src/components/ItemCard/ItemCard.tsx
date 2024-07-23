@@ -8,28 +8,29 @@ import {
   setCurrentProduct,
   setTargetImg,
 } from '../../features/currentItem/currentItemSlice';
-
-import { PageNotFound } from '../PageNotFound';
-
-import { Category } from '../../types/CategoryTypes';
-import { Item } from '../../types/Item';
-
 import { fetchProducts } from '../../utils/fetchProducts';
 
+import { PageNotFound } from '../PageNotFound';
 import { ColorSelector } from '../ColorSelector';
 import { CapacitySelector } from '../CapacitySelector';
 import { ProductActions } from '../ProductActions';
-
-import styles from './ItemCard.module.scss';
 import { ProductPrice } from '../ProductPrice';
 import { Product } from '../../types/Product';
 import { Specification } from '../Specification';
 import { ProductAbout } from '../ProductAbout';
 import { ProductSpecs } from '../ProductSpecs';
+import { BreadCrumbs } from '../BreadCrumbs';
+import { BackButton } from '../BackButton/BackButton';
 
+import { Category } from '../../types/CategoryTypes';
+import { Item } from '../../types/Item';
+
+import styles from './ItemCard.module.scss';
+import { ProductSlider } from '../ProductSlider';
 const {
   card,
   card__content,
+  card__top,
   card__title,
   card__imgBlock,
   card__img,
@@ -50,7 +51,6 @@ type Params = {
   itemPage: string;
 };
 
-// TODO breadcrumbs
 // TODO navigate back link
 
 // TODO change Price on color/capacity change
@@ -78,6 +78,8 @@ export const ItemCard = () => {
         if (!item) {
           return <PageNotFound />;
         }
+
+        console.log('itemcard');
 
         dispatch(setCurrentItem(item));
 
@@ -110,83 +112,102 @@ export const ItemCard = () => {
   return (
     <div className={card}>
       <div className={card__content}>
-        <h2 className={card__title}>{currentItem.name}</h2>
+        <div className={card__top}>
+          <BreadCrumbs />
 
-        <div className={card__imgBlock}>
-          <img
-            src={`/${currentItem.images[targetImgIndex]}`}
-            alt={`${currentItem.name} photo`}
-            className={card__img}
-          />
-        </div>
+          <BackButton />
 
-        {/* TODO change approach to this section (display, width etc) */}
-        <div className={card__previews}>
-          {currentItem.images.map((photo, index) => (
-            <div
-              className={`
+          <h2 className={card__title}>{currentItem.name}</h2>
+
+          <div className={card__imgBlock}>
+            <img
+              src={`/${currentItem.images[targetImgIndex]}`}
+              alt={`${currentItem.name} photo`}
+              className={card__img}
+            />
+          </div>
+
+          {/* TODO change approach to this section (display, width etc) */}
+          <div className={card__previews}>
+            {currentItem.images.map((photo, index) => (
+              <div
+                className={`
                 ${card__sliderBlock} 
                 ${index === targetImgIndex ? card__sliderBlockIsActive : ''}`}
-              key={index}
-              onClick={() => handlePreviewClick(index)}
-            >
-              <img
-                src={`/${photo}`}
-                alt={`${currentItem.name} photo preview`}
-                className={card__sliderImg}
+                key={index}
+                onClick={() => handlePreviewClick(index)}
+              >
+                <img
+                  src={`/${photo}`}
+                  alt={`${currentItem.name} photo preview`}
+                  className={card__sliderImg}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className={card__controls}>
+            <div className={card__colors}>
+              <ColorSelector colors={currentItem.colorsAvailable} />
+            </div>
+
+            <div className={card__capacity}>
+              <CapacitySelector
+                capacityOptions={currentItem.capacityAvailable}
               />
             </div>
-          ))}
-        </div>
 
-        <div className={card__controls}>
-          <div className={card__colors}>
-            <ColorSelector colors={currentItem.colorsAvailable} />
-          </div>
+            <div className={card__actions}>
+              {/* TODO what to do with a discount? */}
+              <div className={card__price}>
+                <ProductPrice
+                  fullPrice={currentItem.priceRegular}
+                  discountedPrice={currentItem.priceDiscount}
+                  context="page"
+                />
+              </div>
 
-          <div className={card__capacity}>
-            <CapacitySelector capacityOptions={currentItem.capacityAvailable} />
-          </div>
+              <ProductActions product={currentProduct} />
+            </div>
 
-          <div className={card__actions}>
-            {/* TODO what to do with a discount? */}
-            <div className={card__price}>
-              <ProductPrice
-                fullPrice={currentItem.priceRegular}
-                discountedPrice={currentItem.priceDiscount}
+            <div className={card__specs}>
+              <Specification
+                label="Screen"
+                value={currentItem.screen}
+                context="page"
+              />
+
+              <Specification
+                label="Resolution"
+                value={currentItem.resolution}
+                context="page"
+              />
+
+              <Specification
+                label="Processor"
+                value={currentItem.processor}
+                context="page"
+              />
+
+              <Specification
+                label="RAM"
+                value={currentItem.ram}
                 context="page"
               />
             </div>
-
-            <ProductActions product={currentProduct} />
-          </div>
-
-          <div className={card__specs}>
-            <Specification
-              label="Screen"
-              value={currentItem.screen}
-              context="page"
-            />
-
-            <Specification
-              label="Resolution"
-              value={currentItem.resolution}
-              context="page"
-            />
-
-            <Specification
-              label="Processor"
-              value={currentItem.processor}
-              context="page"
-            />
-
-            <Specification label="RAM" value={currentItem.ram} context="page" />
           </div>
         </div>
 
         <ProductAbout description={currentItem.description} />
 
         <ProductSpecs product={currentItem} />
+
+        <ProductSlider
+          title="You may also like"
+          apiUrl="/api/products.json"
+          discount={true}
+          newOnly={false}
+        />
       </div>
     </div>
   );

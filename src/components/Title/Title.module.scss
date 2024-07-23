@@ -1,19 +1,16 @@
 .title {
-  @include content-padding-inline;
   @include apply-typography(h1);
   color: map-get($colors, gray-primary);
 
   grid-column: 1 / -1;
 
-  margin-block: 24px;
+  margin-bottom: 24px;
 
   @include on-tablet {
-    padding-inline: 0;
-
-    margin-block: 32px;
+    margin-bottom: 32px;
   }
 
   @include on-desktop {
-    margin-block: 56px;
+    margin-bottom: 56px;
   }
 }

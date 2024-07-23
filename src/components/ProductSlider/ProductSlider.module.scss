@@ -1,11 +1,8 @@
 .productSlider {
-  @include content-padding-inline;
-
   --slide-width: calc(75% - 4px);
   --gap: 16px;
 
   grid-column: 1 / -1;
-  margin-block: 56px;
 
   &__wrapper {
     @include grid(mobile);
@@ -68,15 +65,5 @@
     transform: translateX(
       calc(var(--current-index) * (var(--slide-width) + var(--gap)) * -1)
     );
-  }
-
-  @include on-tablet {
-    margin-block: 64px;
-
-    padding-inline: 0;
-  }
-
-  @include on-desktop {
-    margin-block: 80px;
   }
 }
