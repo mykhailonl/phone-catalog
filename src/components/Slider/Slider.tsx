@@ -14,6 +14,14 @@ import { Dots } from '../Dots';
 import { SliderButton } from '../SliderButton';
 
 import styles from './Slider.module.scss';
+const {
+  slider,
+  slider__content,
+  slider__carousel,
+  slider__carouselWrapper,
+  slider__slide,
+  slider__nav,
+} = styles;
 
 const ANIMATION_DURATION = 700;
 
@@ -51,26 +59,12 @@ export const Slider = () => {
     }
   }, [isAnimating, currentIndex, slides.length, dispatch]);
 
-  const {
-    slider,
-    slider__content,
-    slider__carousel,
-    slider__carouselWrapper,
-    slider__slide,
-    slider__nav,
-  } = styles;
-
   return (
     <div
       className={slider}
       onMouseEnter={() => dispatch(setAutoPlay(false))}
       onMouseLeave={() => dispatch(setAutoPlay(true))}
     >
-      {/* <div className="col-span-full flex items-center justify-between">
-        <p>{`Current index: ${currentIndex}`}</p>
-        <p>{`Slide length: ${slides.length}`}</p>
-      </div> */}
-
       <div className={slider__content}>
         <SliderButton direction="left" />
 

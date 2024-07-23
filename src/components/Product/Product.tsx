@@ -36,7 +36,7 @@ export const Product = ({ product, discount }: Props) => {
       <div className={prod__contentWrapper}>
         <div className={prod__imgWrapper}>
           <img
-            src={product.image}
+            src={`/${product.image}`}
             alt={`${product.image} photo`}
             className={prod__img}
           />

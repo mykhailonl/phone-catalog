@@ -12,10 +12,10 @@
   box-sizing: border-box;
   border: 1px solid map-get($colors, elements);
   height: 439px;
-  padding: 32px;
+  padding: 31px;
 
   @include on-tablet {
-    flex: 0 0 calc(41.67% - 8px);
+    flex: 0 0 calc(41.67% - 9px);
   }
 
   @include on-desktop {

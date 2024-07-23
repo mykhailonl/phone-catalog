@@ -16,6 +16,10 @@
 
 .page__context.actual__price {
   @include apply-typography(h1);
+
+  @include on-tablet {
+    @include apply-typography(h2);
+  }
 }
 
 .page__context.full__price {

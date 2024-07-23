@@ -3,8 +3,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-block: 24px;
+  margin-bottom: 24px;
   overflow: hidden;
+
+  @include on-tablet {
+    margin-bottom: 24px 40px;
+  }
 
   &__icon {
     flex-shrink: 0;
