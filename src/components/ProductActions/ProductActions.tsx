@@ -46,7 +46,7 @@ export const ProductActions = ({ product }: Props) => {
   };
 
   const handleAddToCartClick = (product: Product) => {
-    if (cartItems.some((item) => item.id === product.id)) {
+    if (cartItems.some((item) => item.product.id === product.id)) {
       dispatch(removeFromCart(product.id));
     } else {
       dispatch(addToCart(product));
@@ -77,7 +77,7 @@ export const ProductActions = ({ product }: Props) => {
   };
 
   const inCart = (id: number) => {
-    return cartItems.some((item) => item.id === id);
+    return cartItems.some((item) => item.product.id === id);
   };
 
   // #region conditions

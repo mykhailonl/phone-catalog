@@ -53,7 +53,7 @@ export const SideBar = () => {
           <div className={sidebar__linkWrapper}>
             <SideBarLink
               image="/icons/icon-cart.svg"
-              url="/"
+              url="cart"
               name="cart"
               amount={cartItemsAmount}
             />

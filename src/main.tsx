@@ -13,6 +13,7 @@ import { ProductList } from './components/ProductList';
 import './index.css';
 import { ItemCard } from './components/ItemCard';
 import { ProductListWrapper } from './components/ProductListWraper/ProductListWraper';
+import { Cart } from './pages/cart';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: 'favourites',
         element: <ProductList title="Favourites" category="favourites" />,
+      },
+      {
+        path: 'cart',
+        element: <Cart />,
       },
       {
         path: ':category',

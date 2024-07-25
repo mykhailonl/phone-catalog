@@ -1,5 +1,4 @@
 // TODO add underline inside a header if located in favourites
-// TODO breadcrumbs?
 import { useEffect, useState } from 'react';
 import { Product as ProductType } from '../../types/Product';
 import { fetchProducts } from '../../utils/fetchProducts';

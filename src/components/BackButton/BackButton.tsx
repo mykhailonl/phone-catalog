@@ -4,6 +4,7 @@ import styles from './BackButton.module.scss';
 const { button, button__icon, button__label } = styles;
 
 // FIXME maybe rework routes and make navigate '..' simplier?
+// TODO replace margin bottom
 
 export const BackButton = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const BackButton = () => {
   return (
     <div onClick={handleBack} className={button}>
       <img
-        src="/public/icons/breadcrumbs-back.svg"
+        src="/icons/breadcrumbs-back.svg"
         alt="back button"
         className={button__icon}
       />
