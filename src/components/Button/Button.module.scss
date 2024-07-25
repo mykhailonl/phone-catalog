@@ -1,0 +1,17 @@
+.button {
+  appearance: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid map-get($colors, elements);
+  padding: 7px;
+
+  display: flex;
+  flex-shrink: 0;
+
+  &__img {
+    display: flex;
+
+    width: 16px;
+    height: 16px;
+  }
+}

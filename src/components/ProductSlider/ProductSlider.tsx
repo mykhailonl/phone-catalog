@@ -48,8 +48,6 @@ export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
           );
           setProducts(filteredProducts);
         } else {
-          console.log(false);
-
           setProducts(preparedProducts);
         }
       } catch (error) {

@@ -1,0 +1,35 @@
+.total {
+  border: 1px solid map-get($colors, elements);
+
+  padding: 23px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__priceBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
+
+  &__price {
+    @include apply-typography(h1);
+  }
+
+  &__amount {
+    @include apply-typography(p);
+
+    font-weight: 600;
+
+    color: map-get($colors, secondary);
+  }
+
+  &__line {
+    height: 1px;
+
+    background-color: map-get($colors, elements);
+  }
+}

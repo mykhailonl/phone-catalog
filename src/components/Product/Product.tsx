@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { ProductActions } from '../ProductActions';
 import { Specification } from '../Specification';
@@ -24,12 +24,11 @@ type Props = {
   discount: boolean;
 };
 
-export const Product = ({ product, discount }: Props) => {
-  const { category } = useParams();
+// FIXME check if currentProduct already there (link crashes when trying to get from page to product)
+// FIXME some animation when changing to another page? scroll on top or smth
 
-  const linkTo = category
-    ? `${product.itemId}`
-    : `${product.category}/${product.itemId}`;
+export const Product = ({ product, discount }: Props) => {
+  const linkTo = `/${product.category}/${product.itemId}`;
 
   return (
     <div className={prod}>
