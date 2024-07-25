@@ -1,0 +1,55 @@
+.item {
+  border: 1px solid map-get($colors, elements);
+  box-sizing: border-box;
+
+  padding: 15px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    gap: 16px;
+  }
+
+  &__img {
+    display: flex;
+    flex-shrink: 0;
+
+    width: 66px;
+    height: 66px;
+    object-fit: contain;
+
+    padding: 7px;
+  }
+
+  &__name {
+    @include apply-typography(p);
+
+    min-width: 128px;
+    color: map-get($colors, gray-primary);
+  }
+
+  &__counter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 96px;
+  }
+
+  &__amount {
+    @include apply-typography(p);
+
+    font-weight: 600;
+  }
+
+  &__cost {
+    @include apply-typography(h2);
+
+    font-weight: 800;
+  }
+}
