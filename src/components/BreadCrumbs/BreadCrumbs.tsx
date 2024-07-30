@@ -1,3 +1,4 @@
+import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -7,57 +8,65 @@ const {
   breadcrumbs,
   breadcrumbs__link,
   breadcrumbs__icon,
+  breadcrumbs__arrow,
   breadcrumbs__text,
   breadcrumbs__textGray,
 } = styles;
 
-// FIXME better solution to center link text?
-
-export const BreadCrumbs = () => {
+export const BreadCrumbs = memo(() => {
   const { category, itemPage } = useParams();
-  const normalizedCategory =
-    category && category[0].toUpperCase() + category.slice(1);
+  const normalizedCategory = useMemo(
+    () => category && category[0].toUpperCase() + category.slice(1),
+    [category],
+  );
   const productName = useSelector(
     (state: RootState) => state.currentItem.currentItem?.name,
   );
 
+  const renderLink = useCallback(
+    (to: string, className: string, content: ReactNode) => (
+      <Link to={to} className={className}>
+        {content}
+      </Link>
+    ),
+    [],
+  );
+
   return (
     <div className={breadcrumbs}>
-      <Link to="/" className={breadcrumbs__link}>
+      {renderLink(
+        '/',
+        breadcrumbs__link,
         <img
           src="/icons/icon-home.svg"
           alt="home link"
           className={breadcrumbs__icon}
-        />
-      </Link>
+        />,
+      )}
 
       {category && (
         <>
-          <img
-            src="/icons/breadcrumb-arrow.svg"
-            alt="right arrow"
-            className={breadcrumbs__icon}
-          />
-          <Link to={`/${category}`} className={styles.breadcrumbs__link}>
+          <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
+          {renderLink(
+            `/${category}`,
+            breadcrumbs__link,
             <span
               className={`${breadcrumbs__text} ${itemPage ? breadcrumbs__textGray : ''}`}
             >
               {normalizedCategory}
-            </span>
-          </Link>
+            </span>,
+          )}
         </>
       )}
 
       {itemPage && (
         <>
-          <img
-            src="/icons/breadcrumb-arrow.svg"
-            alt="right arrow"
-            className={breadcrumbs__icon}
-          />
+          <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
           <span className={breadcrumbs__text}>{productName}</span>
         </>
       )}
     </div>
   );
-};
+});
+
+BreadCrumbs.displayName = 'BreadCrumbs';
