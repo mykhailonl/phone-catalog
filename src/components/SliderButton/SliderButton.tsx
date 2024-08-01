@@ -1,22 +1,21 @@
-import { useDispatch } from 'react-redux';
 import { setNextSlide, setPrevSlide } from '../../features/slider/sliderSlice';
-
-import styles from './SliderButton.module.scss';
 
 type Props = {
   direction: 'left' | 'right';
 };
 
+import styles from './SliderButton.module.scss';
+import { useAppDispatch } from '../../hooks';
+const { sliderButton, sliderButton__wrapper } = styles;
+
 export const SliderButton = ({ direction }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleClick = () => {
     return direction === 'left'
       ? dispatch(setPrevSlide())
       : dispatch(setNextSlide());
   };
-
-  const { sliderButton, sliderButton__wrapper } = styles;
 
   return (
     <button
@@ -25,8 +24,11 @@ export const SliderButton = ({ direction }: Props) => {
         handleClick();
       }}
     >
-      <div className={sliderButton__wrapper}>
-        <img src={`/icons/${direction}-arrow.svg`} alt={`${direction}-arrow`} />
+      <div
+        className={sliderButton__wrapper}
+        style={direction === 'left' ? { transform: 'rotate(-180deg)' } : {}}
+      >
+        <img src={`/icons/icon-arrow.svg`} alt={`${direction}-arrow`} />
       </div>
     </button>
   );

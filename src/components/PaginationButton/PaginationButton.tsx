@@ -1,12 +1,5 @@
-import { useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  nextPage,
-  prevPage,
-} from '../../features/pagination/paginationSlice.ts';
-
 import styles from './PaginationButton.module.scss';
-import { RootState } from '../../store';
+import { useSearchParamValue } from '../../hooks/useSearchParamValue';
 const { button, button__iconBlock, button__icon } = styles;
 
 type Props = {
@@ -19,26 +12,14 @@ type Props = {
 // TODO add some styles for disabled buttons
 
 export const PaginationButton = ({ direction, disabled }: Props) => {
-  const dispatch = useDispatch();
-  const currentPage = useSelector(
-    (state: RootState) => state.pagination.currentPage,
-  );
-
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useSearchParamValue<number>('page', 1);
 
   const handleButtonClick = () => {
     if (direction === 'left') {
-      dispatch(prevPage());
+      setCurrentPage(currentPage - 1);
     } else {
-      dispatch(nextPage());
+      setCurrentPage(currentPage + 1);
     }
-
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(
-      'page',
-      `${currentPage + (direction === 'left' ? -1 : 1)}`,
-    );
-    setSearchParams(newSearchParams);
   };
 
   return (

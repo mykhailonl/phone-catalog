@@ -1,7 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
-import { RootState } from '../../store';
 import {
   setNextSlide,
   setAutoPlay,
@@ -14,6 +12,7 @@ import { Dots } from '../Dots';
 import { SliderButton } from '../SliderButton';
 
 import styles from './Slider.module.scss';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 const {
   slider,
   slider__content,
@@ -26,10 +25,9 @@ const {
 const ANIMATION_DURATION = 700;
 
 export const Slider = () => {
-  const dispatch = useDispatch();
-  const { currentIndex, slides, interval, autoPlay, isAnimating } = useSelector(
-    (state: RootState) => state.slider,
-  );
+  const dispatch = useAppDispatch();
+  const { currentIndex, slides, interval, autoPlay, isAnimating } =
+    useAppSelector((state) => state.slider);
 
   useEffect(() => {
     if (autoPlay) {

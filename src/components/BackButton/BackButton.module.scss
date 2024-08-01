@@ -1,21 +1,34 @@
 .button {
   grid-column: 1 / -1;
-  
+
   display: flex;
 
   gap: 4px;
   width: 66px;
   margin-bottom: 16px;
+  cursor: pointer;
+
+  &:hover {
+    .button__label {
+      color: map-get($colors, gray-primary);
+    }
+  }
 
   &__label {
     @include apply-typography(small);
 
     margin-top: 2px;
-    line-height: 14px;
+    line-height: 13px;
     color: map-get($colors, secondary);
   }
 
   &__icon {
-    padding: 3px 5px;
+    display: flex;
+    padding: 5px 8px;
+
+    background-image: url('/icons/icon-arrow.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: rotate(-180deg);
   }
 }

@@ -1,12 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import { setCurrentItem } from '../../features/currentItem/currentItemSlice';
 
 import styles from './CapacitySelector.module.scss';
 import { fetchProducts } from '../../utils/fetchProducts';
 import { Item } from '../../types/Item';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 const {
   capacity__selector,
@@ -25,10 +24,8 @@ type Props = {
 export const CapacitySelector = ({ capacityOptions }: Props) => {
   const { category } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const currentItem = useSelector(
-    (state: RootState) => state.currentItem.currentItem,
-  );
+  const dispatch = useAppDispatch();
+  const currentItem = useAppSelector((state) => state.currentItem.currentItem);
 
   const handleCapacityChange = async (newCapacity: string) => {
     if (!currentItem) return;
@@ -46,7 +43,7 @@ export const CapacitySelector = ({ capacityOptions }: Props) => {
     if (newItem) {
       dispatch(setCurrentItem(newItem));
       navigate(
-        `/${newItem.category}/${newItem.namespaceId}-${newItem.capacity}-${newItem.color}`,
+        `/catalog/${newItem.category}/${newItem.namespaceId}-${newItem.capacity}-${newItem.color}`,
       );
     }
   };

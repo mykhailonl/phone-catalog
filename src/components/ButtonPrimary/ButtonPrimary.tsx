@@ -22,7 +22,9 @@ export const ButtonPrimary = ({
       style={additionalStyles}
       disabled={disabled}
     >
-      <span className={button__text}>{buttonText}</span>
+      <span className={button__text} style={additionalStyles}>
+        {buttonText}
+      </span>
     </button>
   );
 };

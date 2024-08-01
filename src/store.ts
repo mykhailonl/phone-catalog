@@ -6,6 +6,7 @@ import favoriteSlice from './features/favorites/favoriteSlice';
 import cartSlice from './features/cart/cartSlice';
 import paginationSlice from './features/pagination/paginationSlice';
 import currentItemSlice from './features/currentItem/currentItemSlice';
+import scrollSlice from './features/scroll/scrollSlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     cart: cartSlice,
     pagination: paginationSlice,
     currentItem: currentItemSlice,
+    scroll: scrollSlice,
   },
 });
 

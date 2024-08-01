@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import {
   setCurrentItem,
   setCurrentProduct,
@@ -10,23 +8,24 @@ import {
 } from '../../features/currentItem/currentItemSlice';
 import { fetchProducts } from '../../utils/fetchProducts';
 
-import { PageNotFound } from '../PageNotFound';
+import { PageNotFound } from '../../pages/PageNotFound';
 import { ColorSelector } from '../ColorSelector';
 import { CapacitySelector } from '../CapacitySelector';
 import { ProductActions } from '../ProductActions';
 import { ProductPrice } from '../ProductPrice';
-import { Product } from '../../types/Product';
 import { Specification } from '../Specification';
 import { ProductAbout } from '../ProductAbout';
 import { ProductSpecs } from '../ProductSpecs';
 import { BreadCrumbs } from '../BreadCrumbs';
 import { BackButton } from '../BackButton/BackButton';
+import { ProductSlider } from '../ProductSlider';
 
+import { Product } from '../../types/Product';
 import { Category } from '../../types/CategoryTypes';
 import { Item } from '../../types/Item';
 
 import styles from './ItemCard.module.scss';
-import { ProductSlider } from '../ProductSlider';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 const {
   card,
   card__content,
@@ -51,63 +50,60 @@ type Params = {
   itemPage: string;
 };
 
-// TODO navigate back link
-
-// TODO change Price on color/capacity change
-
 export const ItemCard = () => {
   const { category, itemPage } = useParams<Params>();
 
-  const dispatch = useDispatch();
-  const { currentItem, currentProduct, targetImgIndex } = useSelector(
-    (state: RootState) => state.currentItem,
+  const dispatch = useAppDispatch();
+  const { currentItem, currentProduct, targetImgIndex } = useAppSelector(
+    (state) => state.currentItem,
   );
+
+  const fetchData = useCallback(async () => {
+    try {
+      const productsUrl = `/api/${category}.json`;
+      const items: Item[] = await fetchProducts(productsUrl);
+
+      const item = items.find((item) => item.id === itemPage);
+
+      if (!item) {
+        return <PageNotFound />;
+      }
+
+      dispatch(setCurrentItem(item));
+
+      const products: Product[] = await fetchProducts(`/api/products.json`);
+      const newProduct = products.find((prod) => prod.itemId === item.id);
+
+      if (!newProduct) {
+        return <PageNotFound />;
+      }
+
+      dispatch(setCurrentProduct(newProduct));
+    } catch (error) {
+      return <p>{`Error happened while fetching products: ${error}`}</p>;
+    }
+  }, [category, itemPage, dispatch]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // #region handlers
+  const handlePreviewClick = useCallback(
+    (index: number) => {
+      dispatch(setTargetImg(index));
+    },
+    [dispatch],
+  );
+  // #endregion
 
   if (!category || !itemPage) {
     return <PageNotFound />;
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productsUrl = `/api/${category}.json`;
-        const items: Item[] = await fetchProducts(productsUrl);
-
-        const item = items.find((item) => item.id === itemPage);
-
-        if (!item) {
-          return <PageNotFound />;
-        }
-
-        console.log('itemcard');
-
-        dispatch(setCurrentItem(item));
-
-        const products: Product[] = await fetchProducts(`/api/products.json`);
-        const newProduct = products.find((prod) => prod.itemId === item.id);
-
-        if (!newProduct) {
-          return <PageNotFound />;
-        }
-
-        dispatch(setCurrentProduct(newProduct));
-      } catch (error) {
-        return <p>{`Error happened while fetching products: ${error}`}</p>;
-      }
-    };
-
-    fetchData();
-  }, [category, itemPage, dispatch]);
-
   if (!currentItem || !currentProduct) {
     return null;
   }
-
-  // #region handlers
-  const handlePreviewClick = (index: number) => {
-    dispatch(setTargetImg(index));
-  };
-  // #endregion
 
   return (
     <div className={card}>
@@ -127,7 +123,6 @@ export const ItemCard = () => {
             />
           </div>
 
-          {/* TODO change approach to this section (display, width etc) */}
           <div className={card__previews}>
             {currentItem.images.map((photo, index) => (
               <div

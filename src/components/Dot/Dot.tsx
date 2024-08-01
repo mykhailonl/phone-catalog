@@ -1,7 +1,7 @@
-import { useDispatch } from 'react-redux';
 import { setCurrentIndex } from '../../features/slider/sliderSlice';
 
 import styles from './Dot.module.scss';
+import { useAppDispatch } from '../../hooks';
 
 type Props = {
   isActive: boolean;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const Dot = ({ isActive, id }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleDotClick = () => {
     dispatch(setCurrentIndex(id));

@@ -1,16 +1,23 @@
 .header {
   @include box-shadow(custom-bottom);
-
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  height: 48px;
   width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: map-get($colors, $key: white);
+  z-index: 60;
 
-  @include on-desktop {
-    gap: 24px;
-    height: 64px;
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  
+    height: 48px;
+    
+  
+    @include on-desktop {
+      gap: 24px;
+      height: 64px;
+    }
   }
 
   &__logo {

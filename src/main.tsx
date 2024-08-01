@@ -6,14 +6,15 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './store';
 
 import { App } from './App';
-import { HomePage } from './components/HomePage';
-import { PageNotFound } from './components/PageNotFound/PageNotFound';
-import { ProductList } from './components/ProductList';
+import { HomePage } from './pages/HomePage';
+import { PageNotFound } from './pages/PageNotFound/PageNotFound';
+import { Cart } from './pages/CartPage';
 
-import './index.css';
 import { ItemCard } from './components/ItemCard';
 import { ProductListWrapper } from './components/ProductListWraper/ProductListWraper';
-import { Cart } from './pages/cart';
+import { FavouritesList } from './components/FavouritesList';
+
+import './index.css';
 
 const router = createBrowserRouter([
   {
@@ -25,20 +26,30 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: 'favourites',
-        element: <ProductList title="Favourites" category="favourites" />,
+        path: 'catalog',
+        children: [
+          {
+            path: ':category',
+            element: <ProductListWrapper />,
+          },
+          {
+            path: ':category/:itemPage',
+            element: <ItemCard />,
+          },
+        ],
       },
       {
-        path: 'cart',
-        element: <Cart />,
-      },
-      {
-        path: ':category',
-        element: <ProductListWrapper />,
-      },
-      {
-        path: ':category/:itemPage',
-        element: <ItemCard />,
+        path: 'user',
+        children: [
+          {
+            path: 'favourites',
+            element: <FavouritesList />,
+          },
+          {
+            path: 'cart',
+            element: <Cart />,
+          },
+        ],
       },
       {
         path: '*',

@@ -1,11 +1,10 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import { setCurrentItem } from '../../features/currentItem/currentItemSlice';
 
 import styles from './ColorSelector.module.scss';
 import { fetchProducts } from '../../utils/fetchProducts';
 import { Item } from '../../types/Item';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 const {
   colorSelector,
@@ -30,21 +29,21 @@ const colorPalette: { [key: string]: string } = {
   silver: '#E3E3E5',
   gold: '#F8DAD0',
   'rose gold': '#ECC4BC',
+  rosegold: '#ECC4BC',
   blue: '#33384F',
   'sky blue': '#C1D1DE',
   red: '#F44C54',
   green: '#C5D5C0',
   starlight: '##F3EDE8',
   pink: '#F9E5E4',
+  black: '#16171B',
 };
 
 export const ColorSelector = ({ colors }: Props) => {
   const { category } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const currentItem = useSelector(
-    (state: RootState) => state.currentItem.currentItem,
-  );
+  const dispatch = useAppDispatch();
+  const currentItem = useAppSelector((state) => state.currentItem.currentItem);
 
   const handleColorChange = async (newColor: string) => {
     if (!currentItem) return;
@@ -62,7 +61,7 @@ export const ColorSelector = ({ colors }: Props) => {
     if (newItem) {
       dispatch(setCurrentItem(newItem));
       navigate(
-        `/${newItem.category}/${newItem.namespaceId}-${newItem.capacity}-${newItem.color}`,
+        `/catalog/${newItem.category}/${newItem.namespaceId}-${newItem.capacity}-${newItem.color}`,
       );
     }
   };
@@ -90,7 +89,7 @@ export const ColorSelector = ({ colors }: Props) => {
         })}
       </div>
 
-      <div className={line}></div>
+      <div className={line} />
     </div>
   );
 };

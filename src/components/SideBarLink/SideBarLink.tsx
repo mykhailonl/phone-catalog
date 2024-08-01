@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { toggleMenu } from '../../features/sideBar/sideBarSlice';
 
 import styles from './SideBarLink.module.scss';
+import { useAppDispatch } from '../../hooks';
 
 type Props = {
   image: string;
@@ -19,11 +19,9 @@ const {
 } = styles;
 
 export const SideBarLink = ({ image, url, amount, name }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    console.log('handle');
-
     dispatch(toggleMenu());
   };
 

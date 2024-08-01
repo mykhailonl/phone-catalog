@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { CSSProperties, memo, useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchProducts } from '../../utils/fetchProducts';
 
-import { ProductSliderButton } from '../ProductSliderButton';
+import { useProductData } from '../../hooks/useProductData';
+
+import { Button } from '../Button';
+
 import { Product } from '../Product';
-
-import { Product as ProductType } from '../../types/Product';
 
 import styles from './ProductSlider.module.scss';
 const {
@@ -24,91 +24,78 @@ type Props = {
   newOnly: boolean;
 };
 
-// TODO get rid of states?
+export const ProductSlider = memo(
+  ({ title, apiUrl, discount, newOnly }: Props) => {
+    const { category } = useParams();
+    const products = useProductData(apiUrl, category, newOnly);
 
-export const ProductSlider = ({ title, apiUrl, discount, newOnly }: Props) => {
-  const { category } = useParams();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [products, setProducts] = useState<ProductType[]>([]);
+    // #region click handlers
+    const handlePrevClick = useCallback(() => {
+      setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productsData: ProductType[] = await fetchProducts(apiUrl);
-        let preparedProducts = newOnly
-          ? productsData.filter((product) => product.year === 2022)
-          : productsData.filter((product) => product.year !== 2022);
+    const handleNextClick = useCallback(() => {
+      setCurrentIndex((prevIndex) =>
+        Math.min(prevIndex + 1, Math.max(products.length - 1, 0)),
+      );
+    }, [products.length]);
+    // #endregion
 
-        if (category) {
-          console.log(true);
-
-          const filteredProducts = preparedProducts.filter(
-            (product) => product.category === category,
-          );
-          setProducts(filteredProducts);
-        } else {
-          setProducts(preparedProducts);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, [category, apiUrl, newOnly]);
-
-  // #region click handlers
-  const handlePrevClick = () => {
-    setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-  };
-
-  const handleNextClick = () => {
-    setCurrentIndex((prevIndex) =>
-      Math.min(prevIndex + 1, Math.max(products.length - 1, 0)),
+    // #region conditions
+    const productsStartPosition = useMemo(
+      () => currentIndex === 0,
+      [currentIndex],
     );
-  };
-  // #endregion
+    const productsEndPosition = useMemo(
+      () => currentIndex === products.length,
+      [currentIndex, products.length],
+    );
+    // #endregion
 
-  // #region conditions
-  const productsStartPosition = currentIndex === 0;
-  const productsEndPosition = currentIndex === products.length;
-  // #endregion
+    return (
+      <div className={productSlider}>
+        <div className={productSlider__wrapper}>
+          <h2 className={productSlider__title}>{title}</h2>
 
-  return (
-    <div className={productSlider}>
-      <div className={productSlider__wrapper}>
-        <h2 className={productSlider__title}>{title}</h2>
+          <div className={productSlider__buttonsWrapper}>
+            <Button
+              bgImg="/icons/icon-arrow.svg"
+              action={handlePrevClick}
+              disabled={productsStartPosition}
+              additionalStyles={{
+                transform: 'rotate(-180deg)',
+                borderColor: '#B4BDC3',
+              }}
+            />
 
-        <div className={productSlider__buttonsWrapper}>
-          <ProductSliderButton
-            direction="left"
-            onClick={handlePrevClick}
-            disabled={productsStartPosition}
-          />
+            <Button
+              bgImg="/icons/icon-arrow.svg"
+              action={handleNextClick}
+              disabled={productsEndPosition}
+              additionalStyles={{ borderColor: '#B4BDC3' }}
+            />
+          </div>
 
-          <ProductSliderButton
-            direction="right"
-            onClick={handleNextClick}
-            disabled={productsEndPosition}
-          />
-        </div>
-
-        <div className={productSlider__carouselWrapper}>
-          <div
-            className={productSlider__carousel}
-            style={
-              {
-                '--current-index': currentIndex,
-              } as React.CSSProperties
-            }
-          >
-            {products.map((item, index) => (
-              <Product product={item} discount={discount} key={index} />
-            ))}
+          <div className={productSlider__carouselWrapper}>
+            <div
+              className={productSlider__carousel}
+              style={
+                {
+                  '--current-index': currentIndex,
+                } as CSSProperties
+              }
+            >
+              {products.map((item, index) => (
+                <Product product={item} discount={discount} key={index} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
+
+ProductSlider.displayName = 'ProductSlider';

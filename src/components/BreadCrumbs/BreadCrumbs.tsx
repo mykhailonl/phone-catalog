@@ -1,5 +1,5 @@
 import { ReactNode, memo, useCallback, useMemo } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 
@@ -14,6 +14,7 @@ const {
 } = styles;
 
 export const BreadCrumbs = memo(() => {
+  const location = useLocation();
   const { category, itemPage } = useParams();
   const normalizedCategory = useMemo(
     () => category && category[0].toUpperCase() + category.slice(1),
@@ -44,11 +45,22 @@ export const BreadCrumbs = memo(() => {
         />,
       )}
 
+      {location.pathname.startsWith('/user') && (
+        <>
+          <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
+          <span
+            className={`${breadcrumbs__text} ${itemPage ? breadcrumbs__textGray : ''}`}
+          >
+            Favourites
+          </span>
+        </>
+      )}
+
       {category && (
         <>
           <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
           {renderLink(
-            `/${category}`,
+            `/catalog/${category}`,
             breadcrumbs__link,
             <span
               className={`${breadcrumbs__text} ${itemPage ? breadcrumbs__textGray : ''}`}

@@ -10,21 +10,42 @@
 
     @include on-desktop {
       @include grid(desktop);
+
+      max-width: 1136px;
+      margin-inline: auto;
     }
 
-    row-gap: 40px;
     margin-bottom: 64px;
   }
 
   &__dropdowns {
-    grid-column: 1 / -1;
-    grid-row: 1 / 1;
+    max-width: 320px;
+    grid-area: 2 / 1 / 2 / -1;
 
     display: flex;
     gap: 16px;
 
     @include on-tablet {
       grid-column: span 7;
+    }
+
+    @include on-desktop {
+      grid-area: 2 / 1 / 2 / -1;
+    }
+  }
+
+  &__products {
+    grid-column: 1 / -1;
+    row-gap: 40px;
+
+    @include grid(mobile);
+
+    @include on-tablet {
+      @include grid(tablet);
+    }
+
+    @include on-desktop {
+      @include grid(desktop);
     }
   }
 

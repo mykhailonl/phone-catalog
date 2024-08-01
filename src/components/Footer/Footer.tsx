@@ -1,33 +1,39 @@
-import { HashLink } from 'react-router-hash-link';
-
+import { setScrollToTop } from '../../features/scroll/scrollSlice';
 import { NavItem } from '../NavItem';
 import { Logo } from '../Logo';
 
 import styles from './Footer.module.scss';
+import { useAppDispatch } from '../../hooks';
 
+// TODO switch from NavLink to links?
+// TODO add correct links
 export const Footer = () => {
+  const dispatch = useAppDispatch();
   const {
     footer,
-    footer__container,
+    footer__content,
     footer__logo,
     footer__nav,
     footer__anchor,
     footer__anchor__text,
     footer__anchor__link,
     footer__anchor__icon,
-    footer__anchor__arrow,
   } = styles;
+
+  const handleAnchorClick = () => {
+    dispatch(setScrollToTop('smooth'));
+  };
 
   return (
     <footer className={footer}>
-      <div className={footer__container}>
+      <div className={footer__content}>
         <div className={footer__logo}>
-          <Logo />
+          <Logo placement="footer" />
         </div>
 
         {/* TODO check hover values (item width) */}
         <nav className={footer__nav}>
-          <NavItem url="/" name="Github" />
+          <NavItem url="github.com/mykhailonl" name="Github" />
 
           <NavItem url="/" name="Contacts" />
 
@@ -37,15 +43,9 @@ export const Footer = () => {
         <div className={footer__anchor}>
           <small className={footer__anchor__text}>Back to top</small>
 
-          <HashLink smooth to="#header" className={footer__anchor__link}>
-            <div className={footer__anchor__icon}>
-              <img
-                src={`/icons/right-arrow.svg`}
-                alt={`product slider button top`}
-                className={footer__anchor__arrow}
-              />
-            </div>
-          </HashLink>
+          <button className={footer__anchor__link} onClick={handleAnchorClick}>
+            <div className={footer__anchor__icon} />
+          </button>
         </div>
       </div>
     </footer>

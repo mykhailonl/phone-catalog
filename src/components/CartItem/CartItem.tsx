@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { Link, useLocation } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { removeFromCart, addToCart } from '../../features/cart/cartSlice';
 
 import { Button } from '../Button';
@@ -8,6 +7,7 @@ import { Button } from '../Button';
 import { Product } from '../../types/Product';
 
 import styles from './CartItem.module.scss';
+import { useEffect } from 'react';
 const {
   item,
   item__row,
@@ -25,9 +25,13 @@ type Props = {
 // FIXME width?
 
 export const CartItem = ({ product }: Props) => {
-  const dispatch = useDispatch();
-  const { cartItems } = useSelector((state: RootState) => state.cart);
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const { cartItems } = useAppSelector((state) => state.cart);
 
+  const isInCart = location.pathname.startsWith('/user/cart');
+
+  useEffect(() => console.log(product), [product]);
   // #region handler functions
   const deleteProduct = (productId: number) => {
     dispatch(removeFromCart(productId));
@@ -44,7 +48,7 @@ export const CartItem = ({ product }: Props) => {
   }
 
   const productCost = currentItem.product.fullPrice * currentItem.quantity;
-  const productPageUrl = `/${product.category}/${product.itemId}`;
+  const productPageUrl = `/catalog/${product.category}/${product.itemId}`;
 
   // #region conditions
   const minusButtonDisabled = currentItem.quantity === 1;
@@ -52,8 +56,9 @@ export const CartItem = ({ product }: Props) => {
 
   // #region additionalStyles
   const deleteButtonStyles = {
-    'border-color': 'transparent',
+    borderColor: 'transparent',
     opacity: '50%',
+    padding: '0',
   };
   const minusButtonStyles = minusButtonDisabled
     ? {
@@ -76,13 +81,17 @@ export const CartItem = ({ product }: Props) => {
         />
 
         <img
-          src={product.image}
+          src={`/${product.image}`}
           alt={`${product.name} image`}
           className={item__img}
         />
 
-        <Link to={productPageUrl}>
-          <p className={item__name}>{product.name}</p>
+        <Link
+          to={productPageUrl}
+          className={item__name}
+          state={isInCart && { from: 'user', previousPath: location.pathname }}
+        >
+          <p>{product.name}</p>
         </Link>
       </div>
 

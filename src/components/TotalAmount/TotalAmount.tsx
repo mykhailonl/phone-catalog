@@ -35,6 +35,7 @@ export const Total = () => {
         buttonText="Checkout"
         action={() => console.log('Hey there')}
         disabled={false}
+        additionalStyles={{ fontWeight: '600' }}
       />
     </div>
   );

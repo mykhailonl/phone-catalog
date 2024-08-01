@@ -7,11 +7,11 @@ export const MenuItems = () => {
     <>
       <SideBarItem url="/" name="Home" />
 
-      <SideBarItem url="phones" name="Phones" />
+      <SideBarItem url="/catalog/phones" name="Phones" />
 
-      <SideBarItem url="tablets" name="Tablets" />
+      <SideBarItem url="/catalog/tablets" name="Tablets" />
 
-      <SideBarItem url="accessories" name="Accessories" />
+      <SideBarItem url="/catalog/accessories" name="Accessories" />
     </>
   );
 };

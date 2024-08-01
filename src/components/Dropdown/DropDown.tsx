@@ -1,12 +1,8 @@
-import { useSearchParams } from 'react-router-dom';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import {
-  setActiveDropdown,
-  setSortBy,
-  setItemsOnThePage,
-} from '../../features/pagination/paginationSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setActiveDropdown } from '../../features/pagination/paginationSlice';
+import { useSearchParamValue } from '../../hooks/useSearchParamValue';
 
 import {
   DropDownItemsPerPage,
@@ -18,11 +14,6 @@ import {
 } from '../../types/DropDownSortOptions';
 
 import styles from './DropDown.module.scss';
-
-type Props = {
-  dropdownConfig: DropDownSort | DropDownItemsPerPage;
-  currentValue: DropDownSortOptions | ItemsPerPageOptions;
-};
 
 const {
   dropdown,
@@ -37,44 +28,95 @@ const {
   dropdown__arrowIsOpen,
 } = styles;
 
-// TODO реагировать на клики вне опций и тд
+type Props = {
+  dropdownConfig: DropDownSort | DropDownItemsPerPage;
+};
 
-export const DropDown = ({ dropdownConfig, currentValue }: Props) => {
+export const DropDown = memo(({ dropdownConfig }: Props) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const { name, urlSearchName, values } = dropdownConfig;
 
-  const dispatch = useDispatch();
-  const { activeDropdown } = useSelector(
-    (state: RootState) => state.pagination,
+  const [sortBy, setSortBy] = useSearchParamValue(
+    'sort',
+    DropDownSortOptions.age,
   );
+  const [itemsOnPage, setItemsOnPage] = useSearchParamValue('perPage', 'All');
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useAppDispatch();
+  const { activeDropdown } = useAppSelector((state) => state.pagination);
 
-  const handleDropDownClick = () => {
+  const handleDropDownClick = useCallback(() => {
     dispatch(
       setActiveDropdown(
         activeDropdown === urlSearchName ? null : urlSearchName,
       ),
     );
-  };
+  }, [dispatch, activeDropdown, urlSearchName]);
 
-  const handleOptionClick = (value: string | number) => {
-    dispatch(setActiveDropdown(null));
+  const handleOptionClick = useCallback(
+    (newValue: ItemsPerPageOptions | DropDownSortOptions) => {
+      if (dropdownConfig.name === 'Sort by') {
+        setSortBy(newValue as DropDownSortOptions);
+      } else {
+        setItemsOnPage(newValue as ItemsPerPageOptions);
+      }
+      dispatch(setActiveDropdown(null));
+    },
+    [dropdownConfig.name, setSortBy, setItemsOnPage, dispatch],
+  );
 
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set(urlSearchName, `${value}`);
-    setSearchParams(newParams);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        activeDropdown === urlSearchName
+      ) {
+        dispatch(setActiveDropdown(null));
+      }
+    };
 
-    if (urlSearchName === 'sortBy') {
-      dispatch(setSortBy(value as DropDownSortOptions));
-    } else if (urlSearchName === 'itemsOnPage') {
-      dispatch(setItemsOnThePage(+value as ItemsPerPageOptions));
-    }
-  };
+    document.addEventListener('mousedown', handleClickOutside);
 
-  const isOpen = activeDropdown === urlSearchName;
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dispatch, activeDropdown, urlSearchName]);
+
+  const isOpen = useMemo(
+    () => activeDropdown === urlSearchName,
+    [activeDropdown, urlSearchName],
+  );
+  const currentValue = useMemo(
+    () => (dropdownConfig.name === 'Sort by' ? sortBy : itemsOnPage),
+    [dropdownConfig.name, sortBy, itemsOnPage],
+  );
+
+  const options = useMemo(
+    () =>
+      values.map((value) => (
+        <div
+          key={value}
+          className={dropdown__option}
+          onClick={() => handleOptionClick(value)}
+        >
+          {value}
+        </div>
+      )),
+    [values, handleOptionClick],
+  );
 
   return (
-    <div className={dropdown}>
+    <div
+      ref={dropdownRef}
+      className={dropdown}
+      style={
+        dropdownConfig.name === 'Sort by'
+          ? { width: '176px' }
+          : { width: '128px' }
+      }
+    >
       <label className={dropdown__description}>{name}</label>
 
       <div className={dropdown__list} onClick={handleDropDownClick}>
@@ -90,16 +132,10 @@ export const DropDown = ({ dropdownConfig, currentValue }: Props) => {
       <div
         className={`${dropdown__options} ${isOpen ? dropdown__optionsOpen : dropdown__optionsClosed}`}
       >
-        {values.map((value) => (
-          <div
-            key={value}
-            className={dropdown__option}
-            onClick={() => handleOptionClick(value)}
-          >
-            {value}
-          </div>
-        ))}
+        {options}
       </div>
     </div>
   );
-};
+});
+
+DropDown.displayName = 'DropDown';
