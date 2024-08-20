@@ -1,7 +1,7 @@
-import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+
+import { Item } from '../../types/Item';
 
 import styles from './BreadCrumbs.module.scss';
 const {
@@ -13,15 +13,16 @@ const {
   breadcrumbs__textGray,
 } = styles;
 
-export const BreadCrumbs = memo(() => {
+type BreadCrumbsProps = {
+  item?: Item;
+};
+
+export const BreadCrumbs = ({ item }: BreadCrumbsProps) => {
   const location = useLocation();
   const { category, itemPage } = useParams();
   const normalizedCategory = useMemo(
     () => category && category[0].toUpperCase() + category.slice(1),
     [category],
-  );
-  const productName = useSelector(
-    (state: RootState) => state.currentItem.currentItem?.name,
   );
 
   const renderLink = useCallback(
@@ -74,11 +75,9 @@ export const BreadCrumbs = memo(() => {
       {itemPage && (
         <>
           <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
-          <span className={breadcrumbs__text}>{productName}</span>
+          <span className={breadcrumbs__text}>{item?.name}</span>
         </>
       )}
     </div>
   );
-});
-
-BreadCrumbs.displayName = 'BreadCrumbs';
+};
