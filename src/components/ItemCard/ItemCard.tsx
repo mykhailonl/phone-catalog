@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 import { fetchProducts } from '../../utils/fetchProducts';
 
@@ -14,14 +15,13 @@ import { ProductSpecs } from '../ProductSpecs';
 import { BreadCrumbs } from '../BreadCrumbs';
 import { BackButton } from '../BackButton/BackButton';
 import { ProductSlider } from '../ProductSlider';
+import { Loader } from '../Loader';
 
 import { Product } from '../../types/Product';
 import { Category } from '../../types/CategoryTypes';
 import { Item } from '../../types/Item';
 
 import styles from './ItemCard.module.scss';
-import { useQuery } from '@tanstack/react-query';
-import { Loader } from '../Loader';
 const {
   card,
   card__content,
@@ -46,86 +46,139 @@ type Params = {
 
 export const ItemCard = () => {
   const { category, itemPage } = useParams<Params>();
+  const navigate = useNavigate();
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [targetImgIndex, setTargetImgIndex] = useState(0);
 
+  // Fetch all item options for the current category
   const {
-    data: item,
-    isLoading: isItemLoading,
-    error: itemError,
-  } = useQuery<Item, Error>({
-    queryKey: ['item', category, itemPage],
+    data: itemOptions,
+    isLoading: isItemOptionsLoading,
+    error: itemOptionsError,
+  } = useQuery<Item[], Error>({
+    queryKey: ['models', category],
     queryFn: async () => {
-      const productsUrl = `/api/${category}.json`;
-      const items: Item[] = await fetchProducts(productsUrl);
-      const item = items.find((item) => item.id === itemPage);
+      if (!category) return [];
 
-      // TODO
-      if (!item) throw new Error('Item not found');
+      const response: Item[] = await fetchProducts(`/api/${category}.json`);
 
-      return item;
+      return response;
     },
-    refetchOnMount: 'always',
   });
 
+  const productQueryKey = useMemo(() => ['product', itemPage], [itemPage]);
+
+  // Fetch the current product with optimized caching
   const {
-    data: product,
+    data: currentProduct,
     isLoading: isProductLoading,
     error: productError,
   } = useQuery<Product, Error>({
-    queryKey: ['product', itemPage],
+    queryKey: productQueryKey,
     queryFn: async () => {
       const products: Product[] = await fetchProducts(`/api/products.json`);
-      const product = products.find((prod) => prod.itemId === itemPage);
+      const product = products.find((p) => p.itemId === itemPage);
+
       if (!product) throw new Error('Product not found');
+
       return product;
     },
-    refetchOnMount: 'always',
+    enabled: !!itemPage,
+    staleTime: Infinity, // Data will never become stale
+    gcTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
-  const isLoading = isItemLoading || isProductLoading;
-  const error = itemError || productError;
+  // Find the current item from pre-loaded options
+  const currentItem = useMemo(() => {
+    if (!itemOptions || !itemPage) return null;
 
-  if (isLoading) return <Loader />;
+    return itemOptions.find((item) => item.id === itemPage) || null;
+  }, [itemOptions, itemPage]);
+
+  const isLoading = useMemo(
+    () => isInitialLoading || isItemOptionsLoading || isProductLoading,
+    [isInitialLoading, isItemOptionsLoading, isProductLoading],
+  );
+
+  const error = useMemo(
+    () => itemOptionsError || productError,
+    [itemOptionsError, productError],
+  );
+
+  // Simulate initial loading state for UX purposes
+  useEffect(() => {
+    if (!isItemOptionsLoading && !isProductLoading) {
+      const timer = setTimeout(() => {
+        setIsInitialLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isItemOptionsLoading, isProductLoading]);
+
+  // Handle item variant changes (color, capacity) without page reload
+  const handleItemChange = useCallback(
+    (newItemId: string) => {
+      if (category) {
+        navigate(`/catalog/${category}/${newItemId}`, { replace: true });
+      }
+    },
+    [category, navigate],
+  );
+
+  const handlePreviewClick = useCallback((index: number) => {
+    setTargetImgIndex(index);
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   // TODO
-  if (error) return <p>{`Error: ${error.message}`}</p>;
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
-  if (!category || !itemPage || !item || !product) return <PageNotFound />;
-
-  const handlePreviewClick = (index: number) => {
-    setTargetImgIndex(index);
-  };
+  if (
+    !category ||
+    !itemPage ||
+    !itemOptions ||
+    !currentProduct ||
+    !currentItem
+  ) {
+    return <PageNotFound />;
+  }
 
   return (
     <div className={card}>
       <div className={card__content}>
         <div className={card__top}>
-          <BreadCrumbs item={item} />
+          <BreadCrumbs item={currentItem} />
 
           <BackButton />
 
-          <h2 className={card__title}>{item.name}</h2>
+          <h2 className={card__title}>{currentItem.name}</h2>
 
           <div className={card__imgBlock}>
             <img
-              src={`/${item.images[targetImgIndex]}`}
-              alt={`${item.name} photo`}
+              src={`/${currentItem.images[targetImgIndex]}`}
+              alt={`${currentItem.name} photo`}
               className={card__img}
             />
           </div>
 
           <div className={card__previews}>
-            {item.images.map((photo, index) => (
+            {currentItem.images.map((photo, index) => (
               <div
                 className={`
-                ${card__sliderBlock} 
+                ${card__sliderBlock}
                 ${index === targetImgIndex && card__sliderBlockIsActive}`}
                 key={index}
                 onClick={() => handlePreviewClick(index)}
               >
                 <img
                   src={`/${photo}`}
-                  alt={`${item.name} photo preview`}
+                  alt={`${currentItem.name} photo preview`}
                   className={card__sliderImg}
                 />
               </div>
@@ -133,53 +186,64 @@ export const ItemCard = () => {
           </div>
 
           <div className={card__controls}>
-            <ColorSelector item={item} colors={item.colorsAvailable} />
+            <ColorSelector
+              item={currentItem}
+              colors={currentItem.colorsAvailable}
+              onColorChange={handleItemChange}
+              itemOptions={itemOptions}
+            />
 
             <CapacitySelector
-              item={item}
-              capacityOptions={item.capacityAvailable}
+              item={currentItem}
+              capacityOptions={currentItem.capacityAvailable}
+              onCapacityChange={handleItemChange}
+              itemOptions={itemOptions}
             />
 
             <div className={card__actions}>
               {/* TODO what to do with a discount? */}
               <div className={card__price}>
                 <ProductPrice
-                  fullPrice={item.priceRegular}
-                  discountedPrice={item.priceDiscount}
+                  fullPrice={currentProduct.fullPrice}
+                  discountedPrice={currentProduct.price}
                   context="page"
                 />
               </div>
 
-              <ProductActions product={product} />
+              <ProductActions product={currentProduct} />
             </div>
 
             <div className={card__specs}>
               <Specification
                 label="Screen"
-                value={item.screen}
+                value={currentItem.screen}
                 context="page"
               />
 
               <Specification
                 label="Resolution"
-                value={item.resolution}
+                value={currentItem.resolution}
                 context="page"
               />
 
               <Specification
                 label="Processor"
-                value={item.processor}
+                value={currentItem.processor}
                 context="page"
               />
 
-              <Specification label="RAM" value={item.ram} context="page" />
+              <Specification
+                label="RAM"
+                value={currentItem.ram}
+                context="page"
+              />
             </div>
           </div>
         </div>
 
-        <ProductAbout description={item.description} />
+        <ProductAbout description={currentItem.description} />
 
-        <ProductSpecs product={item} />
+        <ProductSpecs product={currentItem} />
 
         <ProductSlider
           title="You may also like"

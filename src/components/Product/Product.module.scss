@@ -14,6 +14,14 @@
   height: 439px;
   padding: 31px;
 
+  &__listPositioning {
+    grid-column: 1 / -1;
+
+    @include on-tablet {
+      grid-column: span 6;
+    }
+  }
+
   @include on-tablet {
     flex: 0 0 calc(41.67% - 9px);
   }
@@ -49,11 +57,9 @@
     object-fit: contain;
   }
 
-  &__link {
+  &__name {
     padding-top: 16px;
-  }
 
-  &__buttonLink {
     @include apply-typography(button);
 
     text-align: left;

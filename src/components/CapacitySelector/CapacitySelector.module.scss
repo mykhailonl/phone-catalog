@@ -32,11 +32,8 @@
     color: map-get($colors, gray-primary);
 
     cursor: pointer;
-    transition: border map-get($duration, '0.3') ease;
 
-    &:hover {
-      border-color: map-get($colors, gray-primary);
-    }
+    @include hover(border-color, map-get($colors, gray-primary));
   }
 
   &__line {
