@@ -17,12 +17,14 @@ import styles from './DropDown.module.scss';
 
 const {
   dropdown,
+  dropdown__sort,
   dropdown__description,
   dropdown__list,
   dropdown__options,
   dropdown__optionsOpen,
   dropdown__optionsClosed,
   dropdown__option,
+  dropdown__activeOption,
   dropdown__arrowBlock,
   dropdown__arrow,
   dropdown__arrowIsOpen,
@@ -98,7 +100,9 @@ export const DropDown = memo(({ dropdownConfig }: Props) => {
       values.map((value) => (
         <div
           key={value}
-          className={dropdown__option}
+          className={`${dropdown__option} ${
+            value === currentValue && dropdown__activeOption
+          }`}
           onClick={() => handleOptionClick(value)}
         >
           {value}
@@ -110,12 +114,7 @@ export const DropDown = memo(({ dropdownConfig }: Props) => {
   return (
     <div
       ref={dropdownRef}
-      className={dropdown}
-      style={
-        dropdownConfig.name === 'Sort by'
-          ? { width: '176px' }
-          : { width: '128px' }
-      }
+      className={`${dropdown} ${dropdownConfig.urlSearchName === 'sort' ? dropdown__sort : ''}`}
     >
       <label className={dropdown__description}>{name}</label>
 

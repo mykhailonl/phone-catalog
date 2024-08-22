@@ -1,27 +1,21 @@
-import { setCurrentIndex } from '../../features/slider/sliderSlice';
-
+import React from 'react';
 import styles from './Dot.module.scss';
-import { useAppDispatch } from '../../hooks';
 
-type Props = {
+interface DotProps {
   isActive: boolean;
-  id: number;
-};
+  onClick: () => void;
+}
 
-export const Dot = ({ isActive, id }: Props) => {
-  const dispatch = useAppDispatch();
-
-  const handleDotClick = () => {
-    dispatch(setCurrentIndex(id));
-  };
-
+export const Dot: React.FC<DotProps> = React.memo(({ isActive, onClick }) => {
   const { dot, dot__content, dot__isActive } = styles;
 
   return (
-    <button className={dot} onClick={handleDotClick}>
+    <button className={dot} onClick={onClick}>
       <div
         className={`${dot__content} ${isActive ? dot__isActive : 'bg-elements'}`}
       />
     </button>
   );
-};
+});
+
+Dot.displayName = 'Dot';

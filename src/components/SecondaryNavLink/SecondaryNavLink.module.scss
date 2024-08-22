@@ -1,4 +1,4 @@
-.sideBarLink {
+.secondaryNavLink {
   @include box-shadow(custom-left);
 
   position: relative;
@@ -8,13 +8,29 @@
   justify-content: center;
 
   height: 100%;
-  width: 100%;
   flex-grow: 1;
+
+  &--isActive {
+    &::after {
+      position: absolute;
+      bottom: 0;
+
+      content: '';
+      height: 2px;
+      width: 100%;
+      background-color: map-get($colors, $key: gray-primary);
+    }
+  }
 
   &__iconWrapper {
     position: relative;
     height: 16px;
     width: 16px;
+
+    &--hasAmount {
+      width: 28px;
+      height: 28px;
+    }
   }
 
   &__iconImg {
@@ -31,5 +47,9 @@
     font-size: 9px;
     line-height: 11.5px;
     color: map-get($colors, white);
+
+    &--hasAmount {
+      right: 3px;
+    }
   }
 }

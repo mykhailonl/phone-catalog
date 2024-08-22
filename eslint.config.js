@@ -5,10 +5,12 @@ import tsParser from '@typescript-eslint/parser';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js';
 import prettierConfig from 'eslint-config-prettier';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default [
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
+  ...pluginQuery.configs['flat/recommended'],
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: { parser: tsParser },

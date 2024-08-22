@@ -5,20 +5,18 @@
   grid-column: 1 / -1;
 
   &__wrapper {
-    @include grid(mobile);
+    @include responsive-grid;
     row-gap: 24px;
 
     margin-bottom: 0;
 
     @include on-tablet {
-      @include grid(tablet);
       --slide-width: calc(41.67% - 8px);
 
       gap: 24px;
     }
 
     @include on-desktop {
-      @include grid(desktop);
       --slide-width: calc(25% - 12px);
     }
   }

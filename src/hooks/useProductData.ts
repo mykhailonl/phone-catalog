@@ -20,6 +20,7 @@ export const useProductData = (
       setProductsData(fetchedProducts);
       dataFetchedRef.current = true;
     } catch (error) {
+      // TODO
       console.error(error);
     }
   }, [apiUrl]);

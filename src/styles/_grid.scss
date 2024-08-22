@@ -10,3 +10,15 @@
     grid-template-columns: repeat(24, 32px);
   }
 }
+
+@mixin responsive-grid {
+  @include grid(mobile);
+
+  @include on-tablet {
+    @include grid(tablet);
+  }
+
+  @include on-desktop {
+    @include grid(desktop);
+  }
+}

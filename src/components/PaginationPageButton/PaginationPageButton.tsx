@@ -10,12 +10,12 @@ type Props = {
 
 export const PaginationPageButton = ({ pageNumber }: Props) => {
   const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = useSearchParamValue<number>('page', 1);
+  const [currentPage, setCurrentPage] = useSearchParamValue('page', 1);
 
   const isActivePage = pageNumber === currentPage;
 
   const handleButtonClick = (page: number) => {
-    dispatch(setScrollToTop());
+    dispatch(setScrollToTop('auto'));
 
     setCurrentPage(page);
   };

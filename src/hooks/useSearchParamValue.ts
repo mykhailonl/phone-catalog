@@ -14,7 +14,7 @@ import {
 type ParamName = 'sort' | 'perPage' | 'page';
 
 // Possible types for our parameter values
-type ParamValue = number | ItemsPerPageOptions | DropDownSortOptions;
+export type ParamValue = number | ItemsPerPageOptions | DropDownSortOptions;
 
 // Check if a value is valid for a given parameter
 const isValidParamValue = (param: ParamName, value: string): boolean => {

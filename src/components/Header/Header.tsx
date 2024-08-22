@@ -1,12 +1,14 @@
 import { toggleMenu } from '../../features/sideBar/sideBarSlice';
 
-import styles from './Header.module.scss';
-
-import { Logo } from '../Logo';
-import { SideBarLink } from '../SideBarLink';
-import { MenuItems } from '../MenuItems';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
+import { Logo } from '../Logo';
+import { SecondaryNavLink } from '../SecondaryNavLink';
+import { NavigationLink } from '../NavigationLink';
+
+import { NAVIGATION_LINKS } from '../../types/NavigationLinkType.ts';
+
+import styles from './Header.module.scss';
 const {
   header,
   header__content,
@@ -51,22 +53,23 @@ export const Header = () => {
         </button>
 
         <div className={header__links}>
-          <MenuItems />
+          {NAVIGATION_LINKS.map((link, index) => (
+            <NavigationLink key={index} url={link.url} name={link.name} />
+          ))}
         </div>
 
-        {/* TODO rename component for the links and maybe move to wrapper component? */}
         <div className={header__buttons}>
           <div className={header__buttonWrapper}>
-            <SideBarLink
+            <SecondaryNavLink
               image="/icons/emty-heart.svg"
               url="/user/favourites"
               amount={favItemsAmount}
-              name="fav"
+              name="favourites"
             />
           </div>
 
           <div className={header__buttonWrapper}>
-            <SideBarLink
+            <SecondaryNavLink
               image="/icons/icon-cart.svg"
               url="/user/cart"
               amount={cartItemsAmount}

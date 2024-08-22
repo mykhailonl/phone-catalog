@@ -5,18 +5,20 @@
   padding: 15px;
 
   display: flex;
-  justify-content: space-between;
 
   flex-wrap: wrap;
   gap: 16px;
 
   @include on-tablet {
     padding: 23px;
+    gap: 24px;
     flex-wrap: nowrap;
   }
 
   &__row {
     display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
     align-items: center;
     gap: 16px;
 
@@ -34,10 +36,16 @@
     object-fit: contain;
 
     padding: 7px;
+
+    @include hover(transform, scale(1.1));
   }
 
-  &__name {
+  &__link {
     @include apply-typography(p);
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
 
     min-width: 128px;
     color: map-get($colors, gray-primary);
@@ -46,6 +54,7 @@
 
     @include on-tablet {
       font-weight: 600;
+      gap: 24px;
     }
   }
 

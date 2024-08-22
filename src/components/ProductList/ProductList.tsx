@@ -1,4 +1,3 @@
-// TODO add underline inside a header if located in favourites
 import { useMemo } from 'react';
 
 import { useProducts } from '../../hooks/useProducts';
@@ -22,9 +21,9 @@ import {
 } from '../../types/DropDownItemsPerPage';
 
 import styles from './ProductList.module.scss';
+import { Loader } from '../Loader';
 
-const { list, list__content, list__dropdowns, list__products, list__product } =
-  styles;
+const { list, list__content, list__dropdowns, list__products } = styles;
 
 // Configuration for the sort dropdown
 const sortByDropdown: DropDownSort = {
@@ -45,7 +44,7 @@ export const ProductList = ({
   productsUrl,
   category,
 }: ProductListType) => {
-  // Get values from URL parameters
+  // * Get values from URL parameters
   const [currentPage] = useSearchParamValue('page', 1);
   const [itemsOnPage] = useSearchParamValue(
     'perPage',
@@ -53,14 +52,14 @@ export const ProductList = ({
   );
   const [sortBy] = useSearchParamValue('sort', DropDownSortOptions.age);
 
-  // Fetch the list of products
-  const products = useProducts(
+  // * Fetching the list of products using custom hook with loading emulation
+  const { products, isLoading, error } = useProducts(
     category,
     sortBy as DropDownSortOptions,
     productsUrl,
   );
 
-  // Calculate the current items and total number of pages
+  // * Calculate the current items and total number of pages
   const { currentItems, pagesAmount } = useMemo(() => {
     if (itemsOnPage === 'All') {
       return {
@@ -81,9 +80,14 @@ export const ProductList = ({
     };
   }, [products, itemsOnPage, currentPage]);
 
-  // Determine if dropdowns and pagination should be visible
+  // * Determine if dropdowns and pagination should be visible
   const dropdownsVisible = category !== 'favourites';
   const paginationVisible = pagesAmount > 1;
+
+  if (isLoading) return <Loader />;
+
+  // TODO create component
+  if (error) return <div>Error</div>;
 
   return (
     <div className={list}>
@@ -101,19 +105,23 @@ export const ProductList = ({
               categoryName={title}
               categoryAmount={products.length}
             />
+
             <div className={list__dropdowns}>
               <DropDown dropdownConfig={sortByDropdown} />
+
               <DropDown dropdownConfig={itemsDropdown} />
             </div>
           </>
         )}
 
-        {/* TODO: Add a wrapper for products and set padding-block to 24px? */}
         <div className={list__products}>
           {currentItems.map((prod, index) => (
-            <div key={index} className={list__product}>
-              <Product product={prod} discount={false} />
-            </div>
+            <Product
+              product={prod}
+              discount={false}
+              key={index}
+              isInCategory={true}
+            />
           ))}
         </div>
 

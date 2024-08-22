@@ -13,6 +13,7 @@ export const Categories = () => {
         photo="/img/category-phones.webp"
         url="/catalog/phones"
         products="/api/phones.json"
+        additionalStyles={{ backgroundColor: '#6D6474' }}
       />
 
       <Category
@@ -20,6 +21,7 @@ export const Categories = () => {
         photo="/img/category-tablets.webp"
         url="/catalog/tablets"
         products="/api/tablets.json"
+        additionalStyles={{ backgroundColor: '#8D8D92' }}
       />
 
       <Category
@@ -27,6 +29,7 @@ export const Categories = () => {
         photo="/img/category-accessories.webp"
         url="/catalog/accessories"
         products="/api/accessories.json"
+        additionalStyles={{ backgroundColor: '#973D5F' }}
       />
     </div>
   );

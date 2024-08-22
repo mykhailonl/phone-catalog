@@ -1,5 +1,4 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { useAppSelector } from '../../hooks';
 
 import { BackButton } from '../../components/BackButton';
 import { CartItem } from '../../components/CartItem';
@@ -16,7 +15,7 @@ const {
 } = styles;
 
 export const Cart = () => {
-  const { cartItems } = useSelector((state: RootState) => state.cart);
+  const { cartItems } = useAppSelector((state) => state.cart);
   const cartNotEmpty = !!cartItems.length;
 
   return (
