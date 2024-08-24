@@ -8,7 +8,7 @@ type Props = {
   disabled: boolean;
   additionalStyles?: CSSProperties;
   bgImg?: string;
-  pageNumber?: number;
+  pageNumber?: number | string;
 };
 
 export const Button = ({
