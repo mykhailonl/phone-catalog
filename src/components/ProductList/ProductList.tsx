@@ -8,6 +8,7 @@ import { CategoryTitleBlock } from '../CategoryTitleBlock';
 import { DropDown } from '../Dropdown';
 import { Pagination } from '../Pagination';
 import { Product } from '../Product/Product';
+import { Loader } from '../Loader';
 
 import { ProductListType } from '../../types/ProductList';
 import {
@@ -21,8 +22,6 @@ import {
 } from '../../types/DropDownItemsPerPage';
 
 import styles from './ProductList.module.scss';
-import { Loader } from '../Loader';
-
 const { list, list__content, list__dropdowns, list__products } = styles;
 
 // Configuration for the sort dropdown
@@ -44,88 +43,95 @@ export const ProductList = ({
   productsUrl,
   category,
 }: ProductListType) => {
-  // * Get values from URL parameters
-  const [currentPage] = useSearchParamValue('page', 1);
-  const [itemsOnPage] = useSearchParamValue(
+  // #region URLSearchParams
+  const [page, setPage] = useSearchParamValue('page', 1);
+  const [perPage, setPerPage] = useSearchParamValue(
     'perPage',
-    ITEMS_PER_PAGE_OPTIONS[0],
+    ITEMS_PER_PAGE_OPTIONS[3],
   );
-  const [sortBy] = useSearchParamValue('sort', DropDownSortOptions.age);
+  const [sortBy, setSortBy] = useSearchParamValue(
+    'sort',
+    DropDownSortOptions.age,
+  );
+  // #endregion
 
-  // * Fetching the list of products using custom hook with loading emulation
   const { products, isLoading, error } = useProducts(
     category,
     sortBy as DropDownSortOptions,
     productsUrl,
   );
 
-  // * Calculate the current items and total number of pages
-  const { currentItems, pagesAmount } = useMemo(() => {
-    if (itemsOnPage === 'All') {
-      return {
-        currentItems: products,
-        pagesAmount: 1,
-      };
-    }
+  const paginatedProducts = useMemo(() => {
+    if (perPage === 'All') return products;
 
-    const itemsPerPage = parseInt(itemsOnPage as string, 10);
-    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const startIndex = Number(+page - 1) * Number(perPage);
 
-    const lastItemIndex = +currentPage * itemsPerPage;
-    const firstItemIndex = (+currentPage - 1) * itemsPerPage;
+    return products.slice(startIndex, startIndex + Number(perPage));
+  }, [products, page, perPage]);
 
-    return {
-      currentItems: products.slice(firstItemIndex, lastItemIndex),
-      pagesAmount: totalPages,
-    };
-  }, [products, itemsOnPage, currentPage]);
-
-  // * Determine if dropdowns and pagination should be visible
-  const dropdownsVisible = category !== 'favourites';
-  const paginationVisible = pagesAmount > 1;
-
+  // #region Loading/Error handling
   if (isLoading) return <Loader />;
+  // TODO create error component
+  if (error)
+    return (
+      <div>
+        Error: {error instanceof Error ? error.message : 'An error occurred'}
+      </div>
+    );
+  if (!products) return null;
+  // #endregion
 
-  // TODO create component
-  if (error) return <div>Error</div>;
+  // #region conditions
+  const dropdownsVisible = category !== 'favourites';
+  const paginationVisible =
+    perPage !== 'All' && products.length > Number(perPage);
+  const totalPages = Math.ceil(products.length / Number(perPage));
+  // #endregion
 
   return (
     <div className={list}>
       <BreadCrumbs />
 
       <div className={list__content}>
-        {!dropdownsVisible ? (
-          <CategoryTitleBlock
-            categoryName={title}
-            categoryAmount={products.length}
-          />
-        ) : (
-          <>
-            <CategoryTitleBlock
-              categoryName={title}
-              categoryAmount={products.length}
+        <CategoryTitleBlock
+          categoryName={title}
+          categoryAmount={products.length}
+        />
+
+        {dropdownsVisible && (
+          <div className={list__dropdowns}>
+            <DropDown
+              dropdownConfig={sortByDropdown}
+              value={sortBy}
+              onChange={setSortBy}
             />
 
-            <div className={list__dropdowns}>
-              <DropDown dropdownConfig={sortByDropdown} />
-
-              <DropDown dropdownConfig={itemsDropdown} />
-            </div>
-          </>
+            <DropDown
+              dropdownConfig={itemsDropdown}
+              value={perPage}
+              onChange={setPerPage}
+            />
+          </div>
         )}
 
         <div className={list__products}>
-          {currentItems.map((prod, index) => (
+          {paginatedProducts.map((prod) => (
             <Product
               product={prod}
               discount={false}
-              key={index}
+              key={prod.id}
               isInCategory={true}
             />
           ))}
         </div>
 
-        {paginationVisible && <Pagination pages={pagesAmount} />}
+        {paginationVisible && (
+          <Pagination
+            currentPage={+page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        )}
       </div>
     </div>
   );
