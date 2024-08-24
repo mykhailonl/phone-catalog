@@ -1,37 +1,42 @@
+import { useAppDispatch } from '../../hooks.ts';
 import { setScrollToTop } from '../../features/scroll/scrollSlice';
 
 import { Button } from '../Button/Button.tsx';
-import { useSearchParamValue } from '../../hooks/useSearchParamValue.ts';
-import { useAppDispatch } from '../../hooks.ts';
 
-type Props = {
-  pageNumber: number;
+const additionalStyles = {
+  backgroundColor: '#313237',
+  color: '#FFFFFF',
+  borderColor: '#313237',
 };
 
-export const PaginationPageButton = ({ pageNumber }: Props) => {
-  const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = useSearchParamValue('page', 1);
+type Props = {
+  currentPage: number;
+  pageNumber: number | string;
+  onPageChange: (page: number) => void;
+};
 
-  const isActivePage = pageNumber === currentPage;
+export const PaginationPageButton = ({
+  currentPage,
+  pageNumber,
+  onPageChange,
+}: Props) => {
+  const dispatch = useAppDispatch();
+
+  const isCurrentPage = pageNumber === currentPage;
 
   const handleButtonClick = (page: number) => {
+    onPageChange(page);
     dispatch(setScrollToTop('auto'));
-
-    setCurrentPage(page);
-  };
-
-  const additionalStyles = {
-    backgroundColor: '#313237',
-    color: '#FFFFFF',
-    borderColor: '#313237',
   };
 
   return (
     <Button
       pageNumber={pageNumber}
-      disabled={false}
-      action={() => handleButtonClick(pageNumber)}
-      additionalStyles={isActivePage ? additionalStyles : {}}
+      disabled={typeof pageNumber === 'string'}
+      action={() =>
+        typeof pageNumber === 'number' && handleButtonClick(pageNumber)
+      }
+      additionalStyles={isCurrentPage ? additionalStyles : {}}
     />
   );
 };
