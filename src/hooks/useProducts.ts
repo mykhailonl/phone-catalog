@@ -27,10 +27,7 @@ export const useProducts = (
       case DropDownSortOptions.title:
         return [...productsToSort].sort((a, b) => a.name.localeCompare(b.name));
       case DropDownSortOptions.price:
-        return [...productsToSort].sort(
-          (a, b) =>
-            a.fullPrice - (a.price || 0) - (b.fullPrice - (b.price || 0)),
-        );
+        return [...productsToSort].sort((a, b) => a.price - b.price);
       default:
         return productsToSort;
     }
