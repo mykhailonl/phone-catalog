@@ -1,61 +1,76 @@
 import { setScrollToTop } from '../../features/scroll/scrollSlice';
-
-import { useSearchParamValue } from '../../hooks/useSearchParamValue.ts';
+import { useAppDispatch } from '../../hooks.ts';
+import { ParamValue } from '../../hooks/useSearchParamValue.ts';
 
 import { Button } from '../Button';
-import { PaginationPageButton } from '../PaginationPageButton/PaginationPageButton.tsx';
+import { PaginationPageButton } from '../PaginationPageButton/PaginationPageButton';
 
 import styles from './Pagination.module.scss';
-import { useAppDispatch } from '../../hooks.ts';
 const { pagination, pagination__pages } = styles;
 
-type Props = {
-  pages: number;
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (newValue: ParamValue) => void;
 };
 
-// TODO убрать ошибку с возможностью использования невалидной страницы page= в url
-// TODO проблема возникает, когда в url есть параметр страницы
-
-export const Pagination = ({ pages }: Props) => {
+export const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) => {
   const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = useSearchParamValue('page', 1);
 
-  const pageNumbers: number[] = [];
-
-  for (let i = 0; i < pages; i++) {
-    pageNumbers.push(i + 1);
-  }
-
-  // ! check if i need that
-  // dispatch(setPages(pageNumbers));
-
-  const handlePageChange = (direction: 'left' | 'right') => {
-    const newCurrentPage =
-      direction === 'left' ? +currentPage - 1 : +currentPage + 1;
-    setCurrentPage(newCurrentPage);
-
-    dispatch(setScrollToTop());
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
+    dispatch(setScrollToTop('auto'));
   };
+
+  const getPageNumbers = () => {
+    const pageNumbers: (number | string)[] = [];
+    const maxVisiblePages = 4;
+
+    if (totalPages <= maxVisiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    if (currentPage <= 3) {
+      pageNumbers.push(1, 2, 3, '...', totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pageNumbers.push(1, '...', currentPage, '...', totalPages);
+    }
+
+    return pageNumbers;
+  };
+
+  const pageNumbers = getPageNumbers();
 
   return (
     <div className={pagination}>
       <Button
         bgImg="/icons/icon-arrow.svg"
-        action={() => handlePageChange('left')}
+        action={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         additionalStyles={{ transform: 'rotate(-180deg)' }}
       />
 
       <div className={pagination__pages}>
         {pageNumbers.map((page, index) => (
-          <PaginationPageButton key={index} pageNumber={page} />
+          <PaginationPageButton
+            key={index}
+            currentPage={currentPage}
+            pageNumber={page}
+            onPageChange={handlePageChange}
+          />
         ))}
       </div>
 
       <Button
         bgImg="/icons/icon-arrow.svg"
-        action={() => handlePageChange('right')}
-        disabled={currentPage === pageNumbers.length}
+        action={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
         additionalStyles={{}}
       />
     </div>
