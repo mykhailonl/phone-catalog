@@ -2,19 +2,12 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveDropdown } from '../../features/pagination/paginationSlice';
-import { useSearchParamValue } from '../../hooks/useSearchParamValue';
+import { ParamValue } from '../../hooks/useSearchParamValue';
 
-import {
-  DropDownItemsPerPage,
-  ItemsPerPageOptions,
-} from '../../types/DropDownItemsPerPage';
-import {
-  DropDownSort,
-  DropDownSortOptions,
-} from '../../types/DropDownSortOptions';
+import { DropDownItemsPerPage } from '../../types/DropDownItemsPerPage';
+import { DropDownSort } from '../../types/DropDownSortOptions';
 
 import styles from './DropDown.module.scss';
-
 const {
   dropdown,
   dropdown__sort,
@@ -32,109 +25,94 @@ const {
 
 type Props = {
   dropdownConfig: DropDownSort | DropDownItemsPerPage;
+  value: ParamValue;
+  onChange: (newValue: ParamValue) => void;
 };
 
-export const DropDown = memo(({ dropdownConfig }: Props) => {
-  const dropdownRef = useRef<HTMLDivElement>(null);
+export const DropDown = memo(
+  ({ dropdownConfig, value: currentValue, onChange }: Props) => {
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
 
-  const { name, urlSearchName, values } = dropdownConfig;
+    const { name, urlSearchName, values } = dropdownConfig;
 
-  const [sortBy, setSortBy] = useSearchParamValue(
-    'sort',
-    DropDownSortOptions.age,
-  );
-  const [itemsOnPage, setItemsOnPage] = useSearchParamValue('perPage', 'All');
+    const { activeDropdown } = useAppSelector((state) => state.pagination);
 
-  const dispatch = useAppDispatch();
-  const { activeDropdown } = useAppSelector((state) => state.pagination);
+    const handleDropDownClick = useCallback(() => {
+      dispatch(
+        setActiveDropdown(
+          activeDropdown === urlSearchName ? null : urlSearchName,
+        ),
+      );
+    }, [dispatch, activeDropdown, urlSearchName]);
 
-  const handleDropDownClick = useCallback(() => {
-    dispatch(
-      setActiveDropdown(
-        activeDropdown === urlSearchName ? null : urlSearchName,
-      ),
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node) &&
+          activeDropdown === urlSearchName
+        ) {
+          dispatch(setActiveDropdown(null));
+        }
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [dispatch, activeDropdown, urlSearchName]);
+
+    const isOpen = useMemo(
+      () => activeDropdown === urlSearchName,
+      [activeDropdown, urlSearchName],
     );
-  }, [dispatch, activeDropdown, urlSearchName]);
 
-  const handleOptionClick = useCallback(
-    (newValue: ItemsPerPageOptions | DropDownSortOptions) => {
-      if (dropdownConfig.name === 'Sort by') {
-        setSortBy(newValue as DropDownSortOptions);
-      } else {
-        setItemsOnPage(newValue as ItemsPerPageOptions);
-      }
-      dispatch(setActiveDropdown(null));
-    },
-    [dropdownConfig.name, setSortBy, setItemsOnPage, dispatch],
-  );
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        activeDropdown === urlSearchName
-      ) {
-        dispatch(setActiveDropdown(null));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch, activeDropdown, urlSearchName]);
-
-  const isOpen = useMemo(
-    () => activeDropdown === urlSearchName,
-    [activeDropdown, urlSearchName],
-  );
-  const currentValue = useMemo(
-    () => (dropdownConfig.name === 'Sort by' ? sortBy : itemsOnPage),
-    [dropdownConfig.name, sortBy, itemsOnPage],
-  );
-
-  const options = useMemo(
-    () =>
-      values.map((value) => (
-        <div
-          key={value}
-          className={`${dropdown__option} ${
-            value === currentValue && dropdown__activeOption
-          }`}
-          onClick={() => handleOptionClick(value)}
-        >
-          {value}
-        </div>
-      )),
-    [values, handleOptionClick],
-  );
-
-  return (
-    <div
-      ref={dropdownRef}
-      className={`${dropdown} ${dropdownConfig.urlSearchName === 'sort' ? dropdown__sort : ''}`}
-    >
-      <label className={dropdown__description}>{name}</label>
-
-      <div className={dropdown__list} onClick={handleDropDownClick}>
-        {currentValue}
-
-        <div className={dropdown__arrowBlock}>
+    const options = useMemo(
+      () =>
+        values.map((value) => (
           <div
-            className={`${dropdown__arrow} ${isOpen && dropdown__arrowIsOpen}`}
-          />
+            key={value}
+            className={`${dropdown__option} ${
+              value === value && dropdown__activeOption
+            }`}
+            onClick={() => {
+              onChange(value);
+              dispatch(setActiveDropdown(null));
+            }}
+          >
+            {value}
+          </div>
+        )),
+      [values, onChange],
+    );
+
+    return (
+      <div
+        ref={dropdownRef}
+        className={`${dropdown} ${dropdownConfig.urlSearchName === 'sort' ? dropdown__sort : ''}`}
+      >
+        <label className={dropdown__description}>{name}</label>
+
+        <div className={dropdown__list} onClick={handleDropDownClick}>
+          {currentValue}
+
+          <div className={dropdown__arrowBlock}>
+            <div
+              className={`${dropdown__arrow} ${isOpen && dropdown__arrowIsOpen}`}
+            />
+          </div>
+        </div>
+
+        <div
+          className={`${dropdown__options} ${isOpen ? dropdown__optionsOpen : dropdown__optionsClosed}`}
+        >
+          {options}
         </div>
       </div>
-
-      <div
-        className={`${dropdown__options} ${isOpen ? dropdown__optionsOpen : dropdown__optionsClosed}`}
-      >
-        {options}
-      </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 DropDown.displayName = 'DropDown';
