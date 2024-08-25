@@ -1,4 +1,6 @@
 .dropdown {
+  position: relative;
+
   margin-block: 32px 24px;
 
   display: flex;
@@ -27,6 +29,8 @@
   &__list {
     @include apply-typography(button);
 
+    cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -35,10 +39,12 @@
 
     padding: 10px 12px;
 
-    @include hover(border-color, map-get($colors, gray-primary), map-get($duration, '0.3'), ease);
+    @include hover(border-color, map-get($colors, secondary), map-get($duration, '0.3'), ease);
   }
 
   &__options {
+    position: absolute;
+    top: 66px;
     background: map-get($colors, white);
 
     display: flex;
@@ -49,6 +55,7 @@
     box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.05);
 
     max-height: 0;
+    width: 100%;
     overflow: hidden;
     opacity: 0;
     transition: all 0.5s;
@@ -57,6 +64,7 @@
   &__option {
     @include apply-typography(button);
 
+    cursor: pointer;
     padding: 6px 12px;
 
     font-weight: 500;

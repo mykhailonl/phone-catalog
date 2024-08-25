@@ -75,7 +75,7 @@ export const DropDown = memo(
           <div
             key={value}
             className={`${dropdown__option} ${
-              value === value && dropdown__activeOption
+              value === currentValue && dropdown__activeOption
             }`}
             onClick={() => {
               onChange(value);

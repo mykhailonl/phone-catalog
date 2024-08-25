@@ -8,7 +8,6 @@ const initialState: dropdownState = {
   activeDropdown: null,
 };
 
-// TODO rename to dropdown or smth?
 export const dropdownSlice = createSlice({
   name: 'dropdown',
   initialState,
