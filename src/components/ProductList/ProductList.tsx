@@ -1,116 +1,92 @@
-// TODO add underline inside a header if located in favourites
-import { useEffect, useState } from 'react';
-import { Product as ProductType } from '../../types/Product';
-import { fetchProducts } from '../../utils/fetchProducts';
+import { useMemo } from 'react';
 
-import styles from './ProductList.module.scss';
+import { useProducts } from '../../hooks/useProducts';
+import { useSearchParamValue } from '../../hooks/useSearchParamValue';
+
+import { BreadCrumbs } from '../BreadCrumbs';
 import { CategoryTitleBlock } from '../CategoryTitleBlock';
 import { DropDown } from '../Dropdown';
+import { Pagination } from '../Pagination';
+import { Product } from '../Product/Product';
+import { Loader } from '../Loader';
+
+import { ProductListType } from '../../types/ProductList';
 import {
   DropDownSort,
   DropDownSortOptions,
+  SORT_OPTIONS,
 } from '../../types/DropDownSortOptions';
 import {
   DropDownItemsPerPage,
-  ItemsPerPageOptions,
+  ITEMS_PER_PAGE_OPTIONS,
 } from '../../types/DropDownItemsPerPage';
-import { useSearchParams } from 'react-router-dom';
-import { Product } from '../Product/Product';
-import { Pagination } from '../Pagination';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { BreadCrumbs } from '../BreadCrumbs';
 
-type Props = {
-  title: string;
-  productsUrl?: string;
-  category: 'phones' | 'tablets' | 'accessories' | 'favourites';
-};
+import styles from './ProductList.module.scss';
+const { list, list__content, list__dropdowns, list__products } = styles;
 
-const { list, list__content, list__dropdowns, list__product } = styles;
-
+// Configuration for the sort dropdown
 const sortByDropdown: DropDownSort = {
   name: 'Sort by',
-  urlSearchName: 'sortBy',
-  values: ['Newest', 'Oldest', 'Cheapest', 'Expensive'],
+  urlSearchName: 'sort',
+  values: SORT_OPTIONS,
 };
 
+// Configuration for the items per page dropdown
 const itemsDropdown: DropDownItemsPerPage = {
   name: 'Items on page',
-  urlSearchName: 'itemsOnPage',
-  values: [8, 16, 24, 32],
+  urlSearchName: 'perPage',
+  values: ITEMS_PER_PAGE_OPTIONS,
 };
 
-export const ProductList = ({ title, productsUrl, category }: Props) => {
-  const {
-    currentPage: curLocalPage,
-    itemsOnThePage: itemsLocalPage,
-    sortBy: localSortBy,
-  } = useSelector((state: RootState) => state.pagination);
-
-  // #region products (set and fetch)
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
-
-  useEffect(() => {
-    if (category === 'favourites') {
-      setProducts(favoriteItems);
-    } else if (productsUrl) {
-      fetchProducts(productsUrl).then((items: ProductType[]) => {
-        const categoryProducts = items
-          .filter((item) => item.category === category)
-          .sort((a, b) => b.year - a.year);
-        setProducts(categoryProducts);
-      });
-    }
-  }, [category, productsUrl, favoriteItems]);
+export const ProductList = ({
+  title,
+  productsUrl,
+  category,
+}: ProductListType) => {
+  // #region URLSearchParams
+  const [page, setPage] = useSearchParamValue('page', 1);
+  const [perPage, setPerPage] = useSearchParamValue(
+    'perPage',
+    ITEMS_PER_PAGE_OPTIONS[3],
+  );
+  const [sortBy, setSortBy] = useSearchParamValue(
+    'sort',
+    DropDownSortOptions.age,
+  );
   // #endregion
 
-  // #region searchParams
-  const [searchParams] = useSearchParams();
+  const { products, isLoading, error } = useProducts(
+    category,
+    sortBy as DropDownSortOptions,
+    productsUrl,
+  );
 
-  const currentPage = +(searchParams.get('page') || curLocalPage);
-  const itemsOnpage = +(
-    searchParams.get('itemsOnPage') || itemsLocalPage
-  ) as ItemsPerPageOptions;
-  const sortBy = (searchParams.get('sortBy') ||
-    localSortBy) as DropDownSortOptions;
+  const paginatedProducts = useMemo(() => {
+    if (perPage === 'All') return products;
+
+    const startIndex = Number(+page - 1) * Number(perPage);
+
+    return products.slice(startIndex, startIndex + Number(perPage));
+  }, [products, page, perPage]);
+
+  // #region Loading/Error handling
+  if (isLoading) return <Loader />;
+  // TODO create error component
+  if (error)
+    return (
+      <div>
+        Error: {error instanceof Error ? error.message : 'An error occurred'}
+      </div>
+    );
+  if (!products) return null;
   // #endregion
 
-  useEffect(() => {
-    switch (sortBy) {
-      case 'Newest':
-        setProducts((prevProducts) =>
-          [...prevProducts].sort((a, b) => b.year - a.year),
-        );
-        break;
-      case 'Oldest':
-        setProducts((prevProducts) =>
-          [...prevProducts].sort((a, b) => a.year - b.year),
-        );
-        break;
-      case 'Cheapest':
-        setProducts((prevProducts) =>
-          [...prevProducts].sort((a, b) => a.fullPrice - b.fullPrice),
-        );
-        break;
-      case 'Expensive':
-        setProducts((prevProducts) =>
-          [...prevProducts].sort((a, b) => b.fullPrice - a.fullPrice),
-        );
-        break;
-      default:
-        break;
-    }
-  }, [sortBy]);
-
-  const pagesAmount = Math.ceil(products.length / itemsOnpage);
-  const indexOfLastItem = currentPage * itemsOnpage;
-  const indexOfFirstItem = indexOfLastItem - itemsOnpage;
-  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
-
+  // #region conditions
   const dropdownsVisible = category !== 'favourites';
-  const pagionationVisible = pagesAmount > 1;
+  const paginationVisible =
+    perPage !== 'All' && products.length > Number(perPage);
+  const totalPages = Math.ceil(products.length / Number(perPage));
+  // #endregion
 
   return (
     <div className={list}>
@@ -124,23 +100,38 @@ export const ProductList = ({ title, productsUrl, category }: Props) => {
 
         {dropdownsVisible && (
           <div className={list__dropdowns}>
-            <DropDown dropdownConfig={sortByDropdown} currentValue={sortBy} />
+            <DropDown
+              dropdownConfig={sortByDropdown}
+              value={sortBy}
+              onChange={setSortBy}
+            />
 
             <DropDown
               dropdownConfig={itemsDropdown}
-              currentValue={itemsOnpage}
+              value={perPage}
+              onChange={setPerPage}
             />
           </div>
         )}
 
-        {/* TODO add wrapper products div and give it padding-block 24px? */}
-        {currentItems.map((prod, index) => (
-          <div key={index} className={list__product}>
-            <Product product={prod} discount={false} />
-          </div>
-        ))}
+        <div className={list__products}>
+          {paginatedProducts.map((prod) => (
+            <Product
+              product={prod}
+              discount={false}
+              key={prod.id}
+              isInCategory={true}
+            />
+          ))}
+        </div>
 
-        {pagionationVisible && <Pagination pages={pagesAmount} />}
+        {paginationVisible && (
+          <Pagination
+            currentPage={+page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        )}
       </div>
     </div>
   );

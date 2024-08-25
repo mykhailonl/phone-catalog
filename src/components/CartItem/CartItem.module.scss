@@ -5,15 +5,26 @@
   padding: 15px;
 
   display: flex;
+
   flex-wrap: wrap;
   gap: 16px;
 
+  @include on-tablet {
+    padding: 23px;
+    gap: 24px;
+    flex-wrap: nowrap;
+  }
+
   &__row {
     display: flex;
+    flex-grow: 1;
     justify-content: space-between;
     align-items: center;
-    flex-grow: 1;
     gap: 16px;
+
+    @include on-tablet {
+      gap: 24px;
+    }
   }
 
   &__img {
@@ -25,13 +36,26 @@
     object-fit: contain;
 
     padding: 7px;
+
+    @include hover(transform, scale(1.1));
   }
 
-  &__name {
+  &__link {
     @include apply-typography(p);
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
 
     min-width: 128px;
     color: map-get($colors, gray-primary);
+    display: flex;
+    flex-grow: 1;
+
+    @include on-tablet {
+      font-weight: 600;
+      gap: 24px;
+    }
   }
 
   &__counter {
@@ -50,6 +74,12 @@
   &__cost {
     @include apply-typography(h2);
 
+    width: 80px;
+    text-align: right;
     font-weight: 800;
+
+    @include on-tablet {
+      @include apply-typography(h3);
+    }
   }
 }

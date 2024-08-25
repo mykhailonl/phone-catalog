@@ -1,15 +1,8 @@
-import { useNavigate, useParams } from 'react-router-dom';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { setCurrentItem } from '../../features/currentItem/currentItemSlice';
-
-import styles from './CapacitySelector.module.scss';
-import { fetchProducts } from '../../utils/fetchProducts';
+import { useMemo } from 'react';
 import { Item } from '../../types/Item';
 
+import styles from './CapacitySelector.module.scss';
 const {
-  capacity__selector,
   capacity__content,
   capacity__title,
   capacity__options,
@@ -19,58 +12,50 @@ const {
 } = styles;
 
 type Props = {
+  item: Item;
   capacityOptions: string[];
+  onCapacityChange: (newItemId: string) => void;
+  itemOptions: Item[];
 };
 
-export const CapacitySelector = ({ capacityOptions }: Props) => {
-  const { category } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const currentItem = useSelector(
-    (state: RootState) => state.currentItem.currentItem,
-  );
-
-  const handleCapacityChange = async (newCapacity: string) => {
-    if (!currentItem) return;
-
-    const productsUrl = `/api/${category}.json`;
-    const items: Item[] = await fetchProducts(productsUrl);
-
-    const newItem = items.find(
-      (item) =>
-        item.namespaceId === currentItem.namespaceId &&
-        item.capacity === newCapacity &&
-        item.color === currentItem.color,
+export const CapacitySelector = ({
+  item,
+  capacityOptions,
+  onCapacityChange,
+  itemOptions,
+}: Props) => {
+  const handleCapacityChange = (capacity: string) => {
+    const newItem = itemOptions.find(
+      (option) =>
+        option.namespaceId === item.namespaceId &&
+        option.color === item.color &&
+        option.capacity === capacity,
     );
-
     if (newItem) {
-      dispatch(setCurrentItem(newItem));
-      navigate(
-        `/${newItem.category}/${newItem.namespaceId}-${newItem.capacity}-${newItem.color}`,
-      );
+      onCapacityChange(newItem.id);
     }
   };
 
+  const capacityButtons = useMemo(
+    () =>
+      capacityOptions.map((capacity, index) => (
+        <button
+          key={index}
+          onClick={() => handleCapacityChange(capacity)}
+          className={`${capacity__option} ${item.capacity === capacity ? isActive : ''}`}
+        >
+          {capacity}
+        </button>
+      )),
+    [capacityOptions, item.capacity],
+  );
+
   return (
-    <div className={capacity__selector}>
+    <div>
       <div className={capacity__content}>
         <h3 className={capacity__title}>Select capacity</h3>
-
-        <div className={capacity__options}>
-          {capacityOptions.map((capacity, index) => {
-            return (
-              <div
-                key={index}
-                className={`${capacity__option} ${currentItem?.capacity === capacity ? isActive : ''}`}
-                onClick={() => handleCapacityChange(capacity)}
-              >
-                {capacity}
-              </div>
-            );
-          })}
-        </div>
+        <div className={capacity__options}>{capacityButtons}</div>
       </div>
-
       <div className={capacity__line}></div>
     </div>
   );

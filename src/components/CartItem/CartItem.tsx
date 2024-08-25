@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { Link, useLocation } from 'react-router-dom';
 import { removeFromCart, addToCart } from '../../features/cart/cartSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import { Button } from '../Button';
 
@@ -12,21 +11,21 @@ const {
   item,
   item__row,
   item__img,
-  item__name,
+  item__link,
   item__counter,
   item__amount,
   item__cost,
 } = styles;
 
-type Props = {
+type CartItemProps = {
   product: Product;
 };
 
-// FIXME width?
+export const CartItem = ({ product }: CartItemProps) => {
+  const pathname = useLocation().pathname;
 
-export const CartItem = ({ product }: Props) => {
-  const dispatch = useDispatch();
-  const { cartItems } = useSelector((state: RootState) => state.cart);
+  const dispatch = useAppDispatch();
+  const { cartItems } = useAppSelector((state) => state.cart);
 
   // #region handler functions
   const deleteProduct = (productId: number) => {
@@ -44,26 +43,10 @@ export const CartItem = ({ product }: Props) => {
   }
 
   const productCost = currentItem.product.fullPrice * currentItem.quantity;
-  const productPageUrl = `/${product.category}/${product.itemId}`;
+  const productPageUrl = `/catalog/${product.category}/${product.itemId}`;
 
-  // #region conditions
+  const isInCart = pathname.startsWith('/user/cart');
   const minusButtonDisabled = currentItem.quantity === 1;
-  // #endregion
-
-  // #region additionalStyles
-  const deleteButtonStyles = {
-    'border-color': 'transparent',
-    opacity: '50%',
-  };
-  const minusButtonStyles = minusButtonDisabled
-    ? {
-        opacity: '50%',
-      }
-    : {};
-  const plusButtonStyles = {
-    borderColor: '#B4BDC3',
-  };
-  // #endregion
 
   return (
     <div className={item}>
@@ -72,17 +55,24 @@ export const CartItem = ({ product }: Props) => {
           bgImg={'/icons/icon-close.svg'}
           action={() => deleteProduct(product.id)}
           disabled={false}
-          additionalStyles={deleteButtonStyles}
+          additionalStyles={{
+            borderColor: 'transparent',
+            opacity: '50%',
+            padding: '0',
+          }}
         />
 
-        <img
-          src={product.image}
-          alt={`${product.name} image`}
-          className={item__img}
-        />
-
-        <Link to={productPageUrl}>
-          <p className={item__name}>{product.name}</p>
+        <Link
+          to={productPageUrl}
+          className={item__link}
+          state={isInCart && { from: 'user', previousPath: pathname }}
+        >
+          <img
+            src={`/${product.image}`}
+            alt={`${product.name} image`}
+            className={item__img}
+          />
+          <p>{product.name}</p>
         </Link>
       </div>
 
@@ -91,7 +81,6 @@ export const CartItem = ({ product }: Props) => {
           <Button
             bgImg={'/icons/icon-minus.svg'}
             disabled={minusButtonDisabled}
-            additionalStyles={minusButtonStyles}
             action={() => deleteProduct(product.id)}
           />
 
@@ -101,7 +90,7 @@ export const CartItem = ({ product }: Props) => {
             bgImg={'/icons/icon-plus.svg'}
             disabled={false}
             action={() => addProduct(product)}
-            additionalStyles={plusButtonStyles}
+            additionalStyles={{ borderColor: '#B4BDC3' }}
           />
         </div>
 

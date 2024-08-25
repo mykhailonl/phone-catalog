@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from '../../store';
+import { useAppSelector } from '../../hooks';
 
 import { Header } from '../Header';
-import { SideBarLink } from '../SideBarLink';
-import { MenuItems } from '../MenuItems';
+import { SecondaryNavLink } from '../SecondaryNavLink';
+import { SidebarNavLink } from '../SidebarNavLink';
+
+import { NAVIGATION_LINKS } from '../../types/NavigationLinkType';
 
 import styles from './SideBar.module.scss';
 
@@ -20,9 +20,9 @@ const {
 } = styles;
 
 export const SideBar = () => {
-  const { isOpen } = useSelector((state: RootState) => state.menu);
-  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
-  const { cartItems } = useSelector((state: RootState) => state.cart);
+  const { isOpen } = useAppSelector((state) => state.menu);
+  const { favoriteItems } = useAppSelector((state) => state.favorites);
+  const { cartItems } = useAppSelector((state) => state.cart);
 
   const favItemsAmount = favoriteItems.length;
   const cartItemsAmount = cartItems.length;
@@ -37,23 +37,25 @@ export const SideBar = () => {
 
       <div className={sidebar__content}>
         <nav className={sidebar__nav}>
-          <MenuItems />
+          {NAVIGATION_LINKS.map((link, index) => (
+            <SidebarNavLink key={index} url={link.url} name={link.name} />
+          ))}
         </nav>
 
         <div className={sidebar__footer}>
           <div className={sidebar__linkWrapper}>
-            <SideBarLink
+            <SecondaryNavLink
               image="/icons/emty-heart.svg"
-              url="favourites"
-              name="fav"
+              url="/user/favourites"
+              name="favourites"
               amount={favItemsAmount}
             />
           </div>
 
           <div className={sidebar__linkWrapper}>
-            <SideBarLink
+            <SecondaryNavLink
               image="/icons/icon-cart.svg"
-              url="cart"
+              url="/user/cart"
               name="cart"
               amount={cartItemsAmount}
             />

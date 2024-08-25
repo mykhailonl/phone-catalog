@@ -1,23 +1,28 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import React from 'react';
 import { Dot } from '../Dot';
 
 import styles from './Dots.module.scss';
 
-export const Dots = () => {
-  const { currentIndex, slides } = useSelector(
-    (state: RootState) => state.slider,
-  );
+interface DotsProps {
+  count: number;
+  activeIndex: number;
+  onClick: (index: number) => void;
+}
 
-  return (
-    <div className={styles.dots}>
-      {slides.slice(1, -1).map((slide) => (
-        <Dot
-          key={slide.id}
-          isActive={slide.id === currentIndex}
-          id={slide.id}
-        />
-      ))}
-    </div>
-  );
-};
+export const Dots: React.FC<DotsProps> = React.memo(
+  ({ count, activeIndex, onClick }) => {
+    return (
+      <div className={styles.dots}>
+        {Array.from({ length: count }, (_, index) => (
+          <Dot
+            key={index}
+            isActive={index === activeIndex}
+            onClick={() => onClick(index)}
+          />
+        ))}
+      </div>
+    );
+  },
+);
+
+Dots.displayName = 'Dots';

@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import {
   addToFavorites,
   removeFromFavorites,
@@ -11,6 +9,7 @@ import { addToCart, removeFromCart } from '../../features/cart/cartSlice';
 import { Product } from '../../types/Product';
 
 import styles from './ProductActions.module.scss';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 const {
   buttons,
@@ -26,13 +25,11 @@ type Props = {
   product: Product;
 };
 
-// TODO create product as props to push into fav/cart
-
 export const ProductActions = ({ product }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { favoriteItems } = useSelector((state: RootState) => state.favorites);
-  const { cartItems } = useSelector((state: RootState) => state.cart);
+  const { favoriteItems } = useAppSelector((state) => state.favorites);
+  const { cartItems } = useAppSelector((state) => state.cart);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 

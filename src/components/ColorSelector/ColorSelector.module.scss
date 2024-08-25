@@ -21,13 +21,10 @@
 
   border: 1px solid map-get($colors, elements);
   border-radius: 50%;
-  
-  &:hover {
-    border-color: map-get($colors, gray-primary);
-  }
 
   cursor: pointer;
-  transition: border map-get($duration, '0.3') ease;
+  
+  @include hover(border-color, map-get($colors, gray-primary));
 }
 
 .innerCircle {

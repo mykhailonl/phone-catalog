@@ -7,10 +7,6 @@ type Props = {
 
 const { block, block__name, block__amount } = styles;
 
-// TODO refactor title block from homepage and from ProductList,
-// add some flag to understand where located and add custom styles
-// (different fz and gap)
-
 export const CategoryTitleBlock = ({ categoryName, categoryAmount }: Props) => {
   return (
     <div className={block}>

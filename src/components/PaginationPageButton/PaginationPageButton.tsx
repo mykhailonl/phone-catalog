@@ -1,50 +1,42 @@
-import { useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentPage } from '../../features/pagination/paginationSlice.ts';
+import { useAppDispatch } from '../../hooks.ts';
+import { setScrollToTop } from '../../features/scroll/scrollSlice';
 
-import styles from './PaginationPageButton.module.scss';
-import { RootState } from '../../store.ts';
-import { useEffect } from 'react';
+import { Button } from '../Button/Button.tsx';
 
-const { button, button__numberBlock, button__isActive } = styles;
-
-type Props = {
-  pageNumber: number;
+const additionalStyles = {
+  backgroundColor: '#313237',
+  color: '#FFFFFF',
+  borderColor: '#313237',
 };
 
-export const PaginationPageButton = ({ pageNumber }: Props) => {
-  const dispatch = useDispatch();
-  const { currentPage } = useSelector((state: RootState) => state.pagination);
+type Props = {
+  currentPage: number;
+  pageNumber: number | string;
+  onPageChange: (page: number) => void;
+};
 
-  // #region searchParams
-  const [searchParams, setSearchParams] = useSearchParams();
+export const PaginationPageButton = ({
+  currentPage,
+  pageNumber,
+  onPageChange,
+}: Props) => {
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const page = searchParams.get('page');
-    if (page && Number(page) !== currentPage) {
-      dispatch(setCurrentPage(Number(page)));
-    }
-  }, [searchParams, currentPage, dispatch]);
-
-  const isActivePage = pageNumber === currentPage;
-
-  // #endregion
+  const isCurrentPage = pageNumber === currentPage;
 
   const handleButtonClick = (page: number) => {
-    dispatch(setCurrentPage(page));
-
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', `${page}`);
-
-    setSearchParams(newSearchParams);
+    onPageChange(page);
+    dispatch(setScrollToTop('auto'));
   };
 
   return (
-    <button
-      className={`${button} ${isActivePage ? button__isActive : ''}`}
-      onClick={() => handleButtonClick(pageNumber)}
-    >
-      <div className={button__numberBlock}>{pageNumber}</div>
-    </button>
+    <Button
+      pageNumber={pageNumber}
+      disabled={typeof pageNumber === 'string'}
+      action={() =>
+        typeof pageNumber === 'number' && handleButtonClick(pageNumber)
+      }
+      additionalStyles={isCurrentPage ? additionalStyles : {}}
+    />
   );
 };

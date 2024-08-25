@@ -2,23 +2,18 @@
   @include content-padding-inline;
 
   &__content {
-    @include grid(mobile);
-
-    @include on-tablet {
-      @include grid(tablet);
-    }
+    @include responsive-grid;
 
     @include on-desktop {
-      @include grid(desktop);
+      max-width: 1136px;
+      margin-inline: auto;
     }
 
-    row-gap: 40px;
     margin-bottom: 64px;
   }
 
   &__dropdowns {
-    grid-column: 1 / -1;
-    grid-row: 1 / 1;
+    grid-area: 2 / 1 / 2 / -1;
 
     display: flex;
     gap: 16px;
@@ -26,13 +21,16 @@
     @include on-tablet {
       grid-column: span 7;
     }
+
+    @include on-desktop {
+      grid-area: 2 / 1 / 2 / -1;
+    }
   }
 
-  &__product {
-    grid-column: 1 / -1;
+  &__products {
+    @include responsive-grid;
 
-    @include on-tablet {
-      grid-column: span 6;
-    }
+    grid-column: 1 / -1;
+    row-gap: 40px;
   }
 }

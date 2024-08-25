@@ -3,7 +3,7 @@
 
   display: flex;
   flex-direction: column;
-  align-items: center;
+  // align-items: center;
   gap: 24px;
 
   @include on-tablet {
@@ -20,8 +20,8 @@
 
     display: flex;
 
-    width: var(--side);
-    height: var(--side);
+    min-width: var(--side);
+    min-height: var(--side);
 
     @include on-tablet {
       --side: 187px;
@@ -37,8 +37,6 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-
-    background-color: map-get($colors, --bg-color);
   }
 
   &__img {
@@ -50,7 +48,7 @@
     width: auto;
     object-fit: contain;
 
-    transform: translateX(40%);
+    transform: translate(40%, 10%);
 
     @include on-tablet {
       top: 20px;
@@ -60,6 +58,7 @@
   &__description {
     display: flex;
     flex-direction: column;
+    // align-self: start;
     gap: 4px;
   }
 

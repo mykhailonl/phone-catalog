@@ -1,51 +1,70 @@
-import { HashLink } from 'react-router-hash-link';
-
-import { NavItem } from '../NavItem';
+import { setScrollToTop } from '../../features/scroll/scrollSlice';
 import { Logo } from '../Logo';
 
 import styles from './Footer.module.scss';
+import { useAppDispatch } from '../../hooks';
+
+const {
+  footer,
+  footer__content,
+  footer__logo,
+  footer__nav,
+  footer__anchor,
+  footer__anchor__text,
+  footer__anchor__link,
+  footer__anchor__icon,
+  footer__link,
+} = styles;
 
 export const Footer = () => {
-  const {
-    footer,
-    footer__container,
-    footer__logo,
-    footer__nav,
-    footer__anchor,
-    footer__anchor__text,
-    footer__anchor__link,
-    footer__anchor__icon,
-    footer__anchor__arrow,
-  } = styles;
+  const dispatch = useAppDispatch();
+
+  const handleAnchorClick = () => {
+    dispatch(setScrollToTop('smooth'));
+  };
 
   return (
     <footer className={footer}>
-      <div className={footer__container}>
+      <div className={footer__content}>
         <div className={footer__logo}>
-          <Logo />
+          <Logo placement="footer" />
         </div>
 
-        {/* TODO check hover values (item width) */}
         <nav className={footer__nav}>
-          <NavItem url="/" name="Github" />
+          <a
+            href="https://github.com/mykhailonl"
+            rel="noopener noreferrer"
+            target="_blank"
+            className={footer__link}
+          >
+            Github
+          </a>
 
-          <NavItem url="/" name="Contacts" />
+          <a
+            href="https://linkedin.com/in/mykhailo-lapchynskyi-003251322"
+            rel="noopener noreferrer"
+            target="_blank"
+            className={footer__link}
+          >
+            Contacts
+          </a>
 
-          <NavItem url="/" name="Rights" />
+          <a
+            href="/"
+            rel="noopener noreferrer"
+            target="_blank"
+            className={footer__link}
+          >
+            Rights
+          </a>
         </nav>
 
-        <div className={footer__anchor}>
+        <div className={footer__anchor} onClick={handleAnchorClick}>
           <small className={footer__anchor__text}>Back to top</small>
 
-          <HashLink smooth to="#header" className={footer__anchor__link}>
-            <div className={footer__anchor__icon}>
-              <img
-                src={`/icons/right-arrow.svg`}
-                alt={`product slider button top`}
-                className={footer__anchor__arrow}
-              />
-            </div>
-          </HashLink>
+          <button className={footer__anchor__link}>
+            <div className={footer__anchor__icon} />
+          </button>
         </div>
       </div>
     </footer>

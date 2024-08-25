@@ -1,19 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+
+import { setScrollToTop } from '../../features/scroll/scrollSlice';
+import { useAppDispatch } from '../../hooks';
 
 import { ProductActions } from '../ProductActions';
 import { Specification } from '../Specification';
+import { ProductPrice } from '../ProductPrice';
 
 import { Product as ProductType } from '../../types/Product';
 
 import styles from './Product.module.scss';
-import { ProductPrice } from '../ProductPrice';
 const {
   prod,
+  prod__listPositioning,
   prod__contentWrapper,
   prod__imgWrapper,
   prod__img,
-  prod__link,
-  prod__buttonLink,
+  prod__name,
   prod__priceWrapper,
   prod__line,
   prod__specs,
@@ -22,17 +25,31 @@ const {
 type Props = {
   product: ProductType;
   discount: boolean;
+  isInCategory?: boolean;
 };
 
-// FIXME check if currentProduct already there (link crashes when trying to get from page to product)
-// FIXME some animation when changing to another page? scroll on top or smth
+export const Product = ({ product, discount, isInCategory }: Props) => {
+  const dispatch = useAppDispatch();
+  const pathname = useLocation().pathname;
+  const linkTo = `/catalog/${product.category}/${product.itemId}`;
 
-export const Product = ({ product, discount }: Props) => {
-  const linkTo = `/${product.category}/${product.itemId}`;
+  // * checking if user inside cart page or favourites page
+  // * (to pass state with path for correct back navigation)
+  const isInFavourites = pathname.startsWith('/user/favourites');
+
+  const handleProductClick = () => {
+    // Scrolling a page on top when going to another page
+    dispatch(setScrollToTop('auto'));
+  };
 
   return (
-    <div className={prod}>
-      <div className={prod__contentWrapper}>
+    <div className={`${prod} ${isInCategory && prod__listPositioning}`}>
+      <Link
+        to={linkTo}
+        className={prod__contentWrapper}
+        state={isInFavourites && { from: 'user', previousPath: pathname }}
+        onClick={handleProductClick}
+      >
         <div className={prod__imgWrapper}>
           <img
             src={`/${product.image}`}
@@ -41,10 +58,8 @@ export const Product = ({ product, discount }: Props) => {
           />
         </div>
 
-        <Link to={linkTo} className={prod__link}>
-          <button className={prod__buttonLink}>{product.name}</button>
-        </Link>
-      </div>
+        <span className={prod__name}>{product.name}</span>
+      </Link>
 
       <div className={prod__priceWrapper}>
         <ProductPrice
@@ -55,7 +70,7 @@ export const Product = ({ product, discount }: Props) => {
         />
       </div>
 
-      <div className={prod__line}></div>
+      <div className={prod__line} />
 
       <div className={prod__specs}>
         <Specification label="Screen" value={product.screen} context="card" />

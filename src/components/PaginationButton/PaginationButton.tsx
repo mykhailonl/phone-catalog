@@ -1,44 +1,21 @@
-import { useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  nextPage,
-  prevPage,
-} from '../../features/pagination/paginationSlice.ts';
-
 import styles from './PaginationButton.module.scss';
-import { RootState } from '../../store';
-const { button, button__iconBlock, button__icon } = styles;
+import { useSearchParamValue } from '../../hooks/useSearchParamValue';
+const { button, button__iconBlock } = styles;
 
 type Props = {
   direction: 'left' | 'right';
   disabled: boolean;
 };
 
-// TODO разобраться в useEffects тут и в paginationPageButton
-
-// TODO add some styles for disabled buttons
-
 export const PaginationButton = ({ direction, disabled }: Props) => {
-  const dispatch = useDispatch();
-  const currentPage = useSelector(
-    (state: RootState) => state.pagination.currentPage,
-  );
-
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useSearchParamValue('page', 1);
 
   const handleButtonClick = () => {
     if (direction === 'left') {
-      dispatch(prevPage());
+      setCurrentPage(+currentPage - 1);
     } else {
-      dispatch(nextPage());
+      setCurrentPage(+currentPage + 1);
     }
-
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(
-      'page',
-      `${currentPage + (direction === 'left' ? -1 : 1)}`,
-    );
-    setSearchParams(newSearchParams);
   };
 
   return (
@@ -47,7 +24,6 @@ export const PaginationButton = ({ direction, disabled }: Props) => {
         <img
           src={`/public/icons/${direction}-arrow.svg`}
           alt="pagination button"
-          className={button__icon}
         />
       </div>
     </button>

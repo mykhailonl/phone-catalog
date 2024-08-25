@@ -1,37 +1,78 @@
-import { useSelector } from 'react-redux';
-import { PaginationButton } from '../PaginationButton';
-import { PaginationPageButton } from '../PaginationPageButton';
+import { setScrollToTop } from '../../features/scroll/scrollSlice';
+import { useAppDispatch } from '../../hooks.ts';
+import { ParamValue } from '../../hooks/useSearchParamValue.ts';
+
+import { Button } from '../Button';
+import { PaginationPageButton } from '../PaginationPageButton/PaginationPageButton';
 
 import styles from './Pagination.module.scss';
-import { RootState } from '../../store';
-
 const { pagination, pagination__pages } = styles;
 
-type Props = {
-  pages: number;
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (newValue: ParamValue) => void;
 };
 
-// TODO убрать ошибку с возможностью использования невалидной страницы page= в url
+export const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) => {
+  const dispatch = useAppDispatch();
 
-export const Pagination = ({ pages }: Props) => {
-  const { currentPage } = useSelector((state: RootState) => state.pagination);
-  const pageNumbers = [];
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
+    dispatch(setScrollToTop('auto'));
+  };
 
-  for (let i = 0; i < pages; i++) {
-    pageNumbers.push(i + 1);
-  }
+  const getPageNumbers = () => {
+    const pageNumbers: (number | string)[] = [];
+    const maxVisiblePages = 4;
+
+    if (totalPages <= maxVisiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    if (currentPage <= 3) {
+      pageNumbers.push(1, 2, 3, '...', totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pageNumbers.push(1, '...', currentPage, '...', totalPages);
+    }
+
+    return pageNumbers;
+  };
+
+  const pageNumbers = getPageNumbers();
 
   return (
     <div className={pagination}>
-      <PaginationButton direction="left" disabled={currentPage === 1} />
+      <Button
+        bgImg="/icons/icon-arrow.svg"
+        action={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        additionalStyles={{ transform: 'rotate(-180deg)' }}
+      />
 
       <div className={pagination__pages}>
         {pageNumbers.map((page, index) => (
-          <PaginationPageButton pageNumber={page} key={index} />
+          <PaginationPageButton
+            key={index}
+            currentPage={currentPage}
+            pageNumber={page}
+            onPageChange={handlePageChange}
+          />
         ))}
       </div>
 
-      <PaginationButton direction="right" disabled={currentPage === pages} />
+      <Button
+        bgImg="/icons/icon-arrow.svg"
+        action={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        additionalStyles={{}}
+      />
     </div>
   );
 };

@@ -1,33 +1,30 @@
-import { useDispatch } from 'react-redux';
-import { setNextSlide, setPrevSlide } from '../../features/slider/sliderSlice';
-
+import React from 'react';
 import styles from './SliderButton.module.scss';
 
-type Props = {
+interface SliderButtonProps {
   direction: 'left' | 'right';
-};
+  onClick: () => void;
+}
 
-export const SliderButton = ({ direction }: Props) => {
-  const dispatch = useDispatch();
+const { sliderButton, sliderButton__wrapper } = styles;
 
-  const handleClick = () => {
-    return direction === 'left'
-      ? dispatch(setPrevSlide())
-      : dispatch(setNextSlide());
-  };
+export const SliderButton: React.FC<SliderButtonProps> = React.memo(
+  ({ direction, onClick }) => {
+    return (
+      <button
+        className={sliderButton}
+        onClick={onClick}
+        aria-label={`${direction} slide`}
+      >
+        <div
+          className={sliderButton__wrapper}
+          style={direction === 'left' ? { transform: 'rotate(-180deg)' } : {}}
+        >
+          <img src="/icons/icon-arrow.svg" alt={`${direction} arrow`} />
+        </div>
+      </button>
+    );
+  },
+);
 
-  const { sliderButton, sliderButton__wrapper } = styles;
-
-  return (
-    <button
-      className={sliderButton}
-      onClick={() => {
-        handleClick();
-      }}
-    >
-      <div className={sliderButton__wrapper}>
-        <img src={`/icons/${direction}-arrow.svg`} alt={`${direction}-arrow`} />
-      </div>
-    </button>
-  );
-};
+SliderButton.displayName = 'SliderButton';

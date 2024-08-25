@@ -1,61 +1,81 @@
-import { Link, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { ReactNode, useCallback, useMemo } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+
+import { Item } from '../../types/Item';
 
 import styles from './BreadCrumbs.module.scss';
 const {
   breadcrumbs,
   breadcrumbs__link,
   breadcrumbs__icon,
+  breadcrumbs__arrow,
   breadcrumbs__text,
   breadcrumbs__textGray,
 } = styles;
 
-// FIXME better solution to center link text?
+type BreadCrumbsProps = {
+  item?: Item;
+};
 
-export const BreadCrumbs = () => {
+export const BreadCrumbs = ({ item }: BreadCrumbsProps) => {
+  const location = useLocation();
   const { category, itemPage } = useParams();
-  const normalizedCategory =
-    category && category[0].toUpperCase() + category.slice(1);
-  const productName = useSelector(
-    (state: RootState) => state.currentItem.currentItem?.name,
+  const normalizedCategory = useMemo(
+    () => category && category[0].toUpperCase() + category.slice(1),
+    [category],
+  );
+
+  const renderLink = useCallback(
+    (to: string, className: string, content: ReactNode) => (
+      <Link to={to} className={className}>
+        {content}
+      </Link>
+    ),
+    [],
   );
 
   return (
     <div className={breadcrumbs}>
-      <Link to="/" className={breadcrumbs__link}>
+      {renderLink(
+        '/',
+        breadcrumbs__link,
         <img
           src="/icons/icon-home.svg"
           alt="home link"
           className={breadcrumbs__icon}
-        />
-      </Link>
+        />,
+      )}
+
+      {location.pathname.startsWith('/user') && (
+        <>
+          <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
+          <span
+            className={`${breadcrumbs__text} ${itemPage ? breadcrumbs__textGray : ''}`}
+          >
+            Favourites
+          </span>
+        </>
+      )}
 
       {category && (
         <>
-          <img
-            src="/icons/breadcrumb-arrow.svg"
-            alt="right arrow"
-            className={breadcrumbs__icon}
-          />
-          <Link to={`/${category}`} className={styles.breadcrumbs__link}>
+          <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
+          {renderLink(
+            `/catalog/${category}`,
+            breadcrumbs__link,
             <span
               className={`${breadcrumbs__text} ${itemPage ? breadcrumbs__textGray : ''}`}
             >
               {normalizedCategory}
-            </span>
-          </Link>
+            </span>,
+          )}
         </>
       )}
 
       {itemPage && (
         <>
-          <img
-            src="/icons/breadcrumb-arrow.svg"
-            alt="right arrow"
-            className={breadcrumbs__icon}
-          />
-          <span className={breadcrumbs__text}>{productName}</span>
+          <div className={`${breadcrumbs__icon} ${breadcrumbs__arrow} `} />
+          <span className={breadcrumbs__text}>{item?.name}</span>
         </>
       )}
     </div>

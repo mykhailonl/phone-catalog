@@ -1,32 +1,27 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import {
-  setCurrentItem,
-  setCurrentProduct,
-  setTargetImg,
-} from '../../features/currentItem/currentItemSlice';
 import { fetchProducts } from '../../utils/fetchProducts';
 
-import { PageNotFound } from '../PageNotFound';
+import { PageNotFound } from '../../pages/PageNotFound';
 import { ColorSelector } from '../ColorSelector';
 import { CapacitySelector } from '../CapacitySelector';
 import { ProductActions } from '../ProductActions';
 import { ProductPrice } from '../ProductPrice';
-import { Product } from '../../types/Product';
 import { Specification } from '../Specification';
 import { ProductAbout } from '../ProductAbout';
 import { ProductSpecs } from '../ProductSpecs';
 import { BreadCrumbs } from '../BreadCrumbs';
 import { BackButton } from '../BackButton/BackButton';
+import { ProductSlider } from '../ProductSlider';
+import { Loader } from '../Loader';
 
+import { Product } from '../../types/Product';
 import { Category } from '../../types/CategoryTypes';
 import { Item } from '../../types/Item';
 
 import styles from './ItemCard.module.scss';
-import { ProductSlider } from '../ProductSlider';
 const {
   card,
   card__content,
@@ -39,8 +34,6 @@ const {
   card__sliderBlockIsActive,
   card__sliderImg,
   card__controls,
-  card__colors,
-  card__capacity,
   card__actions,
   card__price,
   card__specs,
@@ -51,69 +44,116 @@ type Params = {
   itemPage: string;
 };
 
-// TODO navigate back link
-
-// TODO change Price on color/capacity change
-
 export const ItemCard = () => {
   const { category, itemPage } = useParams<Params>();
+  const navigate = useNavigate();
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [targetImgIndex, setTargetImgIndex] = useState(0);
 
-  const dispatch = useDispatch();
-  const { currentItem, currentProduct, targetImgIndex } = useSelector(
-    (state: RootState) => state.currentItem,
+  // Fetch all item options for the current category
+  const {
+    data: itemOptions,
+    isLoading: isItemOptionsLoading,
+    error: itemOptionsError,
+  } = useQuery<Item[], Error>({
+    queryKey: ['models', category],
+    queryFn: async () => {
+      if (!category) return [];
+
+      const response: Item[] = await fetchProducts(`/api/${category}.json`);
+
+      return response;
+    },
+  });
+
+  const productQueryKey = useMemo(() => ['product', itemPage], [itemPage]);
+
+  // Fetch the current product with optimized caching
+  const {
+    data: currentProduct,
+    isLoading: isProductLoading,
+    error: productError,
+  } = useQuery<Product, Error>({
+    queryKey: productQueryKey,
+    queryFn: async () => {
+      const products: Product[] = await fetchProducts(`/api/products.json`);
+      const product = products.find((p) => p.itemId === itemPage);
+
+      if (!product) throw new Error('Product not found');
+
+      return product;
+    },
+    enabled: !!itemPage,
+    staleTime: Infinity, // Data will never become stale
+    gcTime: 1000 * 60 * 5, // Cache for 5 minutes
+  });
+
+  // Find the current item from pre-loaded options
+  const currentItem = useMemo(() => {
+    if (!itemOptions || !itemPage) return null;
+
+    return itemOptions.find((item) => item.id === itemPage) || null;
+  }, [itemOptions, itemPage]);
+
+  const isLoading = useMemo(
+    () => isInitialLoading || isItemOptionsLoading || isProductLoading,
+    [isInitialLoading, isItemOptionsLoading, isProductLoading],
   );
 
-  if (!category || !itemPage) {
+  const error = useMemo(
+    () => itemOptionsError || productError,
+    [itemOptionsError, productError],
+  );
+
+  // Simulate initial loading state for UX purposes
+  useEffect(() => {
+    if (!isItemOptionsLoading && !isProductLoading) {
+      const timer = setTimeout(() => {
+        setIsInitialLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isItemOptionsLoading, isProductLoading]);
+
+  // Handle item variant changes (color, capacity) without page reload
+  const handleItemChange = useCallback(
+    (newItemId: string) => {
+      if (category) {
+        navigate(`/catalog/${category}/${newItemId}`, { replace: true });
+      }
+    },
+    [category, navigate],
+  );
+
+  const handlePreviewClick = useCallback((index: number) => {
+    setTargetImgIndex(index);
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  // TODO
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
+  if (
+    !category ||
+    !itemPage ||
+    !itemOptions ||
+    !currentProduct ||
+    !currentItem
+  ) {
     return <PageNotFound />;
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productsUrl = `/api/${category}.json`;
-        const items: Item[] = await fetchProducts(productsUrl);
-
-        const item = items.find((item) => item.id === itemPage);
-
-        if (!item) {
-          return <PageNotFound />;
-        }
-
-        console.log('itemcard');
-
-        dispatch(setCurrentItem(item));
-
-        const products: Product[] = await fetchProducts(`/api/products.json`);
-        const newProduct = products.find((prod) => prod.itemId === item.id);
-
-        if (!newProduct) {
-          return <PageNotFound />;
-        }
-
-        dispatch(setCurrentProduct(newProduct));
-      } catch (error) {
-        return <p>{`Error happened while fetching products: ${error}`}</p>;
-      }
-    };
-
-    fetchData();
-  }, [category, itemPage, dispatch]);
-
-  if (!currentItem || !currentProduct) {
-    return null;
-  }
-
-  // #region handlers
-  const handlePreviewClick = (index: number) => {
-    dispatch(setTargetImg(index));
-  };
-  // #endregion
 
   return (
     <div className={card}>
       <div className={card__content}>
         <div className={card__top}>
-          <BreadCrumbs />
+          <BreadCrumbs item={currentItem} />
 
           <BackButton />
 
@@ -127,13 +167,12 @@ export const ItemCard = () => {
             />
           </div>
 
-          {/* TODO change approach to this section (display, width etc) */}
           <div className={card__previews}>
             {currentItem.images.map((photo, index) => (
               <div
                 className={`
-                ${card__sliderBlock} 
-                ${index === targetImgIndex ? card__sliderBlockIsActive : ''}`}
+                ${card__sliderBlock}
+                ${index === targetImgIndex && card__sliderBlockIsActive}`}
                 key={index}
                 onClick={() => handlePreviewClick(index)}
               >
@@ -147,22 +186,26 @@ export const ItemCard = () => {
           </div>
 
           <div className={card__controls}>
-            <div className={card__colors}>
-              <ColorSelector colors={currentItem.colorsAvailable} />
-            </div>
+            <ColorSelector
+              item={currentItem}
+              colors={currentItem.colorsAvailable}
+              onColorChange={handleItemChange}
+              itemOptions={itemOptions}
+            />
 
-            <div className={card__capacity}>
-              <CapacitySelector
-                capacityOptions={currentItem.capacityAvailable}
-              />
-            </div>
+            <CapacitySelector
+              item={currentItem}
+              capacityOptions={currentItem.capacityAvailable}
+              onCapacityChange={handleItemChange}
+              itemOptions={itemOptions}
+            />
 
             <div className={card__actions}>
               {/* TODO what to do with a discount? */}
               <div className={card__price}>
                 <ProductPrice
-                  fullPrice={currentItem.priceRegular}
-                  discountedPrice={currentItem.priceDiscount}
+                  fullPrice={currentProduct.fullPrice}
+                  discountedPrice={currentProduct.price}
                   context="page"
                 />
               </div>

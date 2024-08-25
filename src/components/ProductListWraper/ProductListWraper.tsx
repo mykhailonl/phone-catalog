@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom';
+
 import { ProductList } from '../ProductList';
-import { PageNotFound } from '../PageNotFound';
+import { PageNotFound } from '../../pages/PageNotFound';
+
 import { Category, CategoryEnum } from '../../types/CategoryTypes';
 
 export const ProductListWrapper = () => {
@@ -10,9 +12,10 @@ export const ProductListWrapper = () => {
     phones: 'Mobile phones',
     tablets: 'Tablets',
     accessories: 'Accessories',
+    favourites: 'Favourites',
   };
 
-  const productsUrl = './api/products.json';
+  const productsUrl = '/api/products.json';
 
   if (
     !category ||
