@@ -4,7 +4,7 @@ import sliderSlice from './features/slider/sliderSlice';
 import sideBarSlice from './features/sideBar/sideBarSlice';
 import favoriteSlice from './features/favorites/favoriteSlice';
 import cartSlice from './features/cart/cartSlice';
-import paginationSlice from './features/pagination/paginationSlice';
+import dropdownSlice from './features/dropdown/dropdownSlice';
 import scrollSlice from './features/scroll/scrollSlice';
 
 export const store = configureStore({
@@ -13,7 +13,7 @@ export const store = configureStore({
     menu: sideBarSlice,
     favorites: favoriteSlice,
     cart: cartSlice,
-    pagination: paginationSlice,
+    dropdown: dropdownSlice,
     scroll: scrollSlice,
   },
 });

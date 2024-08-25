@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setActiveDropdown } from '../../features/pagination/paginationSlice';
+import { setActiveDropdown } from '../../features/dropdown/dropdownSlice';
 import { ParamValue } from '../../hooks/useSearchParamValue';
 
 import { DropDownItemsPerPage } from '../../types/DropDownItemsPerPage';
@@ -36,7 +36,7 @@ export const DropDown = memo(
 
     const { name, urlSearchName, values } = dropdownConfig;
 
-    const { activeDropdown } = useAppSelector((state) => state.pagination);
+    const { activeDropdown } = useAppSelector((state) => state.dropdown);
 
     const handleDropDownClick = useCallback(() => {
       dispatch(
