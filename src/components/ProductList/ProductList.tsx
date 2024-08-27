@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
 
 import { useProducts } from '../../hooks/useProducts';
-import { useSearchParamValue } from '../../hooks/useSearchParamValue';
+import {
+  ParamValue,
+  useSearchParamValue,
+} from '../../hooks/useSearchParamValue';
 
 import { BreadCrumbs } from '../BreadCrumbs';
 import { CategoryTitleBlock } from '../CategoryTitleBlock';
@@ -13,8 +16,10 @@ import { Loader } from '../Loader';
 import { ProductListType } from '../../types/ProductList';
 import {
   DropDownSort,
-  DropDownSortOptions,
-  SORT_OPTIONS,
+  SORT_OPTIONS_VALUES,
+  SortKey,
+  getSortKeyFromOption,
+  getSortOptionFromKey,
 } from '../../types/DropDownSortOptions';
 import {
   DropDownItemsPerPage,
@@ -28,7 +33,7 @@ const { list, list__content, list__dropdowns, list__products } = styles;
 const sortByDropdown: DropDownSort = {
   name: 'Sort by',
   urlSearchName: 'sort',
-  values: SORT_OPTIONS,
+  values: SORT_OPTIONS_VALUES,
 };
 
 // Configuration for the items per page dropdown
@@ -51,13 +56,13 @@ export const ProductList = ({
   );
   const [sortBy, setSortBy] = useSearchParamValue(
     'sort',
-    DropDownSortOptions.age,
+    getSortKeyFromOption('Newest') as ParamValue,
   );
   // #endregion
 
   const { products, isLoading, error } = useProducts(
     category,
-    sortBy as DropDownSortOptions,
+    getSortOptionFromKey(sortBy as SortKey),
     productsUrl,
   );
 

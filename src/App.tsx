@@ -31,10 +31,6 @@ export const App = () => {
     }
   }, [shouldScrollToTop, dispatch]);
 
-  // TODO how to deal with it?
-  // console.log('Device Pixel Ratio:', window.devicePixelRatio);
-  // console.log('Zoom Level:', window.devicePixelRatio * 100 + '%');
-
   return (
     <div
       className="App"

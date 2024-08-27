@@ -5,7 +5,13 @@ import { setActiveDropdown } from '../../features/dropdown/dropdownSlice';
 import { ParamValue } from '../../hooks/useSearchParamValue';
 
 import { DropDownItemsPerPage } from '../../types/DropDownItemsPerPage';
-import { DropDownSort } from '../../types/DropDownSortOptions';
+import {
+  DropDownSort,
+  SortOption,
+  SortKey,
+  getSortOptionFromKey,
+  getSortKeyFromOption,
+} from '../../types/DropDownSortOptions';
 
 import styles from './DropDown.module.scss';
 const {
@@ -71,21 +77,34 @@ export const DropDown = memo(
 
     const options = useMemo(
       () =>
-        values.map((value) => (
-          <div
-            key={value}
-            className={`${dropdown__option} ${
-              value === currentValue && dropdown__activeOption
-            }`}
-            onClick={() => {
-              onChange(value);
-              dispatch(setActiveDropdown(null));
-            }}
-          >
-            {value}
-          </div>
-        )),
-      [values, onChange],
+        values.map((value) => {
+          const isSort = urlSearchName === 'sort';
+          const currentSortValue = isSort
+            ? typeof currentValue === 'string'
+              ? getSortOptionFromKey(currentValue as SortKey)
+              : currentValue
+            : currentValue;
+
+          return (
+            <div
+              key={value}
+              className={`${dropdown__option} ${
+                value === currentSortValue && dropdown__activeOption
+              }`}
+              onClick={() => {
+                onChange(
+                  isSort
+                    ? getSortKeyFromOption(value as SortOption) || value
+                    : value,
+                );
+                dispatch(setActiveDropdown(null));
+              }}
+            >
+              {value}
+            </div>
+          );
+        }),
+      [values, onChange, currentValue, urlSearchName],
     );
 
     return (
@@ -96,7 +115,11 @@ export const DropDown = memo(
         <label className={dropdown__description}>{name}</label>
 
         <div className={dropdown__list} onClick={handleDropDownClick}>
-          {currentValue}
+          {urlSearchName === 'sort'
+            ? typeof currentValue === 'string'
+              ? getSortOptionFromKey(currentValue as SortKey)
+              : currentValue
+            : currentValue}
 
           <div className={dropdown__arrowBlock}>
             <div

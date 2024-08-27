@@ -2,8 +2,10 @@ import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import {
-  DropDownSortOptions,
-  SORT_OPTIONS,
+  SortOption,
+  SORT_KEYS,
+  SortKey,
+  getSortKeyFromOption,
 } from '../types/DropDownSortOptions';
 import {
   ITEMS_PER_PAGE_OPTIONS,
@@ -14,13 +16,13 @@ import {
 type ParamName = 'sort' | 'perPage' | 'page';
 
 // Possible types for our parameter values
-export type ParamValue = number | ItemsPerPageOptions | DropDownSortOptions;
+export type ParamValue = number | ItemsPerPageOptions | SortKey | SortOption;
 
 // Check if a value is valid for a given parameter
-const isValidParamValue = (param: ParamName, value: string): boolean => {
+const isValidParamValue = (param: ParamName, value: ParamValue): boolean => {
   switch (param) {
     case 'sort':
-      return SORT_OPTIONS.includes(value as DropDownSortOptions);
+      return SORT_KEYS.includes(value as SortKey);
     case 'perPage':
       return ITEMS_PER_PAGE_OPTIONS.includes(
         value === 'All' ? value : (Number(value) as ItemsPerPageOptions),
@@ -45,7 +47,7 @@ export const useSearchParamValue = (
 ): [ParamValue, (newValue: ParamValue) => void] => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const paramValue = searchParams.get(paramName);
+  const paramValue = searchParams.get(paramName) as ParamValue;
 
   // Figure out the current value
   const value: ParamValue = useMemo(() => {
@@ -55,7 +57,9 @@ export const useSearchParamValue = (
           paramValue === 'All' ? paramValue : Number(paramValue)
         ) as ParamValue;
       }
-      return paramValue as ParamValue;
+      if (paramName === 'sort') {
+        return paramValue as SortKey;
+      }
     }
     return defaultValue;
   }, [paramName, paramValue, defaultValue]);
@@ -63,9 +67,19 @@ export const useSearchParamValue = (
   // Function to update the value
   const setValue = useCallback(
     (newValue: ParamValue) => {
-      const stringValue = String(newValue);
+      let stringValue: string;
 
-      if (isValidParamValue(paramName, stringValue)) {
+      if (paramName === 'sort' && typeof newValue === 'string') {
+        // Converting SortOption to SortKey if necessary
+        const sortKey = getSortKeyFromOption(newValue as SortOption);
+        stringValue = sortKey || String(newValue);
+      } else {
+        stringValue = String(newValue);
+      }
+
+      console.log('StringValue is ', stringValue);
+
+      if (isValidParamValue(paramName, newValue)) {
         const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.set(paramName, stringValue);
         setSearchParams(newSearchParams);

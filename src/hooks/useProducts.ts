@@ -4,7 +4,7 @@ import { fetchProducts } from '../utils/fetchProducts';
 
 import { Product } from '../types/Product';
 import { Category } from '../types/CategoryTypes';
-import { DropDownSortOptions } from '../types/DropDownSortOptions';
+import { SortOption } from '../types/DropDownSortOptions';
 
 type UseProductsReturn = {
   products: Product[];
@@ -14,7 +14,7 @@ type UseProductsReturn = {
 
 export const useProducts = (
   category: Category,
-  sortBy: DropDownSortOptions,
+  sortBy: SortOption,
   productsUrl?: string,
 ): UseProductsReturn => {
   const { favoriteItems } = useAppSelector((state) => state.favorites);
@@ -22,11 +22,11 @@ export const useProducts = (
   // Function to sort products based on the selected option
   const sortProducts = (productsToSort: Product[]): Product[] => {
     switch (sortBy) {
-      case DropDownSortOptions.age:
+      case 'Newest':
         return [...productsToSort].sort((a, b) => b.year - a.year);
-      case DropDownSortOptions.title:
+      case 'Alphabetically':
         return [...productsToSort].sort((a, b) => a.name.localeCompare(b.name));
-      case DropDownSortOptions.price:
+      case 'Cheapest':
         return [...productsToSort].sort((a, b) => a.price - b.price);
       default:
         return productsToSort;
