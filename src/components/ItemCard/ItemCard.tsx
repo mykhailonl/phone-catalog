@@ -22,6 +22,7 @@ import { Category } from '../../types/CategoryTypes';
 import { Item } from '../../types/Item';
 
 import styles from './ItemCard.module.scss';
+import { TransitionMask } from '../TransitionMask/TransitionMask';
 const {
   card,
   card__content,
@@ -49,6 +50,7 @@ export const ItemCard = () => {
   const navigate = useNavigate();
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [targetImgIndex, setTargetImgIndex] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Fetch all item options for the current category
   const {
@@ -56,36 +58,42 @@ export const ItemCard = () => {
     isLoading: isItemOptionsLoading,
     error: itemOptionsError,
   } = useQuery<Item[], Error>({
-    queryKey: ['models', category],
+    queryKey: ['models', category, itemPage],
     queryFn: async () => {
-      if (!category) return [];
+      if (!category || !itemPage) return [];
+
+      // Defining a modelPrefix aka namespaceID to reduce a number of saved itemOptions
+      const modelPrefix =
+        category === 'phones'
+          ? itemPage.split('-').slice(0, -2).join('-')
+          : category === 'tablets'
+            ? itemPage.split('-').slice(0, -2).join('-')
+            : category === 'accessories' &&
+              itemPage.split('-').slice(0, 4).join('-');
 
       const response: Item[] = await fetchProducts(`/api/${category}.json`);
 
-      return response;
+      return response.filter((item) => item.namespaceId === modelPrefix);
     },
   });
 
-  const productQueryKey = useMemo(() => ['product', itemPage], [itemPage]);
+  const productQueryKey = useMemo(() => ['products', itemPage], [itemPage]);
 
-  // Fetch the current product with optimized caching
+  // Fetch the products
   const {
-    data: currentProduct,
-    isLoading: isProductLoading,
-    error: productError,
-  } = useQuery<Product, Error>({
+    data: productOptions,
+    isLoading: isProductOptionsLoading,
+    error: productOptionsError,
+  } = useQuery<Product[], Error>({
     queryKey: productQueryKey,
     queryFn: async () => {
       const products: Product[] = await fetchProducts(`/api/products.json`);
-      const product = products.find((p) => p.itemId === itemPage);
 
-      if (!product) throw new Error('Product not found');
-
-      return product;
+      return products;
     },
     enabled: !!itemPage,
     staleTime: Infinity, // Data will never become stale
-    gcTime: 1000 * 60 * 5, // Cache for 5 minutes
+    gcTime: Infinity,
   });
 
   // Find the current item from pre-loaded options
@@ -95,30 +103,49 @@ export const ItemCard = () => {
     return itemOptions.find((item) => item.id === itemPage) || null;
   }, [itemOptions, itemPage]);
 
+  // Find the current product from pre-loaded options
+  const currentProduct = useMemo(() => {
+    if (!productOptions || !itemPage) return null;
+
+    return (
+      productOptions.find((product) => product.itemId === itemPage) || null
+    );
+  }, [productOptions, itemPage]);
+
+  useEffect(() => {
+    if (currentProduct && currentItem) {
+      setIsUpdating(false);
+    }
+  }, [currentProduct, currentItem]);
+
   const isLoading = useMemo(
-    () => isInitialLoading || isItemOptionsLoading || isProductLoading,
-    [isInitialLoading, isItemOptionsLoading, isProductLoading],
+    () => isInitialLoading || isItemOptionsLoading || isProductOptionsLoading,
+    [isInitialLoading, isItemOptionsLoading, isProductOptionsLoading],
   );
 
   const error = useMemo(
-    () => itemOptionsError || productError,
-    [itemOptionsError, productError],
+    () => itemOptionsError || productOptionsError,
+    [itemOptionsError, productOptionsError],
   );
 
   // Simulate initial loading state for UX purposes
   useEffect(() => {
-    if (!isItemOptionsLoading && !isProductLoading) {
+    if (!isItemOptionsLoading && !isProductOptionsLoading) {
       const timer = setTimeout(() => {
         setIsInitialLoading(false);
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [isItemOptionsLoading, isProductLoading]);
+  }, [isItemOptionsLoading, isProductOptionsLoading]);
 
   // Handle item variant changes (color, capacity) without page reload
   const handleItemChange = useCallback(
-    (newItemId: string) => {
+    async (newItemId: string) => {
+      setIsUpdating(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       if (category) {
         navigate(`/catalog/${category}/${newItemId}`, { replace: true });
       }
@@ -150,108 +177,110 @@ export const ItemCard = () => {
   }
 
   return (
-    <div className={card}>
-      <div className={card__content}>
-        <div className={card__top}>
-          <BreadCrumbs item={currentItem} />
+    <TransitionMask isUpdating={isUpdating}>
+      <div className={card}>
+        <div className={card__content}>
+          <div className={card__top}>
+            <BreadCrumbs item={currentItem} />
 
-          <BackButton />
+            <BackButton />
 
-          <h2 className={card__title}>{currentItem.name}</h2>
+            <h2 className={card__title}>{currentItem.name}</h2>
 
-          <div className={card__imgBlock}>
-            <img
-              src={`/${currentItem.images[targetImgIndex]}`}
-              alt={`${currentItem.name} photo`}
-              className={card__img}
-            />
-          </div>
+            <div className={card__imgBlock}>
+              <img
+                src={`/${currentItem.images[targetImgIndex]}`}
+                alt={`${currentItem.name} photo`}
+                className={card__img}
+              />
+            </div>
 
-          <div className={card__previews}>
-            {currentItem.images.map((photo, index) => (
-              <div
-                className={`
+            <div className={card__previews}>
+              {currentItem.images.map((photo, index) => (
+                <div
+                  className={`
                 ${card__sliderBlock}
                 ${index === targetImgIndex && card__sliderBlockIsActive}`}
-                key={index}
-                onClick={() => handlePreviewClick(index)}
-              >
-                <img
-                  src={`/${photo}`}
-                  alt={`${currentItem.name} photo preview`}
-                  className={card__sliderImg}
-                />
+                  key={index}
+                  onClick={() => handlePreviewClick(index)}
+                >
+                  <img
+                    src={`/${photo}`}
+                    alt={`${currentItem.name} photo preview`}
+                    className={card__sliderImg}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className={card__controls}>
+              <ColorSelector
+                item={currentItem}
+                colors={currentItem.colorsAvailable}
+                onColorChange={handleItemChange}
+                itemOptions={itemOptions}
+              />
+
+              <CapacitySelector
+                item={currentItem}
+                capacityOptions={currentItem.capacityAvailable}
+                onCapacityChange={handleItemChange}
+                itemOptions={itemOptions}
+              />
+
+              <div className={card__actions}>
+                {/* TODO what to do with a discount? */}
+                <div className={card__price}>
+                  <ProductPrice
+                    fullPrice={currentProduct.fullPrice}
+                    discountedPrice={currentProduct.price}
+                    context="page"
+                  />
+                </div>
+
+                <ProductActions product={currentProduct} />
               </div>
-            ))}
-          </div>
 
-          <div className={card__controls}>
-            <ColorSelector
-              item={currentItem}
-              colors={currentItem.colorsAvailable}
-              onColorChange={handleItemChange}
-              itemOptions={itemOptions}
-            />
+              <div className={card__specs}>
+                <Specification
+                  label="Screen"
+                  value={currentItem.screen}
+                  context="page"
+                />
 
-            <CapacitySelector
-              item={currentItem}
-              capacityOptions={currentItem.capacityAvailable}
-              onCapacityChange={handleItemChange}
-              itemOptions={itemOptions}
-            />
+                <Specification
+                  label="Resolution"
+                  value={currentItem.resolution}
+                  context="page"
+                />
 
-            <div className={card__actions}>
-              {/* TODO what to do with a discount? */}
-              <div className={card__price}>
-                <ProductPrice
-                  fullPrice={currentProduct.fullPrice}
-                  discountedPrice={currentProduct.price}
+                <Specification
+                  label="Processor"
+                  value={currentItem.processor}
+                  context="page"
+                />
+
+                <Specification
+                  label="RAM"
+                  value={currentItem.ram}
                   context="page"
                 />
               </div>
-
-              <ProductActions product={currentProduct} />
-            </div>
-
-            <div className={card__specs}>
-              <Specification
-                label="Screen"
-                value={currentItem.screen}
-                context="page"
-              />
-
-              <Specification
-                label="Resolution"
-                value={currentItem.resolution}
-                context="page"
-              />
-
-              <Specification
-                label="Processor"
-                value={currentItem.processor}
-                context="page"
-              />
-
-              <Specification
-                label="RAM"
-                value={currentItem.ram}
-                context="page"
-              />
             </div>
           </div>
+
+          <ProductAbout description={currentItem.description} />
+
+          <ProductSpecs product={currentItem} />
+
+          <ProductSlider
+            title="You may also like"
+            apiUrl="/api/products.json"
+            discount={true}
+            newOnly={false}
+          />
         </div>
-
-        <ProductAbout description={currentItem.description} />
-
-        <ProductSpecs product={currentItem} />
-
-        <ProductSlider
-          title="You may also like"
-          apiUrl="/api/products.json"
-          discount={true}
-          newOnly={false}
-        />
       </div>
-    </div>
+    </TransitionMask>
   );
 };
