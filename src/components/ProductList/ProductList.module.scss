@@ -1,13 +1,13 @@
 .list {
   @include content-padding-inline;
+  
+  @include on-desktop {
+    max-width: 1136px;
+    margin-inline: auto;
+  }
 
   &__content {
     @include responsive-grid;
-
-    @include on-desktop {
-      max-width: 1136px;
-      margin-inline: auto;
-    }
 
     margin-bottom: 64px;
   }
