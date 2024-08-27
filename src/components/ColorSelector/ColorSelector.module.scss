@@ -38,6 +38,7 @@
 }
 
 .isActive {
+  cursor: auto;
   border-color: map-get($colors, gray-primary);
 }
 

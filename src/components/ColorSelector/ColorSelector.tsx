@@ -33,7 +33,7 @@ const colorPalette: { [key: string]: string } = {
   'sky blue': '#C1D1DE',
   red: '#F44C54',
   green: '#C5D5C0',
-  starlight: '##F3EDE8',
+  starlight: '#F3EDE8',
   pink: '#F9E5E4',
   black: '#16171B',
 };
@@ -45,18 +45,17 @@ export const ColorSelector = ({
   itemOptions,
 }: Props) => {
   const handleColorChange = (color: string) => {
-    const newColor =
-      color === 'space gray'
-        ? 'space-gray'
-        : color === 'rose gold'
-          ? 'rose-gold'
-          : color;
+    if (color === item.color) return;
+
+    const newColor = color === 'rose gold' ? 'rose-gold' : color;
+
     const newItem = itemOptions.find(
       (option) =>
         option.namespaceId === item.namespaceId &&
         option.capacity === item.capacity &&
         option.color === newColor,
     );
+
     if (newItem) {
       onColorChange(newItem.id);
     }
@@ -71,6 +70,7 @@ export const ColorSelector = ({
             key={index}
             onClick={() => handleColorChange(color)}
             className={`${colorCircle} ${item.color === color ? isActive : ''}`}
+            disabled={item.color === color}
           >
             <div
               className={innerCircle}

@@ -25,6 +25,8 @@ export const CapacitySelector = ({
   itemOptions,
 }: Props) => {
   const handleCapacityChange = (capacity: string) => {
+    if (capacity === item.capacity) return;
+
     const newItem = itemOptions.find(
       (option) =>
         option.namespaceId === item.namespaceId &&
@@ -43,6 +45,7 @@ export const CapacitySelector = ({
           key={index}
           onClick={() => handleCapacityChange(capacity)}
           className={`${capacity__option} ${item.capacity === capacity ? isActive : ''}`}
+          disabled={item.capacity === capacity}
         >
           {capacity}
         </button>
