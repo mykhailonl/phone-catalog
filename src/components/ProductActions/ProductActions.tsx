@@ -50,7 +50,7 @@ export const ProductActions = ({ product }: Props) => {
     }
   };
 
-  const withDelay = (callback: () => void, delay: number = 300) => {
+  const withDelay = (callback: () => void, delay: number = 700) => {
     return () => {
       if (isButtonDisabled) return;
 
