@@ -31,7 +31,9 @@ export const useProductData = (
 
   const filteredProducts = useMemo(() => {
     let preparedProducts = newOnly
-      ? productsData.filter((product) => product.year === 2022)
+      ? productsData
+          .filter((product) => product.year === 2022)
+          .sort((a, b) => b.fullPrice - a.fullPrice)
       : productsData.filter((product) => product.year !== 2022);
 
     if (category) {
