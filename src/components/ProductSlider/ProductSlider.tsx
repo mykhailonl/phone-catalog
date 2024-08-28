@@ -75,44 +75,51 @@ export const ProductSlider = memo(
       [products, suggestedProducts],
     );
 
+    const noProductsAvailable = useMemo(() => !products.length, [products]);
+
     return (
       <div className={productSlider}>
         <div className={productSlider__wrapper}>
           <h2 className={productSlider__title}>{title}</h2>
 
-          <div className={productSlider__buttonsWrapper}>
-            <Button
-              bgImg="/icons/icon-arrow.svg"
-              action={handlePrevClick}
-              disabled={productsStartPosition}
-              additionalStyles={{
-                transform: 'rotate(-180deg)',
-                borderColor: '#B4BDC3',
-              }}
-            />
+          {noProductsAvailable ? (
+            <div>There are no {category} yet</div>
+          ) : (
+            <>
+              <div className={productSlider__buttonsWrapper}>
+                <Button
+                  bgImg="/icons/icon-arrow.svg"
+                  action={handlePrevClick}
+                  disabled={productsStartPosition}
+                  additionalStyles={{
+                    transform: 'rotate(-180deg)',
+                    borderColor: '#B4BDC3',
+                  }}
+                />
 
-            <Button
-              bgImg="/icons/icon-arrow.svg"
-              action={handleNextClick}
-              disabled={productsEndPosition}
-              additionalStyles={{ borderColor: '#B4BDC3' }}
-            />
-          </div>
-
-          <div className={productSlider__carouselWrapper}>
-            <div
-              className={productSlider__carousel}
-              style={
-                {
-                  '--current-index': currentIndex,
-                } as CSSProperties
-              }
-            >
-              {shuffledProducts.map((item, index) => (
-                <Product product={item} discount={discount} key={index} />
-              ))}
-            </div>
-          </div>
+                <Button
+                  bgImg="/icons/icon-arrow.svg"
+                  action={handleNextClick}
+                  disabled={productsEndPosition}
+                  additionalStyles={{ borderColor: '#B4BDC3' }}
+                />
+              </div>
+              <div className={productSlider__carouselWrapper}>
+                <div
+                  className={productSlider__carousel}
+                  style={
+                    {
+                      '--current-index': currentIndex,
+                    } as CSSProperties
+                  }
+                >
+                  {shuffledProducts.map((item, index) => (
+                    <Product product={item} discount={discount} key={index} />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );
