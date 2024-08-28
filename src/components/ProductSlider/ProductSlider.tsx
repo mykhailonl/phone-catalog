@@ -54,6 +54,16 @@ export const ProductSlider = memo(
     );
     // #endregion
 
+    const productsAfterDiscount = useMemo(
+      () =>
+        discount
+          ? products.sort(
+              (a, b) => b.fullPrice - b.price - (a.fullPrice - a.price),
+            )
+          : products,
+      [products, discount],
+    );
+
     return (
       <div className={productSlider}>
         <div className={productSlider__wrapper}>
@@ -87,7 +97,7 @@ export const ProductSlider = memo(
                 } as CSSProperties
               }
             >
-              {products.map((item, index) => (
+              {productsAfterDiscount.map((item, index) => (
                 <Product product={item} discount={discount} key={index} />
               ))}
             </div>
