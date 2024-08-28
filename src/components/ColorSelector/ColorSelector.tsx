@@ -39,6 +39,7 @@ const colorPalette: { [key: string]: string } = {
   graphite: '#666460',
   sierrablue: '#9FB8D2',
   spaceblack: '#3E3C3B',
+  white: '#FCF6F1',
 };
 
 export const ColorSelector = ({
