@@ -31,9 +31,17 @@ export const Slider = () => {
   const extendedSlides = useMemo(() => {
     return [slides[slides.length - 1], ...slides, slides[0]];
   }, [slides]);
+  console.log('CurrentIndex', currentIndex);
 
   const handleSlideChange = useCallback((newIndex: number) => {
     setIsAnimating(true);
+
+    if (newIndex >= extendedSlides.length || newIndex < 0) {
+      setCurrentIndex(4);
+
+      return;
+    }
+
     setCurrentIndex(newIndex);
   }, []);
 
