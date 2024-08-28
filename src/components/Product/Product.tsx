@@ -47,7 +47,11 @@ export const Product = ({ product, discount, isInCategory }: Props) => {
       <Link
         to={linkTo}
         className={prod__contentWrapper}
-        state={isInFavourites && { from: 'user', previousPath: pathname }}
+        state={
+          isInFavourites
+            ? { from: 'user', previousPath: pathname }
+            : discount && { discount }
+        }
         onClick={handleProductClick}
       >
         <div className={prod__imgWrapper}>
