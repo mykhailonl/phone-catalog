@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { fetchProducts } from '../../utils/fetchProducts';
@@ -47,6 +47,10 @@ type Params = {
 
 export const ItemCard = () => {
   const { category, itemPage } = useParams<Params>();
+
+  // Getting a state passed from the product to check of there is a discount on the product
+  const { state: itemWithDiscount } = useLocation();
+
   const navigate = useNavigate();
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [targetImgIndex, setTargetImgIndex] = useState(0);
@@ -229,11 +233,11 @@ export const ItemCard = () => {
               />
 
               <div className={card__actions}>
-                {/* TODO what to do with a discount? */}
                 <div className={card__price}>
                   <ProductPrice
                     fullPrice={currentProduct.fullPrice}
                     discountedPrice={currentProduct.price}
+                    discount={itemWithDiscount}
                     context="page"
                   />
                 </div>
