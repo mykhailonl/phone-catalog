@@ -1,6 +1,7 @@
 import styles from './ProductPrice.module.scss';
 
-const { actual__price, full__price, card__context, page__context } = styles;
+const { price, actual__price, full__price, card__context, page__context } =
+  styles;
 
 type Props = {
   fullPrice: number;
@@ -22,13 +23,13 @@ export const ProductPrice = ({
       {!discount ? (
         <h2 className={`${actual__price} ${contextClass}`}>${fullPrice}</h2>
       ) : (
-        <>
+        <div className={price}>
           <h2 className={`${actual__price} ${contextClass}`}>
             ${discountedPrice}
           </h2>
 
-          <h3 className={`${full__price} ${contextClass}`}>${fullPrice}</h3>
-        </>
+          <h3 className={`${contextClass} ${full__price} `}>${fullPrice}</h3>
+        </div>
       )}
     </>
   );
