@@ -277,11 +277,15 @@ export const ItemCard = () => {
 
           <ProductSpecs product={currentItem} />
 
+          {/* If user gets here to the product with discount - he will 
+            see a products with it as recomendations, otherwise - without
+          */}
           <ProductSlider
             title="You may also like"
             apiUrl="/api/products.json"
-            discount={true}
+            discount={itemWithDiscount}
             newOnly={false}
+            suggestedProducts={true}
           />
         </div>
       </div>

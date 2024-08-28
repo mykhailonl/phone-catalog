@@ -8,6 +8,7 @@ import { Button } from '../Button';
 import { Product } from '../Product';
 
 import styles from './ProductSlider.module.scss';
+import { shuffleArray } from '../../utils/shuffleFunction';
 const {
   productSlider,
   productSlider__wrapper,
@@ -22,10 +23,11 @@ type Props = {
   apiUrl: string;
   discount: boolean;
   newOnly: boolean;
+  suggestedProducts?: boolean;
 };
 
 export const ProductSlider = memo(
-  ({ title, apiUrl, discount, newOnly }: Props) => {
+  ({ title, apiUrl, discount, newOnly, suggestedProducts }: Props) => {
     const { category } = useParams();
     const products = useProductData(apiUrl, category, newOnly);
 
@@ -64,6 +66,15 @@ export const ProductSlider = memo(
       [products, discount],
     );
 
+    // shuffling products to generate a random suggestions
+    const shuffledProducts = useMemo(
+      () =>
+        suggestedProducts
+          ? shuffleArray(productsAfterDiscount)
+          : productsAfterDiscount,
+      [products, suggestedProducts],
+    );
+
     return (
       <div className={productSlider}>
         <div className={productSlider__wrapper}>
@@ -97,7 +108,7 @@ export const ProductSlider = memo(
                 } as CSSProperties
               }
             >
-              {productsAfterDiscount.map((item, index) => (
+              {shuffledProducts.map((item, index) => (
                 <Product product={item} discount={discount} key={index} />
               ))}
             </div>
