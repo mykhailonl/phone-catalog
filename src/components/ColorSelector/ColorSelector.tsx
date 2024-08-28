@@ -36,6 +36,9 @@ const colorPalette: { [key: string]: string } = {
   starlight: '#F3EDE8',
   pink: '#F9E5E4',
   black: '#16171B',
+  graphite: '#666460',
+  sierrablue: '#9FB8D2',
+  spaceblack: '#3E3C3B',
 };
 
 export const ColorSelector = ({
