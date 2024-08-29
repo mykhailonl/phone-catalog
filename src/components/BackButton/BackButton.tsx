@@ -1,9 +1,19 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import styles from './BackButton.module.scss';
-const { button, button__icon, button__label } = styles;
+const {
+  button,
+  button__icon,
+  button__label,
+  button__notFoundPage,
+  button__label__notFound,
+} = styles;
 
-export const BackButton = () => {
+type BackButtonProps = {
+  notFoundPage: boolean;
+};
+
+export const BackButton = ({ notFoundPage }: BackButtonProps) => {
   const navigate = useNavigate();
   const { category, itemPage } = useParams();
   const location = useLocation();
@@ -29,10 +39,17 @@ export const BackButton = () => {
   };
 
   return (
-    <div onClick={handleBack} className={button}>
+    <div
+      onClick={handleBack}
+      className={`${button} ${notFoundPage && button__notFoundPage}`}
+    >
       <div className={button__icon} />
 
-      <span className={button__label}>Back</span>
+      <span
+        className={`${button__label} ${notFoundPage && button__label__notFound}`}
+      >
+        Back
+      </span>
     </div>
   );
 };
