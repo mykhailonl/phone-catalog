@@ -1,7 +1,16 @@
 import { useEffect } from 'react';
-import { Link, useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate, useNavigation } from 'react-router-dom';
 
-export const PageNotFound = () => {
+import { BackButton } from '../../components/BackButton';
+
+import styles from './PageNotFound.module.scss';
+const { page, page__notFoundImg } = styles;
+
+type PageNotFoundProps = {
+  productNotFound?: boolean;
+};
+
+export const PageNotFound = ({ productNotFound }: PageNotFoundProps) => {
   const navigate = useNavigate();
   const navigation = useNavigation();
 
@@ -16,14 +25,13 @@ export const PageNotFound = () => {
   }, [navigation]);
 
   return (
-    <div className="flex flex-col px-content py-10 md:px-content-md lg:px-content-lg">
-      <Link to="/" className="mb-4 flex justify-center">
-        Get back to Home
-      </Link>
+    <div className={page}>
+      <BackButton notFoundPage />
 
       <img
-        src="img/page-not-found.png"
+        src={`${productNotFound ? '/img/product-not-found.jpg' : '/img/page-not-found.jpg'}`}
         alt="Page not found"
+        className={page__notFoundImg}
         onClick={() => navigate('/')}
       />
     </div>
