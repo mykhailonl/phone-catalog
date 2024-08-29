@@ -40,4 +40,20 @@
 
     background-color: map-get($colors, elements);
   }
+
+  &__checkoutWindow {
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+  }
+
+  &__checkoutText {
+    @include apply-typography(p);
+  }
+
+  &__checkoutButtonWrapper {
+    display: flex;
+    gap: 16px;
+  }
 }

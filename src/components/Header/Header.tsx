@@ -28,7 +28,10 @@ export const Header = () => {
   const { cartItems } = useAppSelector((state) => state.cart);
 
   const favItemsAmount = favoriteItems.length;
-  const cartItemsAmount = cartItems.length;
+  const cartItemsAmount = cartItems.reduce(
+    (totalAmount, current) => totalAmount + current.quantity,
+    0,
+  );
 
   const menuIcon = isOpen
     ? '/icons/icon-close.svg'
