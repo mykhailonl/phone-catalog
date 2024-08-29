@@ -177,7 +177,7 @@ export const ItemCard = () => {
     !currentProduct ||
     !currentItem
   ) {
-    return <PageNotFound />;
+    return <PageNotFound productNotFound />;
   }
 
   return (

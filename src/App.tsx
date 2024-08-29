@@ -24,9 +24,8 @@ export const App = () => {
 
   useEffect(() => {
     if (shouldScrollToTop) {
-      // TODO decide if I need it smooth or instant
-      // TODO { behavior: 'smooth' } inside scrollIntoView
       topRef.current?.scrollIntoView({ behavior });
+
       dispatch(resetScrollToTop());
     }
   }, [shouldScrollToTop, dispatch]);

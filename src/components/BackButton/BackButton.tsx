@@ -10,7 +10,7 @@ const {
 } = styles;
 
 type BackButtonProps = {
-  notFoundPage: boolean;
+  notFoundPage?: boolean;
 };
 
 export const BackButton = ({ notFoundPage }: BackButtonProps) => {

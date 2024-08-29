@@ -47,6 +47,7 @@ export const Slider = () => {
 
   const handleTransitionEnd = useCallback(() => {
     setIsAnimating(false);
+
     if (currentIndex === 0) {
       setCurrentIndex(slides.length);
     } else if (currentIndex === slides.length + 1) {
@@ -55,10 +56,14 @@ export const Slider = () => {
   }, [currentIndex, slides.length]);
 
   const handleNextSlide = useCallback(() => {
+    // TODO
+
     handleSlideChange(currentIndex + 1);
   }, [currentIndex, handleSlideChange]);
 
   const handlePrevSlide = useCallback(() => {
+    // TODO
+
     handleSlideChange(currentIndex - 1);
   }, [currentIndex, handleSlideChange]);
 
