@@ -1,6 +1,6 @@
 import { Description } from '../../types/Description';
-import styles from './ProductAbout.module.scss';
 
+import styles from './ProductAbout.module.scss';
 const {
   about,
   about__titleBlock,

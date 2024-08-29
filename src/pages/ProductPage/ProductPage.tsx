@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useProducts } from '../../hooks/useProducts';
 import {
@@ -6,14 +7,14 @@ import {
   useSearchParamValue,
 } from '../../hooks/useSearchParamValue';
 
-import { BreadCrumbs } from '../BreadCrumbs';
-import { CategoryTitleBlock } from '../CategoryTitleBlock';
-import { DropDown } from '../Dropdown';
-import { Pagination } from '../Pagination';
-import { Product } from '../Product/Product';
-import { Loader } from '../Loader';
+import { BreadCrumbs } from '../../components/BreadCrumbs';
+import { CategoryTitleBlock } from '../../components/CategoryTitleBlock';
+import { DropDown } from '../../components/Dropdown';
+import { Pagination } from '../../components/Pagination';
+import { Product } from '../../components/Product/Product';
+import { Loader } from '../../components/Loader';
 
-import { ProductListType } from '../../types/ProductList';
+import { ProductPageType } from '../../types/ProductList';
 import {
   DropDownSort,
   SORT_OPTIONS_VALUES,
@@ -26,7 +27,8 @@ import {
   ITEMS_PER_PAGE_OPTIONS,
 } from '../../types/DropDownItemsPerPage';
 
-import styles from './ProductList.module.scss';
+import styles from './ProductPage.module.scss';
+import { ButtonPrimary } from '../../components/ButtonPrimary';
 const { list, list__content, list__dropdowns, list__products } = styles;
 
 // Configuration for the sort dropdown
@@ -43,11 +45,14 @@ const itemsDropdown: DropDownItemsPerPage = {
   values: ITEMS_PER_PAGE_OPTIONS,
 };
 
-export const ProductList = ({
+export const ProductPage = ({
   title,
   productsUrl,
   category,
-}: ProductListType) => {
+}: ProductPageType) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   // #region URLSearchParams
   const [page, setPage] = useSearchParamValue('page', 1);
   const [perPage, setPerPage] = useSearchParamValue(
@@ -60,7 +65,7 @@ export const ProductList = ({
   );
   // #endregion
 
-  const { products, isLoading, error } = useProducts(
+  const { products, isLoading, isError } = useProducts(
     category,
     getSortOptionFromKey(sortBy as SortKey),
     productsUrl,
@@ -76,14 +81,20 @@ export const ProductList = ({
 
   // #region Loading/Error handling
   if (isLoading) return <Loader />;
-  // TODO create error component
-  if (error)
+
+  if (isError)
     return (
-      <div>
-        Error: {error instanceof Error ? error.message : 'An error occurred'}
+      <div style={{ padding: '30px' }}>
+        <p style={{ marginBottom: '20px' }}>Something went wrong</p>
+
+        <ButtonPrimary
+          buttonText="Reload page"
+          action={() => navigate(pathname)}
+          additionalStyles={{ paddingInline: '10px' }}
+          disabled={false}
+        />
       </div>
     );
-  if (!products) return null;
   // #endregion
 
   // #region conditions
@@ -91,6 +102,7 @@ export const ProductList = ({
   const paginationVisible =
     perPage !== 'All' && products.length > Number(perPage);
   const totalPages = Math.ceil(products.length / Number(perPage));
+  const noProducts = !products.length;
   // #endregion
 
   return (
@@ -118,6 +130,8 @@ export const ProductList = ({
             />
           </div>
         )}
+
+        {noProducts && <p>There are no {category} yet.</p>}
 
         <div className={list__products}>
           {paginatedProducts.map((prod) => (

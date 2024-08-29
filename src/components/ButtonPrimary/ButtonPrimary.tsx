@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+
 import styles from './ButtonPrimary.module.scss';
 const { button, button__text } = styles;
 

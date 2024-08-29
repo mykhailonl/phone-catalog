@@ -19,5 +19,9 @@
 
     height: 16px;
     width: 16px;
+
+    &__left {
+      transform: rotate(-180deg);
+    }
   }
 }

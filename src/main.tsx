@@ -10,10 +10,10 @@ import { App } from './App';
 import { HomePage } from './pages/HomePage';
 import { PageNotFound } from './pages/PageNotFound/PageNotFound';
 import { Cart } from './pages/CartPage';
+import { FavouritesPage } from './pages/FavouritesPage';
 
 import { ItemCard } from './components/ItemCard';
-import { ProductListWrapper } from './components/ProductListWraper/ProductListWraper';
-import { FavouritesList } from './components/FavouritesList';
+import { ProductPageWrapper } from './components/ProductPageWraper/ProductPageWrapper';
 
 import './index.css';
 
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: ':category',
-            element: <ProductListWrapper />,
+            element: <ProductPageWrapper />,
           },
           {
             path: ':category/:itemPage',
@@ -44,13 +44,17 @@ const router = createBrowserRouter([
         children: [
           {
             path: 'favourites',
-            element: <FavouritesList />,
+            element: <FavouritesPage />,
           },
           {
             path: 'cart',
             element: <Cart />,
           },
         ],
+      },
+      {
+        path: 'not-implemented',
+        element: <PageNotFound notImplemented />,
       },
       {
         path: '*',

@@ -7,7 +7,6 @@ import { SidebarNavLink } from '../SidebarNavLink';
 import { NAVIGATION_LINKS } from '../../types/NavigationLinkType';
 
 import styles from './SideBar.module.scss';
-
 const {
   sidebar,
   sidebar__isOpen,

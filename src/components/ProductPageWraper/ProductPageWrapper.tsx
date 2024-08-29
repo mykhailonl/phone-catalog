@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 
-import { ProductList } from '../ProductList';
+import { ProductPage } from '../../pages/ProductPage';
 import { PageNotFound } from '../../pages/PageNotFound';
 
 import { Category, CategoryEnum } from '../../types/CategoryTypes';
 
-export const ProductListWrapper = () => {
+export const ProductPageWrapper = () => {
   const { category } = useParams<{ category: Category }>();
 
   const titles: Record<Category, string> = {
@@ -25,7 +25,7 @@ export const ProductListWrapper = () => {
   }
 
   return (
-    <ProductList
+    <ProductPage
       title={titles[category]}
       productsUrl={productsUrl}
       category={category}

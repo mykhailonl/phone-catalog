@@ -1,9 +1,8 @@
 import styles from './ProductPrice.module.scss';
-
 const { price, actual__price, full__price, card__context, page__context } =
   styles;
 
-type Props = {
+type ProductPriceProps = {
   fullPrice: number;
   discountedPrice: number;
   discount?: boolean;
@@ -15,7 +14,7 @@ export const ProductPrice = ({
   discountedPrice,
   discount,
   context,
-}: Props) => {
+}: ProductPriceProps) => {
   const contextClass = context === 'card' ? card__context : page__context;
 
   return (

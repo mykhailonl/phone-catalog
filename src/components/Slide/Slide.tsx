@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import { Slide as SlideType } from '../../types/Slide';
 
 import styles from './Slide.module.scss';
+const { slide, slide__img } = styles;
 
 export const Slide: React.FC<SlideType> = React.memo(({ image, link }) => {
-  const { slide, slide__img } = styles;
-
   return (
     <Link to={link} className={slide}>
       <img

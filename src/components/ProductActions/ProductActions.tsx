@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import {
   addToFavorites,
@@ -6,26 +6,25 @@ import {
 } from '../../features/favorites/favoriteSlice';
 import { addToCart, removeFromCart } from '../../features/cart/cartSlice';
 
+import { useAppDispatch, useAppSelector } from '../../hooks';
+
 import { Product } from '../../types/Product';
 
 import styles from './ProductActions.module.scss';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-
 const {
   buttons,
   buttons__cart,
   buttons__favourite,
   buttons__favImg,
-  white,
-  green,
-  elements,
+  buttons__isInCart,
+  buttons__isInFavorites,
 } = styles;
 
-type Props = {
+type productActionsProps = {
   product: Product;
 };
 
-export const ProductActions = ({ product }: Props) => {
+export const ProductActions = ({ product }: productActionsProps) => {
   const dispatch = useAppDispatch();
 
   const { favoriteItems } = useAppSelector((state) => state.favorites);
@@ -33,86 +32,61 @@ export const ProductActions = ({ product }: Props) => {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  // #region handlers
-  const handleFavClick = (product: Product) => {
-    if (favoriteItems.some((item) => item.id === product.id)) {
-      dispatch(removeFromFavorites(product.id));
-    } else {
-      dispatch(addToFavorites(product));
-    }
-  };
+  const isInFavorites = favoriteItems.some((item) => item.id === product.id);
+  const isInCart = cartItems.some((item) => item.product.id === product.id);
 
-  const handleAddToCartClick = (product: Product) => {
-    if (cartItems.some((item) => item.product.id === product.id)) {
-      dispatch(removeFromCart(product.id));
-    } else {
-      dispatch(addToCart(product));
-    }
-  };
-
-  const withDelay = (callback: () => void, delay: number = 700) => {
-    return () => {
+  const handleAdding = useCallback(
+    (type: 'fav' | 'cart') => {
       if (isButtonDisabled) return;
 
       setIsButtonDisabled(true);
-      callback();
+
+      if (type === 'fav') {
+        if (isInFavorites) {
+          dispatch(removeFromFavorites(product.id));
+        } else {
+          dispatch(addToFavorites(product));
+        }
+      } else if (type === 'cart') {
+        if (isInCart) {
+          dispatch(removeFromCart(product.id));
+        } else {
+          dispatch(addToCart(product));
+        }
+      }
 
       setTimeout(() => {
         setIsButtonDisabled(false);
-      }, delay);
-    };
-  };
-
-  const handleFavClickWithDelay = withDelay(() => handleFavClick(product));
-  const handleCartClickWithDelay = withDelay(() =>
-    handleAddToCartClick(product),
+      }, 400);
+    },
+    [dispatch, isButtonDisabled, isInFavorites, isInCart, product],
   );
-  // #endregion
-
-  const inFavorites = (id: number) => {
-    return favoriteItems.some((item) => item.id === id);
-  };
-
-  const inCart = (id: number) => {
-    return cartItems.some((item) => item.product.id === id);
-  };
-
-  // #region conditions
-  const isInCart = inCart(product.id);
-  const isInFavorites = inFavorites(product.id);
 
   const cartButtonText = isInCart ? 'Added' : 'Add to cart';
-  const additionalCartButtonStyles = isInCart
-    ? { backgroundColor: white, color: green, borderColor: elements }
-    : {};
-
-  const additionalFavButtonStyles = isInFavorites
-    ? { borderColor: elements }
-    : {};
-  // #endregion
+  const favImgSrc = isInFavorites
+    ? '/icons/fav-heart.svg'
+    : '/icons/emty-heart.svg';
 
   return (
     <div className={buttons}>
       <button
-        className={buttons__cart}
-        onClick={handleCartClickWithDelay}
-        style={additionalCartButtonStyles}
+        className={`${buttons__cart} ${isInCart ? buttons__isInCart : ''}`}
+        onClick={() => handleAdding('cart')}
         disabled={isButtonDisabled}
+        aria-label={isInCart ? 'Remove from cart' : 'Add to cart'}
       >
         {cartButtonText}
       </button>
 
       <button
-        className={buttons__favourite}
-        onClick={handleFavClickWithDelay}
+        className={`${buttons__favourite} ${isInFavorites ? buttons__isInFavorites : ''}`}
+        onClick={() => handleAdding('fav')}
         disabled={isButtonDisabled}
-        style={additionalFavButtonStyles}
+        aria-label={
+          isInFavorites ? 'Remove from favorites' : 'Add to favorites'
+        }
       >
-        <img
-          src={isInFavorites ? '/icons/fav-heart.svg' : '/icons/emty-heart.svg'}
-          alt="favorite button"
-          className={buttons__favImg}
-        />
+        <img src={favImgSrc} alt="" className={buttons__favImg} />
       </button>
     </div>
   );

@@ -1,6 +1,14 @@
 import styles from './Specification.module.scss';
+const {
+  spec,
+  spec__text,
+  page__context,
+  card__context,
+  spec__context,
+  spec__label,
+} = styles;
 
-type Props = {
+type SpecificationProps = {
   label:
     | 'Screen'
     | 'Capacity'
@@ -15,15 +23,11 @@ type Props = {
   context?: 'card' | 'page' | 'spec__page';
 };
 
-export const Specification = ({ label, value, context }: Props) => {
-  const {
-    spec,
-    spec__text,
-    page__context,
-    card__context,
-    spec__context,
-    spec__label,
-  } = styles;
+export const Specification = ({
+  label,
+  value,
+  context,
+}: SpecificationProps) => {
   const contextClass =
     context === 'card'
       ? card__context

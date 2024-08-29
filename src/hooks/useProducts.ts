@@ -9,7 +9,7 @@ import { SortOption } from '../types/DropDownSortOptions';
 type UseProductsReturn = {
   products: Product[];
   isLoading: boolean;
-  error: Error | null;
+  isError: boolean;
 };
 
 export const useProducts = (
@@ -37,8 +37,8 @@ export const useProducts = (
   const {
     data: products = [],
     isLoading,
-    error,
-  } = useQuery<Product[], Error>({
+    isError,
+  } = useQuery({
     queryKey: ['products', category, productsUrl],
     queryFn: async () => {
       if (!productsUrl) return [];
@@ -55,10 +55,13 @@ export const useProducts = (
     refetchInterval: 0, // Disable automatic refetching
   });
 
+  console.log('Data', products);
+  console.log('Error', isError);
+
   // Sorting products based on the selected option
   const sortedProducts = sortProducts(
     category === 'favourites' ? favoriteItems : products,
   );
 
-  return { products: sortedProducts, isLoading, error: error || null };
+  return { products: sortedProducts, isLoading, isError };
 };

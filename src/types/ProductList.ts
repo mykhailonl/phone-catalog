@@ -1,6 +1,6 @@
 import { Category } from './CategoryTypes';
 
-export type ProductListType = {
+export type ProductPageType = {
   title: string;
   productsUrl?: string;
   category: Category;

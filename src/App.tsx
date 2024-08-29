@@ -9,6 +9,9 @@ import { Header } from './components/Header';
 import { SideBar } from './components/SideBar';
 import { Footer } from './components/Footer';
 
+import styles from './App.module.scss';
+const { app, app__isOpen, app__topPoint } = styles;
+
 export const App = () => {
   const dispatch = useAppDispatch();
 
@@ -31,24 +34,8 @@ export const App = () => {
   }, [shouldScrollToTop, dispatch]);
 
   return (
-    <div
-      className="App"
-      style={
-        isOpen
-          ? {
-              overflow: 'hidden',
-              position: 'fixed',
-              width: '100%',
-              height: '100%',
-            }
-          : {}
-      }
-    >
-      <div
-        ref={topRef}
-        style={{ height: 0, overflow: 'hidden' }}
-        id="topOfThePage"
-      />
+    <div className={`${app} ${isOpen && app__isOpen}`}>
+      <div ref={topRef} className={app__topPoint} id="topOfThePage" />
 
       <Header />
 

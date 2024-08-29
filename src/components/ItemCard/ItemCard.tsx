@@ -165,7 +165,6 @@ export const ItemCard = () => {
     return <Loader />;
   }
 
-  // TODO
   if (error) {
     return <div>{error.message}</div>;
   }

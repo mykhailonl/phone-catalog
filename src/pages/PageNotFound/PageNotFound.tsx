@@ -8,9 +8,13 @@ const { page, page__notFoundImg } = styles;
 
 type PageNotFoundProps = {
   productNotFound?: boolean;
+  notImplemented?: boolean;
 };
 
-export const PageNotFound = ({ productNotFound }: PageNotFoundProps) => {
+export const PageNotFound = ({
+  productNotFound,
+  notImplemented,
+}: PageNotFoundProps) => {
   const navigate = useNavigate();
   const navigation = useNavigation();
 
@@ -24,12 +28,18 @@ export const PageNotFound = ({ productNotFound }: PageNotFoundProps) => {
     }
   }, [navigation]);
 
+  const imgSrc = productNotFound
+    ? '/img/product-not-found.jpg'
+    : notImplemented
+      ? '/img/page-not-implemented.jpg'
+      : '/img/page-not-found.jpg';
+
   return (
     <div className={page}>
       <BackButton notFoundPage />
 
       <img
-        src={`${productNotFound ? '/img/product-not-found.jpg' : '/img/page-not-found.jpg'}`}
+        src={imgSrc}
         alt="Page not found"
         className={page__notFoundImg}
         onClick={() => navigate('/')}

@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSwipeable } from 'react-swipeable';
 
+import { useAppSelector } from '../../hooks';
+
 import { Slide } from '../Slide/Slide';
 import { Dots } from '../Dots';
 import { SliderButton } from '../SliderButton';
 
 import styles from './Slider.module.scss';
-import { useAppSelector } from '../../hooks';
-
 const {
   slider,
   slider__content,
@@ -16,8 +16,6 @@ const {
   slider__slide,
   slider__nav,
 } = styles;
-
-const ANIMATION_DURATION = 1000;
 
 export const Slider = () => {
   const { slides, interval } = useAppSelector((state) => state.slider);
@@ -56,14 +54,10 @@ export const Slider = () => {
   }, [currentIndex, slides.length]);
 
   const handleNextSlide = useCallback(() => {
-    // TODO
-
     handleSlideChange(currentIndex + 1);
   }, [currentIndex, handleSlideChange]);
 
   const handlePrevSlide = useCallback(() => {
-    // TODO
-
     handleSlideChange(currentIndex - 1);
   }, [currentIndex, handleSlideChange]);
 
@@ -78,6 +72,8 @@ export const Slider = () => {
     onSwipedLeft: handleNextSlide,
     onSwipedRight: handlePrevSlide,
   });
+
+  const ANIMATION_DURATION = 1000;
 
   return (
     <div

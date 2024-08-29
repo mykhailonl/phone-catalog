@@ -1,4 +1,5 @@
 import { setScrollToTop } from '../../features/scroll/scrollSlice';
+
 import { useAppDispatch } from '../../hooks.ts';
 import { ParamValue } from '../../hooks/useSearchParamValue.ts';
 

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import { Item } from '../../types/Item';
 
 import styles from './ColorSelector.module.scss';
@@ -12,7 +13,7 @@ const {
   line,
 } = styles;
 
-type Props = {
+type ColorSelectorProps = {
   item: Item;
   colors: string[];
   onColorChange: (newItemId: string) => void;
@@ -47,7 +48,7 @@ export const ColorSelector = ({
   colors,
   onColorChange,
   itemOptions,
-}: Props) => {
+}: ColorSelectorProps) => {
   const handleColorChange = (color: string) => {
     if (color === item.color) return;
 

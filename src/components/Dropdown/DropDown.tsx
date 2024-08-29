@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveDropdown } from '../../features/dropdown/dropdownSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { ParamValue } from '../../hooks/useSearchParamValue';
 
 import { DropDownItemsPerPage } from '../../types/DropDownItemsPerPage';

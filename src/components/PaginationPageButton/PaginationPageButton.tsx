@@ -1,5 +1,6 @@
-import { useAppDispatch } from '../../hooks.ts';
 import { setScrollToTop } from '../../features/scroll/scrollSlice';
+
+import { useAppDispatch } from '../../hooks.ts';
 
 import { Button } from '../Button/Button.tsx';
 
@@ -23,6 +24,7 @@ export const PaginationPageButton = ({
   const dispatch = useAppDispatch();
 
   const isCurrentPage = pageNumber === currentPage;
+  const buttonAddStyles = isCurrentPage ? additionalStyles : {};
 
   const handleButtonClick = (page: number) => {
     onPageChange(page);
@@ -36,7 +38,7 @@ export const PaginationPageButton = ({
       action={() =>
         typeof pageNumber === 'number' && handleButtonClick(pageNumber)
       }
-      additionalStyles={isCurrentPage ? additionalStyles : {}}
+      additionalStyles={buttonAddStyles}
     />
   );
 };

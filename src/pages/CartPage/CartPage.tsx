@@ -16,6 +16,7 @@ const {
 
 export const Cart = () => {
   const { cartItems } = useAppSelector((state) => state.cart);
+
   const cartNotEmpty = !!cartItems.length;
 
   return (

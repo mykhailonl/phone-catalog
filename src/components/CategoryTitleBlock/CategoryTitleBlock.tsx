@@ -1,13 +1,15 @@
 import styles from './CategoryTitleBlock.module.scss';
+const { block, block__name, block__amount } = styles;
 
-type Props = {
+type CategoryTitleBlockProps = {
   categoryName: string;
   categoryAmount: number;
 };
 
-const { block, block__name, block__amount } = styles;
-
-export const CategoryTitleBlock = ({ categoryName, categoryAmount }: Props) => {
+export const CategoryTitleBlock = ({
+  categoryName,
+  categoryAmount,
+}: CategoryTitleBlockProps) => {
   return (
     <div className={block}>
       <h1 className={block__name}>{categoryName}</h1>

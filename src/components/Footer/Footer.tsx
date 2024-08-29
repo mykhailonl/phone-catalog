@@ -1,9 +1,9 @@
 import { setScrollToTop } from '../../features/scroll/scrollSlice';
+import { useAppDispatch } from '../../hooks';
+
 import { Logo } from '../Logo';
 
 import styles from './Footer.module.scss';
-import { useAppDispatch } from '../../hooks';
-
 const {
   footer,
   footer__content,
@@ -50,9 +50,8 @@ export const Footer = () => {
           </a>
 
           <a
-            href="/"
+            href="/not-implemented"
             rel="noopener noreferrer"
-            target="_blank"
             className={footer__link}
           >
             Rights

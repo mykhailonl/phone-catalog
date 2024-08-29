@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+
 import { toggleMenu } from '../../features/sideBar/sideBarSlice';
 
 import { useAppDispatch } from '../../hooks';
@@ -6,9 +7,12 @@ import { useAppDispatch } from '../../hooks';
 import styles from './SecondaryNavLink.module.scss';
 const {
   secondaryNavLink,
+  secondaryNavLink__isActive,
   secondaryNavLink__iconWrapper,
+  secondaryNavLink__iconWrapper__hasAmount,
   secondaryNavLink__iconImg,
   secondaryNavLink__amount,
+  secondaryNavLink__amount__hasAmount,
 } = styles;
 
 type SideBarLinkProps = {
@@ -21,10 +25,11 @@ type SideBarLinkProps = {
 export const SecondaryNavLink = ({
   image,
   url,
-  amount,
   name,
+  amount,
 }: SideBarLinkProps) => {
-  const pathname = useLocation().pathname;
+  const { pathname } = useLocation();
+
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
@@ -41,14 +46,15 @@ export const SecondaryNavLink = ({
       to={url}
       className={`
         ${secondaryNavLink} 
-        ${locatedInCategory && styles['secondaryNavLink--isActive']}
+        ${locatedInCategory && secondaryNavLink__isActive}
       `}
       onClick={handleClick}
+      state={{ from: 'page', previousPath: pathname }}
     >
       <div
         className={`
         ${secondaryNavLink__iconWrapper} 
-        ${amount && styles['secondaryNavLink__iconWrapper--hasAmount']}
+        ${amount && secondaryNavLink__iconWrapper__hasAmount}
       `}
       >
         <img
@@ -61,7 +67,7 @@ export const SecondaryNavLink = ({
           <p
             className={`
             ${secondaryNavLink__amount} 
-            ${amount > 9 && styles['secondaryNavLink__amount--hasAmount']}
+            ${amount > 9 && secondaryNavLink__amount__hasAmount}
           `}
           >
             {amount}

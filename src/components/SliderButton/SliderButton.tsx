@@ -1,12 +1,12 @@
 import React from 'react';
-import styles from './SliderButton.module.scss';
 
+import styles from './SliderButton.module.scss';
+const { sliderButton, sliderButton__wrapper, sliderButton__wrapper__left } =
+  styles;
 interface SliderButtonProps {
   direction: 'left' | 'right';
   onClick: () => void;
 }
-
-const { sliderButton, sliderButton__wrapper } = styles;
 
 export const SliderButton: React.FC<SliderButtonProps> = React.memo(
   ({ direction, onClick }) => {
@@ -17,8 +17,7 @@ export const SliderButton: React.FC<SliderButtonProps> = React.memo(
         aria-label={`${direction} slide`}
       >
         <div
-          className={sliderButton__wrapper}
-          style={direction === 'left' ? { transform: 'rotate(-180deg)' } : {}}
+          className={`${sliderButton__wrapper} ${direction === 'left' && sliderButton__wrapper__left}`}
         >
           <img src="/icons/icon-arrow.svg" alt={`${direction} arrow`} />
         </div>

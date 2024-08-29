@@ -4,7 +4,6 @@ import { Slider } from '../../components/Slider';
 import { Title } from '../../components/Title';
 
 import styles from './HomePage.module.scss';
-
 const { homepage, homepage__content, homepage__top } = styles;
 
 export const HomePage = () => {

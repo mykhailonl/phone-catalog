@@ -10,7 +10,7 @@
   height: 100%;
   flex-grow: 1;
 
-  &--isActive {
+  &__isActive {
     &::after {
       position: absolute;
       bottom: 0;
@@ -27,7 +27,7 @@
     height: 16px;
     width: 16px;
 
-    &--hasAmount {
+    &__hasAmount {
       width: 28px;
       height: 28px;
     }
@@ -48,7 +48,7 @@
     line-height: 11.5px;
     color: map-get($colors, white);
 
-    &--hasAmount {
+    &__hasAmount {
       right: 3px;
     }
   }

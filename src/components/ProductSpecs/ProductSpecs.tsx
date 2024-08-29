@@ -3,15 +3,14 @@ import { Specification } from '../Specification';
 import { Item } from '../../types/Item';
 
 import styles from './ProductSpecs.module.scss';
-
 const { specs, specs__titleBlock, specs__title, specs__line, specs__group } =
   styles;
 
-type Props = {
+type ProductSpecsProps = {
   product: Item;
 };
 
-export const ProductSpecs = ({ product }: Props) => {
+export const ProductSpecs = ({ product }: ProductSpecsProps) => {
   return (
     <div className={specs}>
       <div className={specs__titleBlock}>

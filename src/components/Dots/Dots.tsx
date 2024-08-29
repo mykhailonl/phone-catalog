@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Dot } from '../Dot';
 
 import styles from './Dots.module.scss';

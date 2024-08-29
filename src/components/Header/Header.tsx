@@ -22,12 +22,17 @@ const {
 
 export const Header = () => {
   const dispatch = useAppDispatch();
+
   const { isOpen } = useAppSelector((state) => state.menu);
   const { favoriteItems } = useAppSelector((state) => state.favorites);
   const { cartItems } = useAppSelector((state) => state.cart);
 
   const favItemsAmount = favoriteItems.length;
   const cartItemsAmount = cartItems.length;
+
+  const menuIcon = isOpen
+    ? '/icons/icon-close.svg'
+    : '/icons/header-burger-menu.svg';
 
   return (
     <header id="header" className={header}>
@@ -42,14 +47,7 @@ export const Header = () => {
           className={header__burger}
           onClick={() => dispatch(toggleMenu())}
         >
-          <img
-            src={
-              !isOpen
-                ? '/icons/header-burger-menu.svg'
-                : '/icons/icon-close.svg'
-            }
-            alt="menu"
-          />
+          <img src={menuIcon} alt="menu" />
         </button>
 
         <div className={header__links}>

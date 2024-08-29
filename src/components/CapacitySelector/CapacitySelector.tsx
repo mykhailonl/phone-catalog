@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import { Item } from '../../types/Item';
 
 import styles from './CapacitySelector.module.scss';
@@ -11,7 +12,7 @@ const {
   isActive,
 } = styles;
 
-type Props = {
+type CapacitySelectorProps = {
   item: Item;
   capacityOptions: string[];
   onCapacityChange: (newItemId: string) => void;
@@ -23,7 +24,7 @@ export const CapacitySelector = ({
   capacityOptions,
   onCapacityChange,
   itemOptions,
-}: Props) => {
+}: CapacitySelectorProps) => {
   const handleCapacityChange = (capacity: string) => {
     if (capacity === item.capacity) return;
 
@@ -59,6 +60,7 @@ export const CapacitySelector = ({
         <h3 className={capacity__title}>Select capacity</h3>
         <div className={capacity__options}>{capacityButtons}</div>
       </div>
+
       <div className={capacity__line}></div>
     </div>
   );

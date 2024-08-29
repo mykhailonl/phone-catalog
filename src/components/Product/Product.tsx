@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
 import { setScrollToTop } from '../../features/scroll/scrollSlice';
+
 import { useAppDispatch } from '../../hooks';
 
 import { ProductActions } from '../ProductActions';

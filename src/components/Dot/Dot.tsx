@@ -1,5 +1,7 @@
 import React from 'react';
+
 import styles from './Dot.module.scss';
+const { dot, dot__content, dot__isActive } = styles;
 
 interface DotProps {
   isActive: boolean;
@@ -7,8 +9,6 @@ interface DotProps {
 }
 
 export const Dot: React.FC<DotProps> = React.memo(({ isActive, onClick }) => {
-  const { dot, dot__content, dot__isActive } = styles;
-
   return (
     <button className={dot} onClick={onClick}>
       <div

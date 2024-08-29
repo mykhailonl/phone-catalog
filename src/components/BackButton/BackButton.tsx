@@ -18,9 +18,14 @@ export const BackButton = ({ notFoundPage }: BackButtonProps) => {
   const { category, itemPage } = useParams();
   const location = useLocation();
 
+  console.log(location);
+
   const handleBack = () => {
     if (location.state?.from === 'user' && location.state.previousPath) {
       // * if we get there from cart or fav - get back there
+      navigate(location.state.previousPath);
+    } else if (location.state?.from === 'page' && location.state.previousPath) {
+      // * if we get there from item page
       navigate(location.state.previousPath);
     } else if (location.key === 'default') {
       // * if we get there from the shared link as a new tab -
