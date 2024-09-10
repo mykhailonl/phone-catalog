@@ -3,9 +3,21 @@ import { SliderState } from '../../types/SliderState';
 
 const initialState: SliderState = {
   slides: [
-    { id: 1, image: '/slider-images/slider-iphone-pro.webp', link: '#' },
-    { id: 2, image: '/slider-images/slider-ipad.jpeg', link: '#' },
-    { id: 3, image: '/slider-images/slider-apple-watch.jpeg', link: '#' },
+    {
+      id: 1,
+      image: '/slider-images/banner-phones.png',
+      link: '/catalog/phones/apple-iphone-14-pro-1tb-spaceblack',
+    },
+    {
+      id: 2,
+      image: '/slider-images/banner-tablets.webp',
+      link: '/catalog/tablets/apple-ipad-pro-11-2021-2tb-silver',
+    },
+    {
+      id: 3,
+      image: '/slider-images/banner-accessories.webp',
+      link: '/catalog/accessories/apple-watch-series-6-44mm-space-gray',
+    },
   ],
   interval: 5000,
 };
